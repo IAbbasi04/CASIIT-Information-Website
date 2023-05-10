@@ -66,7 +66,7 @@ namespace CASIITInformationWebsite
 
 
 
-            //create panels
+            //create panels TODO: do this properly
             List<Panel> panels = new List<Panel>();
             panels.Add(CreateBox("Adv Computer Math", "math bro", 9, null, new string[] { "Algebra 1" }));
             panels.Add(CreateBox("AP Computer Science", "science bro", 10, null, new string[] { "Geometry", "Adv Computer Math" }));
@@ -151,26 +151,6 @@ namespace CASIITInformationWebsite
                     p.Style["left"] = int.Parse(p.Style["left"].Replace("px", "")) + (avgPanelWidth - int.Parse(data[i - 2].Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)[0])) / 2 + "px";
                 }
             }
-
-            //Page.ClientScript.RegisterStartupScript(GetType(), "leftAlign",
-            //    "function alignPanels(){\n" +
-            //    "    for(let p of document.getElementById(\"MainContent_UpdatePanel1\").children){\n" +
-            //   $"        p.style.left = +(p.style.left.replace(\"px\",\"\")) + ({avgPanelWidth} - p.clientWidth)/2 + \"px\";\n" +
-            //    "    }\n" +
-            //    "}\n" +
-            //    "alignPanels();\n", true);
-            ////keep panels lined up
-            //Page.ClientScript.RegisterStartupScript(GetType(), "keepAligned",
-            //    "var prm = Sys.WebForms.PageRequestManager.getInstance();\n" +
-            //    "if (prm != null)\n" +
-            //    "{\n" +
-            //    "    prm.add_endRequest(function(sender, e) {\n" +
-            //    "        if (sender._postBackSettings.panelsToUpdate != null)\n" +
-            //    "        {\n" +
-            //    "            console.log(sender._postBackSettings.panelsToUpdate);alignPanels();\n" +
-            //    "        }\n" +
-            //    "    });\n" +
-            //    "};\n", true);
 
 
             //get line classes
@@ -258,45 +238,6 @@ namespace CASIITInformationWebsite
                     pstreq.Style.Add("left", $"{((i - (items - 1) / 2)) * (minWidthOffset + avgPanelWidth)}px");
                 }
             }
-            //if (items == 1)
-            //{
-            //    foreach (Panel pstreq in roots)
-            //    {
-            //        GetChildrenOffsetToParent(pstreq);
-            //        pstreq.Style.Add("left", "0px");
-            //    }
-            //    return;
-            //}
-            //if (items == 2)
-            //{
-            //    for (int i = 0; i < roots.Count; i++)
-            //    {
-            //        Panel pstreq = roots[i];
-            //        GetChildrenOffsetToParent(pstreq);
-            //        pstreq.Style.Add("left", $"{(i == 0 ? -(minWidthOffset + avgPanelWidth) / 2 : (minWidthOffset + avgPanelWidth) / 2)}px");
-            //    }
-            //    return;
-            //}
-            //if (items == 3)
-            //{
-            //    for (int i = 0; i < roots.Count; i++)
-            //    {
-            //        Panel pstreq = roots[i];
-            //        GetChildrenOffsetToParent(pstreq);
-            //        pstreq.Style.Add("left", $"{(i == 0 ? -(minWidthOffset + avgPanelWidth) : i == 1 ? 0 : (minWidthOffset + avgPanelWidth))}px");
-            //    }
-            //    return;
-            //}
-            //if (items == 4)
-            //{
-            //    for (int i = 0; i < roots.Count; i++)
-            //    {
-            //        Panel pstreq = roots[i];
-            //        GetChildrenOffsetToParent(pstreq);
-            //        pstreq.Style.Add("left", $"{(i == 0 ? -(minWidthOffset + avgPanelWidth) * 1.5 : i == 1 ? -(minWidthOffset + avgPanelWidth) / 2 : i == 2 ? (minWidthOffset + avgPanelWidth) / 2 : (minWidthOffset + avgPanelWidth) * 1.5)}px");
-            //    }
-            //    return;
-            //}
         }
         /// <summary>
         /// Fix the positions of the tree elements such that none of the values are negative, then set the size of the panel containing the lines to the appropriate size
@@ -387,52 +328,6 @@ namespace CASIITInformationWebsite
                     item.Style.Add("left", $"{((i - (items - 1) / 2)) * (minWidthOffset + avgPanelWidth)}px");
                 }
             }
-            //if (items == 1)
-            //{
-            //    foreach (string pstreq in ((HiddenField)panel.FindControl($"{panel.ID}_ptrq")).Value.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries))
-            //    {
-            //        Panel item = (Panel)panel.Parent.FindControl(pstreq);
-            //        GetChildrenOffsetToParent(item);
-            //        item.Style.Add("left", "0px");
-            //    }
-            //    return;
-            //}
-            //if (items == 2)
-            //{
-            //    string[] array = ((HiddenField)panel.FindControl($"{panel.ID}_ptrq")).Value.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-            //    for (int i = 0; i < array.Length; i++)
-            //    {
-            //        string pstreq = array[i];
-            //        Panel item = (Panel)panel.Parent.FindControl(pstreq);
-            //        GetChildrenOffsetToParent(item);
-            //        item.Style.Add("left", $"{(i == 0 ? -(minWidthOffset + avgPanelWidth) / 2 : (minWidthOffset + avgPanelWidth) / 2)}px");
-            //    }
-            //    return;
-            //}
-            //if (items == 3)
-            //{
-            //    string[] array = ((HiddenField)panel.FindControl($"{panel.ID}_ptrq")).Value.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-            //    for (int i = 0; i < array.Length; i++)
-            //    {
-            //        string pstreq = array[i];
-            //        Panel item = (Panel)panel.Parent.FindControl(pstreq);
-            //        GetChildrenOffsetToParent(item);
-            //        item.Style.Add("left", $"{(i == 0 ? -(minWidthOffset + avgPanelWidth) : i == 1 ? 0 : (minWidthOffset + avgPanelWidth))}px");
-            //    }
-            //    return;
-            //}
-            //if (items == 4)
-            //{
-            //    string[] array = ((HiddenField)panel.FindControl($"{panel.ID}_ptrq")).Value.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-            //    for (int i = 0; i < array.Length; i++)
-            //    {
-            //        string pstreq = array[i];
-            //        Panel item = (Panel)panel.Parent.FindControl(pstreq);
-            //        GetChildrenOffsetToParent(item);
-            //        item.Style.Add("left", $"{(i == 0 ? -(minWidthOffset + avgPanelWidth) * 1.5 : i==1? -(minWidthOffset + avgPanelWidth) / 2 : i == 2 ? (minWidthOffset + avgPanelWidth) / 2 : (minWidthOffset + avgPanelWidth) * 1.5)}px");
-            //    }
-            //    return;
-            //}
         }
 
         /// <summary>
@@ -492,12 +387,8 @@ namespace CASIITInformationWebsite
                 }
 
             Panel panel = new Panel();
-            //panel.BorderColor = System.Drawing.Color.Black;
-            //panel.BorderWidth = 2;
             panel.ID = className;
             panel.Style.Add("position", "absolute");
-            //panel.Style.Add("width", "150px");
-            //panel.Style.Add("height", "70px");
             Button button = new Button();
             button.Text = $"Class: {className}\nMinimum Grade: {minGrade}th" + (minGPA == 0 ? "" : $"\nMinimum GPA: {minGPA}");
             button.Style.Add("width", "100%");
@@ -511,7 +402,7 @@ namespace CASIITInformationWebsite
             button2.Visible = false;
             button.Click += (o, e) => { SwitchView(panel); };
             panel.Controls.Add(button);
-            button2.Click += (o, e) => { SwitchView(panel); /*select*/ };
+            button2.Click += (o, e) => { SwitchView(panel); /*TODO:select logic*/ };
             panel.Controls.Add(button2);
 
             HiddenField nameField = new HiddenField();
