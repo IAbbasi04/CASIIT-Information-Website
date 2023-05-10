@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace CASIITInformationWebsite
 {
-    public partial class About : Page
+    public partial class CourseTree : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {

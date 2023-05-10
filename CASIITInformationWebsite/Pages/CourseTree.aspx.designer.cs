@@ -11,7 +11,7 @@ namespace CASIITInformationWebsite
 {
 
 
-    public partial class About
+    public partial class CourseTree
     {
     }
 }
