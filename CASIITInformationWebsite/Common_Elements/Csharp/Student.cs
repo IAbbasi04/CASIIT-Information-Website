@@ -7,5 +7,6 @@ namespace CASIITInformationWebsite.Common_Elements
 {
     public class Student
     {
+
     }
 }
