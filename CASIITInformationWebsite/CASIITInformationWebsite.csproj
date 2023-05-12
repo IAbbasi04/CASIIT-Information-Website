@@ -204,6 +204,9 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Common_Elements\Csharp\Class.cs" />
+    <Compile Include="Common_Elements\Csharp\ClassOption.cs" />
+    <Compile Include="Common_Elements\Csharp\Prerequisite.cs" />
+    <Compile Include="Common_Elements\Csharp\SQLquerier.cs" />
     <Compile Include="Common_Elements\Csharp\Student.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
