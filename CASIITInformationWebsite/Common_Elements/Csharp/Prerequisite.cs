@@ -16,7 +16,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         private int min_year;
         private string classes_required  = "no classes required"; //Class ID
 
-        public class ClassOption
+        public abstract class ClassOption
         {
             public class Option : ClassOption
             {
@@ -26,6 +26,10 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     this.c = c;
                 }
 
+                override public string toString()
+                {
+                    return c.toString();
+                }
                 
             }
 
@@ -39,6 +43,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     ClassOption1 = classOption1;
                     ClassOption2 = classOption2;
                 }
+
+                override public string toString()
+                {
+                    return "(" + ClassOption1 + " AND " + ClassOption2 + ")";
+                }
             }
             public class Or : ClassOption
             {
@@ -50,12 +59,19 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     ClassOption1 = classOption1;
                     ClassOption2 = classOption2;
                 }
+
+                
+                override public string toString()
+                {
+                    return "(" + ClassOption1 + " OR " + ClassOption2 + ")";
+                }
             }
-            
+
+            public abstract string toString();
         }
         // new Or( new And( new ClassOption(ENG101), new ClassOption(DB101) ), new And(  new ClassOption(ENG101), new ClassOption(DB101) ); 
         //ex classes required
-        // (ENG101 && DB101) || (ENG201 && DB201)
+        // ((ENG101 AND DB101) OR (ENG201 AND DB201))
         public Prerequisite(double min_GPA, int min_year, string classes_required)
         {
             this.min_GPA = min_GPA;
