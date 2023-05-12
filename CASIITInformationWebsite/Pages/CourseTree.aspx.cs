@@ -1,9 +1,11 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Newtonsoft.Json;
 
 namespace CASIITInformationWebsite
 {
@@ -79,6 +81,29 @@ namespace CASIITInformationWebsite
             panels.Add(CreateBox("Photography I", "pictures bro", 10, null, new string[] { "IT Graphics Design:OR:", "Art 1:OR:" }));
             panels.Add(CreateBox("IT Web Tech", "web bro", 9, null, new string[] { }));
             panels.Add(CreateBox("Engineering and Robotics", "robots bro", 9, null, new string[] { "Geometry" }));
+
+            //string myConnectionString = "server=p3nlmysql165plsk.secureserver.net;uid=CSIsAwesome;pwd=Casiit2117Class;database=battlefield_casiit";
+
+            //using (MySqlConnection conn = new MySqlConnection(myConnectionString))
+            //{
+            //    conn.ConnectionString = myConnectionString;
+            //    conn.Open();
+
+            //    String sql = "SELECT id,course_name,course_weight,description,dual_enrolled,hs_credit,college_credit,prerequisites FROM courses";
+
+            //    using (MySqlCommand command = new MySqlCommand(sql, conn))
+            //    {
+            //        using (MySqlDataReader reader = command.ExecuteReader())
+            //        {
+            //            while (reader.Read())
+            //            {
+            //                //JsonConvert.
+            //                // reader.GetValue(7)
+            //                panels.Add(CreateBox(reader.GetString(1), reader.GetString(3), null, null, null));
+            //            }
+            //        }
+            //    }
+            //}
 
 
 
@@ -380,11 +405,26 @@ namespace CASIITInformationWebsite
             minGrade = minGrade == null ? 9 : minGrade;
             minGPA = minGPA == null ? 0 : minGPA;
             string prereqs = "";
+            string prereqsDisplay = "";
             if (prerequisites != null)
-                foreach (string item in prerequisites)
+            {
+                for (int i = 0; i < prerequisites.Length; i++)
                 {
-                    prereqs += item + ", ";
+                    prereqs += prerequisites[i] + ", ";
+                    if (prerequisites[i].EndsWith(":OR:") && i + 1 < prerequisites.Length && prerequisites[i + 1].EndsWith(":OR:"))
+                    {
+                        prereqsDisplay += prerequisites[i].Replace(":OR:", "") + " or ";
+                    }
+                    else if (i + 1 < prerequisites.Length)
+                    {
+                        prereqsDisplay += prerequisites[i].Replace(":OR:", "") + ", ";
+                    }
+                    else
+                    {
+                        prereqsDisplay += prerequisites[i].Replace(":OR:", "");
+                    }
                 }
+            }
 
             Panel panel = new Panel();
             panel.ID = className;
@@ -395,7 +435,7 @@ namespace CASIITInformationWebsite
             button.Style.Add("height", "100%");
             button.Style.Add("background-color", "var(--button-background)");
             Button button2 = new Button();
-            button2.Text = $"Class: {className}\nDescription: {description}\nMinimum Grade: {minGrade}th" + (minGPA == 0 ? "" : $"\nMinimum GPA: {minGPA}") + (prereqs == "" ? "" : $"\nPrerequisites: {prereqs}");
+            button2.Text = $"Class: {className}\nDescription: {description}\nMinimum Grade: {minGrade}th" + (minGPA == 0 ? "" : $"\nMinimum GPA: {minGPA}") + (prereqs == "" ? "" : $"\nPrerequisites: {prereqsDisplay}");
             button2.Style.Add("width", "100%");
             button2.Style.Add("height", "100%");
             button2.Style.Add("background-color", "var(--button-background)");
