@@ -70,8 +70,8 @@
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
             <hr />
-            <footer>
-                <p>&copy; <%: DateTime.Now.Month + DateTime.Now.Year %> - My ASP.NET Application</p>
+            <footer style="border:5px solid black">
+                <p>&copy; <%: DateTime.Now.ToString("MM/dd/yyyy") %> - Contact and Help:</p>
             </footer>
         </div>
 
