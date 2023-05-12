@@ -41,7 +41,7 @@ namespace CASIITInformationWebsite.Common_Elements
             gpa = num;
         }
 
-        private int getGpa()
+        private double getGpa()
         {
             return gpa;
         }
