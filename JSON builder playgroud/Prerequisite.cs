@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.IO;
-using Org.BouncyCastle.Asn1.Cmp;
-using System.Transactions;
-using System.Security.Cryptography.X509Certificates;
-using Newtonsoft.Json;
-using Microsoft.Ajax.Utilities;
-
+﻿using Newtonsoft.Json;
 namespace CASIITInformationWebsite.Common_Elements.Csharp
+
 {
     public class Prerequisite
     {
@@ -18,7 +8,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         private int min_year;
         private ClassOption required_classes;
        
-        // new Or( new And( new ClassOption(ENG101), new ClassOption(DB101) ), new And(  new ClassOption(ENG201), new ClassOption(DB201) ); 
+        // new Or( new And( new ClassOption(ENG101), new ClassOption(DB101) ), new And(  new ClassOption(ENG101), new ClassOption(DB101) ); 
         //ex classes required
         // ((ENG101 AND DB101) OR (ENG201 AND DB201))
         public Prerequisite(double min_GPA, int min_year, ClassOption required_classes)
