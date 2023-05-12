@@ -429,45 +429,69 @@ namespace CASIITInformationWebsite
             Panel panel = new Panel();
             panel.ID = className;
             panel.Style.Add("position", "absolute");
+
             Button button = new Button();
             button.Text = $"Class: {className}\nMinimum Grade: {minGrade}th" + (minGPA == 0 ? "" : $"\nMinimum GPA: {minGPA}");
+            button.Style.Add("text-align", "left");
             button.Style.Add("width", "100%");
             button.Style.Add("height", "100%");
             button.Style.Add("background-color", "var(--button-background)");
+
             Button button2 = new Button();
             button2.Text = $"Class: {className}\nDescription: {description}\nMinimum Grade: {minGrade}th" + (minGPA == 0 ? "" : $"\nMinimum GPA: {minGPA}") + (prereqs == "" ? "" : $"\nPrerequisites: {prereqsDisplay}");
+            button2.Style.Add("text-align", "left");
             button2.Style.Add("width", "100%");
             button2.Style.Add("height", "100%");
             button2.Style.Add("background-color", "var(--button-background)");
             button2.Visible = false;
-            button.Click += (o, e) => { SwitchView(panel); };
+
+            Button infobutton = new Button();
+            infobutton.Text = "i";
+            infobutton.Font.Size = FontUnit.Smaller;
+            infobutton.Style.Add("text-align", "center");
+            infobutton.Style.Add("position", "absolute");
+            infobutton.Style.Add("width", "20px");
+            infobutton.Style.Add("height", "20px");
+            infobutton.Style.Add("right", "0px");
+            infobutton.Style.Add("bottom", "0px");
+            infobutton.Style.Add("background-color", "var(--button-background)");
+
+            button.Click += (o, e) => { /*TODO:select logic*/ };
             panel.Controls.Add(button);
-            button2.Click += (o, e) => { SwitchView(panel); /*TODO:select logic*/ };
+            button2.Click += (o, e) => { /*TODO:select logic*/ };
             panel.Controls.Add(button2);
+            infobutton.Click += (o, e) => { SwitchView(panel); };
+            panel.Controls.Add(infobutton);
 
             HiddenField nameField = new HiddenField();
             nameField.Value = className;
             nameField.ID = className + "_name";
             panel.Controls.Add(nameField);
+
             HiddenField descField = new HiddenField();
             descField.Value = description;
             descField.ID = className + "_desc";
             panel.Controls.Add(descField);
+
             HiddenField mgrdField = new HiddenField();
             mgrdField.Value = minGrade + "";
             mgrdField.ID = className + "_mgrd";
             panel.Controls.Add(mgrdField);
+
             HiddenField mgpaField = new HiddenField();
             mgpaField.Value = minGPA + "";
             mgpaField.ID = className + "_mgpa";
             panel.Controls.Add(mgpaField);
+
             HiddenField preqField = new HiddenField();
             preqField.Value = prereqs;
             preqField.ID = className + "_preq";
             panel.Controls.Add(preqField);
+
             HiddenField ptrqField = new HiddenField();
             ptrqField.ID = className + "_ptrq";
             panel.Controls.Add(ptrqField);
+
             HiddenField dpthField = new HiddenField();
             if (prereqs == "")
                 dpthField.Value = 0 + "";
@@ -489,11 +513,13 @@ namespace CASIITInformationWebsite
             {
                 activeView.Controls[1].Visible = false;
                 activeView.Controls[0].Visible = true;
+                activeView.Controls[2].Visible = true;
                 activeView = null;
             }
             if (panel != null)
             {
                 panel.Controls[0].Visible = false;
+                panel.Controls[2].Visible = false;
                 panel.Controls[1].Visible = true;
                 activeView = panel;
             }
