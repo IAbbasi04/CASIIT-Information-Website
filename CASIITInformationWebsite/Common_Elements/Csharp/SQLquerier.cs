@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Management;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Asn1.X509.Qualified;
 
 namespace CASIITInformationWebsite.Common_Elements.Csharp
 {
-
-    public static class SQLQuerier
+    public class SQLQuerier
     {
         public static String name;
         public const string CONNECTION_STRING = "server=p3nlmysql165plsk.secureserver.net;uid=CSIsAwesome;pwd=Casiit2117Class;database=battlefield_casiit";
@@ -53,65 +54,44 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return elements;
         }
 
-        public static void testMethod()
+        public static int[] ToArray(string values, int defaultValue)
         {
-            string rc = "";
-
-            using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
+            string[] valuesAsArray = values.Split(',');
+            int numValues = valuesAsArray.Length;
+            int[] output = new int[numValues];
+            for (int i = 0; i < numValues; i++)
             {
-                conn.ConnectionString = CONNECTION_STRING;
-                conn.Open();
-
-                String sql = "SELECT id, name FROM block7_table";
-
-                using (MySqlCommand command = new MySqlCommand(sql, conn))
+                int temp = 0;
+                if (int.TryParse(valuesAsArray[i], out temp))
                 {
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            rc += reader.GetInt32(0) + reader.GetString(1);
-                        }
-                        command.Parameters.AddWithValue("name", rc);
-                    }
+                    output[i] = int.Parse(valuesAsArray[i]);
+                } else
+                {
+                    output[i] = defaultValue;
+                }
+            }
+            return output;
+        }
+
+        public static double[] ToArray(string values, double defaultValue)
+        {
+            string[] valuesAsArray = values.Split(',');
+            int numValues = valuesAsArray.Length;
+            double[] output = new double[numValues];
+            for (int i = 0; i < numValues; i++)
+            {
+                double temp = 0;
+                if (double.TryParse(valuesAsArray[i], out temp))
+                {
+                    output[i] = double.Parse(valuesAsArray[i]);
+                }
+                else
+                {
+                    output[i] = defaultValue;
                 }
             }
 
-            // Now we can do something here with the data in rc.  Or whatever.
+            return output;
         }
-
-        static void testMethod2()
-        {
-            string rc = "";
-
-            using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
-            {
-                conn.ConnectionString = CONNECTION_STRING;
-                conn.Open();
-
-                String sql = "SELECT id, name FROM block7_table WHERE id = 34543";
-
-                using (MySqlCommand command = new MySqlCommand(sql, conn))
-                {
-
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-
-                    }
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-
-                        while (reader.Read())
-                        {
-                            rc += reader.GetInt32(0) + reader.GetString(1);
-                        }
-                    }
-                }
-            }
-
-            // Now we can do something here with the data in rc.  Or whatever.
-
-        }
-
     }
 }
