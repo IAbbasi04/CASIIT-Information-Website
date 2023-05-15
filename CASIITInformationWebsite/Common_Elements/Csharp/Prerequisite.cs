@@ -36,15 +36,15 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 " required_classes: " + required_classes;
         }
 
-        public string writeJSON()
+        public static string writeJSON(Prerequisite required_classes)
         {
             string json = JsonConvert.SerializeObject(required_classes);
             return json;
         }
 
-        public ClassOption readFromJSON(string serializedPrerequisite)
+        public static Prerequisite readFromJSON(string serializedPrerequisite)
         {
-            return JsonConvert.DeserializeObject<ClassOption>(serializedPrerequisite);
+            return JsonConvert.DeserializeObject<Prerequisite>(serializedPrerequisite);
         }
 
 
