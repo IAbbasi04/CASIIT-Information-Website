@@ -22,7 +22,7 @@
     <asp:UpdatePanel runat="server">
         <ContentTemplate>
             <!-- button to reset tree view -->
-            <asp:Button ID="ResetViewButton" runat="server" Text="Reset View" style="position:absolute;left:50px;background-color:var(--button-background)" OnClientClick="pz.reset();"/>
+            <asp:Button ID="ResetViewButton" runat="server" Text="Reset View" style="position:absolute;left:50px;background-color:var(--button-background)" OnClientClick="pz.zoom(0.3,{animate:true});pz.pan(-1314,104,{animate:true});"/>
         </ContentTemplate>
     </asp:UpdatePanel>
     <!-- background panel, acts as frame for panzoom -->

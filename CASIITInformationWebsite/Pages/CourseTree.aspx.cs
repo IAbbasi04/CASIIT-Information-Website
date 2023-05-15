@@ -12,7 +12,7 @@ namespace CASIITInformationWebsite
     public partial class CourseTree : Page
     {
         const int minHeightOffset = 130;//the ideal minimum vertical distance to keep elements apart, measured from top point to top point
-        const int minWidthOffset = 250;//the ideal minimum hoorizontal distance to keep elements apart, measured form aproximate end to aproximate end
+        const int minWidthOffset = 100;//the ideal minimum hoorizontal distance to keep elements apart, measured form aproximate end to aproximate end
         const int avgPanelWidth = 200;//the width to assume the panels are
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -26,12 +26,16 @@ namespace CASIITInformationWebsite
 
 
             //load script to init Panzoom
+            //Panzoom docs https://github.com/timmywil/panzoom
             Page.ClientScript.RegisterStartupScript(GetType(), "InitPanZoom",
             "elem = document.getElementById(\"MainContent_Panel2\");\n" +
             "pz = Panzoom(elem, {" +
                 "contain: true," +
-                "canvas: true" +
-            "});" +
+                "canvas: true," +
+                "maxScale: 2," +
+                "minScale: 0.25," +
+                "step: 0.1" +
+            "});\n" +
             "elem.parentElement.addEventListener('wheel', pz.zoomWithWheel);\n"
             , true);
             //load script that automatically resizes the view panel to fit the screen
@@ -70,6 +74,17 @@ namespace CASIITInformationWebsite
 
             //create panels TODO: do this properly
             List<Panel> panels = new List<Panel>();
+            panels.Add(CreateBox("test1", "test", 9, null, new string[] {  }));
+            panels.Add(CreateBox("test2", "test", 9, null, new string[] { "test1" }));
+            panels.Add(CreateBox("test3", "test", 9, null, new string[] { "test1" }));
+            panels.Add(CreateBox("test4", "test", 9, null, new string[] { "test2" }));
+            panels.Add(CreateBox("test5", "test", 9, null, new string[] { "test2" }));
+            panels.Add(CreateBox("test6", "test", 9, null, new string[] { "test3" }));
+            panels.Add(CreateBox("test7", "test", 9, null, new string[] { "test3" }));
+            panels.Add(CreateBox("test8", "test", 9, null, new string[] { "test4" }));
+            panels.Add(CreateBox("test9", "test", 9, null, new string[] { "test4" }));
+            panels.Add(CreateBox("test10", "test", 9, null, new string[] { "test5" }));
+
             panels.Add(CreateBox("Adv Computer Math", "math bro", 9, null, new string[] { "Algebra 1" }));
             panels.Add(CreateBox("AP Computer Science", "science bro", 10, null, new string[] { "Geometry", "Adv Computer Math" }));
             panels.Add(CreateBox("IT Fundamentals", "it bro", 9, null, null));
@@ -157,10 +172,10 @@ namespace CASIITInformationWebsite
                 panel.Style.Add("top", $"{minHeightOffset * (deepest - depth)}px");
             }
             //x
-            foreach (Panel panel in roots)
-            {
-                GetChildrenOffsetToParent(panel);
-            }
+            //foreach (Panel panel in roots)
+            //{
+            //    GetChildrenOffsetToParent(panel);
+            //}
             PositionRoots(roots);
             foreach (Panel panel in roots)
             {
@@ -230,7 +245,12 @@ namespace CASIITInformationWebsite
             "}\n" +
             "makeLines();\n"
             , true);
-
+        }
+        protected void Page_LoadComplete(object sender, EventArgs e)
+        {
+            Page.ClientScript.RegisterStartupScript(GetType(), "PanZoomPosition",
+           $"{ResetViewButton.OnClientClick}\n"
+            , true);
         }
         /// <summary>
         /// Similar to GetChildrenOffsetToParents, but instead takes a list of roots and spaces them apropriatly
@@ -243,25 +263,24 @@ namespace CASIITInformationWebsite
             {
                 return;
             }
-            //if even, offset = (((i-(count-1)/2)<=0?(i-(count-1)/2)-1:(i-(count-1)/2))-0.5)*(minWidthOffset + avgPanelWidth)
-            //if odd, offset = ((i-(count-1)/2))*(minWidthOffset + avgPanelWidth)
-            if (items % 2 == 0)
+            int[] widths = new int[roots.Count];
+            int totalNeededWidth = 0;
+            for (int i = 0; i < roots.Count; i++)
             {
-                for (int i = 0; i < roots.Count; i++)
-                {
-                    Panel pstreq = roots[i];
-                    GetChildrenOffsetToParent(pstreq);
-                    pstreq.Style.Add("left", $"{((i - (items - 1) / 2) - 0.5) * (minWidthOffset + avgPanelWidth)}px");
-                }
+                Panel item = roots[i];
+                widths[i] = GetChildrenOffsetToParent(item);
+                totalNeededWidth += minWidthOffset + widths[i];
             }
-            else
+            totalNeededWidth -= minWidthOffset;
+            for (int i = 0; i < roots.Count; i++)
             {
-                for (int i = 0; i < roots.Count; i++)
+                Panel item = roots[i];
+                int prevOffset = 0;
+                for (int j = 0; j < i; j++)
                 {
-                    Panel pstreq = roots[i];
-                    GetChildrenOffsetToParent(pstreq);
-                    pstreq.Style.Add("left", $"{((i - (items - 1) / 2)) * (minWidthOffset + avgPanelWidth)}px");
+                    prevOffset += minWidthOffset + widths[j];
                 }
+                item.Style.Add("left", $"{(widths[i] / 2) + (avgPanelWidth / 2) + prevOffset - (totalNeededWidth / 2) - (avgPanelWidth / 2)}px");
             }
         }
         /// <summary>
@@ -317,42 +336,42 @@ namespace CASIITInformationWebsite
         /// Sets the appropriate offsets on the children elements of the given element such that the children elements do not overlap. Does NOT account for allready present offset, neither parent nor children
         /// </summary>
         /// <param name="panel">The parent of the children to offset</param>
-        private void GetChildrenOffsetToParent(Panel panel)
+        /// <returns>The width that the given parent takes up</returns>
+        private int GetChildrenOffsetToParent(Panel panel)
         {
             //go all the way down the tree
             //once at bottom, offset = 0 and go up 1
-            //offset:
-            //if even, offset = (((i-(count-1)/2)<=0?(i-(count-1)/2)-1:(i-(count-1)/2))-0.5)*(minWidthOffset + avgPanelWidth)
-            //if odd, offset = ((i-(count-1)/2))*(minWidthOffset + avgPanelWidth)
+            //offset = (widths[i] / 2) + (avgPanelWidth / 2) + prevOffset - (totalNeededWidth / 2) - (avgPanelWidth / 2)
             //go back down the tree later adding parent offset to children
             int items = ((HiddenField)panel.FindControl($"{panel.ID}_ptrq")).Value.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries).Length;
             if (items == 0)
             {
-                return;
+                return avgPanelWidth;
             }
+            string[] array = ((HiddenField)panel.FindControl($"{panel.ID}_ptrq")).Value.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (items % 2 == 0)
+            int[] widths = new int[array.Length];
+            int totalNeededWidth = 0;
+            for (int i = 0; i < array.Length; i++)
             {
-                string[] array = ((HiddenField)panel.FindControl($"{panel.ID}_ptrq")).Value.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < array.Length; i++)
-                {
-                    string pstreq = array[i];
-                    Panel item = (Panel)panel.Parent.FindControl(pstreq);
-                    GetChildrenOffsetToParent(item);
-                    item.Style.Add("left", $"{((i - (items - 1) / 2) - 0.5) * (minWidthOffset + avgPanelWidth)}px");
-                }
+                string pstreq = array[i];
+                Panel item = (Panel)panel.Parent.FindControl(pstreq);
+                widths[i] = GetChildrenOffsetToParent(item);
+                totalNeededWidth += minWidthOffset +  widths[i];
             }
-            else
+            totalNeededWidth -= minWidthOffset;
+            for (int i = 0; i < array.Length; i++)
             {
-                string[] array = ((HiddenField)panel.FindControl($"{panel.ID}_ptrq")).Value.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < array.Length; i++)
+                string pstreq = array[i];
+                Panel item = (Panel)panel.Parent.FindControl(pstreq);
+                int prevOffset = 0;
+                for (int j = 0; j < i; j++)
                 {
-                    string pstreq = array[i];
-                    Panel item = (Panel)panel.Parent.FindControl(pstreq);
-                    GetChildrenOffsetToParent(item);
-                    item.Style.Add("left", $"{((i - (items - 1) / 2)) * (minWidthOffset + avgPanelWidth)}px");
+                    prevOffset += minWidthOffset +  widths[j];
                 }
+                item.Style.Add("left", $"{(widths[i] / 2) + (avgPanelWidth / 2) + prevOffset - (totalNeededWidth / 2) - (avgPanelWidth / 2)}px");
             }
+            return totalNeededWidth;
         }
 
         /// <summary>
