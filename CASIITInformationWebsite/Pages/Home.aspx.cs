@@ -5,13 +5,15 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
+using static CASIITInformationWebsite.Common_Elements.Csharp.SQLQuerier;
+
 namespace CASIITInformationWebsite
 {
     public partial class _Default : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            
         }
     }
 }
