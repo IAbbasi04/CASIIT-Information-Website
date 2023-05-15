@@ -93,5 +93,35 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 
             return output;
         }
+
+
+        public void Insert(Class course)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String insert = "" +
+                    "INSERT INTO courses (id, " +
+                    "course_name, " +
+                    "course_weight, " +
+                    "description, " +
+                    "dual_enrolled, " +
+                    "hs_credit, " +
+                    "college_credit, " +
+                    "prerequisites) VALUES" +
+                    "(" + course.name + ", " +
+                    course.weight + ", " +
+                    course.description + ", " +
+                    course.dual_enrolled + ", " +
+                    course.hs_credit + ", " +
+                    course.college_credit + ", " +
+                    course.prerequisites.toString() + ")";
+
+                using (MySqlCommand command = new MySqlCommand(sql, conn))
+                {
+                    command.Execute(insert);
+                }
+            }
+        }
     }
 }
