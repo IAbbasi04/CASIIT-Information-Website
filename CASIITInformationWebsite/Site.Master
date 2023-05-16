@@ -55,7 +55,8 @@
                         <li><a runat="server" href="~/Pages/CourseTree">Course Tree</a></li>
                         <li><a runat="server" href="~/Pages/FacultyAndStaff">Faculty and Staff</a></li>
                         <li><a runat="server" href="~/Pages/FAQ">FAQ</a></li>
-
+                        <li Width="300"/>
+                        <li><asp:Hyperlink runat="server" Text="Create Account" title="createAccountButton" href="~/Pages/Home"/></li>
                     </ul>
                     
                 </div>
@@ -66,6 +67,7 @@
         <div class="container body-content">
             <div >
                 <asp:Button runat="server" Text="Login" title="loginButton"   onmouseup=""  BorderWidth="0" />
+                <asp:Hyperlink runat="server" Text="Create Account" title="createAccountButton" NavigateUrl="http://battlefieldcasiit.org/Pages/Home"  BorderWidth="5" />
             </div>
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
