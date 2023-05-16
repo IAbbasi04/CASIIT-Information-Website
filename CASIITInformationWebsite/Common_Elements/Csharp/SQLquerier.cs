@@ -92,7 +92,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         }
 
 
-        public void Insert(Class course)
+        public static void Insert(Class course)
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {
@@ -122,7 +122,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         }
 
         // Returns a specific class based on its class id
-        public Class SelectClass(int class_id)
+        public static Class SelectClass(int class_id)
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {
@@ -144,7 +144,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         }
 
         // Finds all classes a student can take, and returns them as an array of classes
-        public Class[] SelectAvailableClasses(int class_id)
+        public static  Class[] SelectAvailableClasses(int class_id)
         {
             int numRows = 0;
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -188,7 +188,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         }
 
         //Adds a prerequisite object to the database, associated with a given class ID
-        public void AddPrereqsToCourse(int course_id, Prerequisite prereq)
+        public static void AddPrereqsToCourse(int course_id, Prerequisite prereq)
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {
@@ -205,7 +205,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
         }
 
-        public void AddPrereqsToCourse(Class course, Prerequisite prereq)
+        public static void AddPrereqsToCourse(Class course, Prerequisite prereq)
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {
@@ -237,6 +237,32 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             );
 
             return student;
+        }
+
+        public static int getUID( string email, string password)
+        {
+            int uid = -1;
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query = "" +
+                    "SELECT id" +
+                    "FROM users" +
+                    "WHERE email = " + email +
+                    "AND password = " + password;
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    try
+                    {
+                        uid = reader.GetInt32("id");
+                    }
+                    catch
+                    {
+                        return -1;
+                    }
+                }
+            }
+            return uid;
         }
     }
 }
