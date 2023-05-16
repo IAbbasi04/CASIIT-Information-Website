@@ -189,5 +189,40 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
             return classes;
         }
+
+        //Adds a prerequisite object to the database, associated with a given class ID
+        public void AddPrereqsToCourse(int course_id, Prerequisite prereq)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String insert = "" +
+                    "UPDATE courses" +
+                    "SET prerequisites = " + Prerequisite.writeJSON(prereq) + 
+                    "WHERE course_id = " + course_id;
+
+                using (MySqlCommand command = new MySqlCommand(insert, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void AddPrereqsToCourse(Class course, Prerequisite prereq)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String insert = "" +
+                    "UPDATE courses" +
+                    "SET prerequisites = " + Prerequisite.writeJSON(prereq) +
+                    "WHERE course_id = " + course.id;
+
+                using (MySqlCommand command = new MySqlCommand(insert, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
