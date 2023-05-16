@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CASIITInformationWebsite.Common_Elements.Csharp;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,7 +14,7 @@ namespace CASIITInformationWebsite
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            SQLQuerier.SelectStudent(1000);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,7 +10,6 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 {
     public class SQLQuerier
     {
-        public static String name;
         public const string CONNECTION_STRING = "server=p3nlmysql165plsk.secureserver.net;uid=CSIsAwesome;pwd=Casiit2117Class;database=battlefield_casiit";
 
         public static string[] Parse(string item)
@@ -61,8 +60,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             int[] output = new int[numValues];
             for (int i = 0; i < numValues; i++)
             {
-                int temp = 0;
-                if (int.TryParse(valuesAsArray[i], out temp))
+                if (int.TryParse(valuesAsArray[i], out _))
                 {
                     output[i] = int.Parse(valuesAsArray[i]);
                 } else
@@ -80,8 +78,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             double[] output = new double[numValues];
             for (int i = 0; i < numValues; i++)
             {
-                double temp = 0;
-                if (double.TryParse(valuesAsArray[i], out temp))
+                if (double.TryParse(valuesAsArray[i], out _))
                 {
                     output[i] = double.Parse(valuesAsArray[i]);
                 }
@@ -124,7 +121,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
         }
 
-        //Returns a specific class based on its class id
+        // Returns a specific class based on its class id
         public Class SelectClass(int class_id)
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -134,19 +131,19 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
                     return new Class(
-                        reader.GetInt32(0),     //id
-                        reader.GetString(1),    //name
-                        reader.GetDouble(2),    //weight
-                        reader.GetString(3),    //description
-                        reader.GetInt16(4),     //dual_enrolled
-                        reader.GetDouble(5),    //hs_credit
-                        reader.GetDouble(6),    //college credit
+                        reader.GetInt32(0),                                 //id
+                        reader.GetString(1),                                //name
+                        reader.GetDouble(2),                                //weight
+                        reader.GetString(3),                                //description
+                        reader.GetInt16(4),                                 //dual_enrolled
+                        reader.GetDouble(5),                                //hs_credit
+                        reader.GetDouble(6),                                //college credit
                         Prerequisite.readFromJSON(reader.GetString(7)));    //prerequisite
                 }
             }
         }
 
-        //finds all classes a student can take, and returns them as an array of classes
+        // Finds all classes a student can take, and returns them as an array of classes
         public Class[] SelectAvailableClasses(int class_id)
         {
             int numRows = 0;
@@ -223,6 +220,23 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     command.ExecuteNonQuery();
                 }
             }
+        }
+
+        // Returns a student with a given student ID
+        public static Student SelectStudent(int studentID)
+        {
+            string[] result = Parse("id, name");
+            int studentIndex = result[0].IndexOf("" + studentID);
+
+            Student student = new Student(
+                result[0],                  // name
+                int.Parse(result[1]),       // student ID
+                int.Parse(result[2]),       // grade level 
+                double.Parse(result[3]),    // gpa
+                int.Parse(result[4])        // counselor ID
+            );
+
+            return student;
         }
     }
 }
