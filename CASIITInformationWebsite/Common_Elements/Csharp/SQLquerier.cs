@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Runtime.Remoting.Services;
+using System.Security.Cryptography;
 using System.Web;
 using System.Web.Management;
 using MySql.Data.MySqlClient;
@@ -264,5 +267,43 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
             return uid;
         }
+
+        public static void CreateTrack( int uid, string trackname)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String insert = "" +
+                    "INSERT INTO tracks" +
+                    "(user_id, track_name) VALUES " +
+                    "" + uid + ", " + 
+                    trackname;
+
+                using (MySqlCommand command = new MySqlCommand(insert, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static void InsertClassIntoTrack( int uid, int track_id, int course_id )
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String insert = "" +
+                    "INSERT INTO track_courses" +
+                    "(user_id, track_id, course_id) VALUES " +
+                    uid + ", " +
+                    track_id + ", " +
+                    course_id;
+
+                using (MySqlCommand command = new MySqlCommand(insert, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
     }
+
 }
