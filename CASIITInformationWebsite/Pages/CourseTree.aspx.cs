@@ -530,11 +530,14 @@ namespace CASIITInformationWebsite
         {
             Panel activeView = Session["TVActive"] == null ? null : (Panel)(UpdatePanel1.ContentTemplateContainer.FindControl((string)Session["TVActive"]));
 
-            if (activeView != null)
+            foreach (Control item in UpdatePanel1.ContentTemplateContainer.Controls)
             {
-                activeView.Controls[1].Visible = false;
-                activeView.Controls[0].Visible = true;
-                activeView.Controls[2].Visible = true;
+                if (item as Panel != null)
+                {
+                    item.Controls[1].Visible = false;
+                    item.Controls[0].Visible = true;
+                    item.Controls[2].Visible = true;
+                }
                 activeView = null;
             }
             if (panel != null)
