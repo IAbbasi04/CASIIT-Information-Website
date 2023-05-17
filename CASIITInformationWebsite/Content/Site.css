@@ -35,3 +35,9 @@ textarea {
     background-color: #777;
     border-color: #fff
 }
+
+.divider {
+    width: 200px;
+    height: auto;
+    display: inline-block;
+}
