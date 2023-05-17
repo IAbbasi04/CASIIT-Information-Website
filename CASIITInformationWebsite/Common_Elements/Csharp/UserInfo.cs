@@ -9,13 +9,13 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 		public int currentSelectedTrack;
 	}
 
-	public class TestStudent : UserInfo
+	public class Student : UserInfo
 	{
 		public int Year;
 		public double GPA;
 		public int CounselorId;
 
-		public TestStudent(string name, int userId, int year, double gpa, int counselorId)
+		public Student(string name, int userId, int year, double gpa, int counselorId)
 		{
 			base.Name = name;
 			base.UserId = userId;

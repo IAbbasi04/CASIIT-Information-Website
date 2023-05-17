@@ -222,6 +222,52 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return classes;
         }
 
+        public static int[] PreviousClassIDs(UserInfo user)
+        {
+            int numRows = 0;
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query = "SELECT COUNT(id) " +
+                    "FROM courses " +
+                    "WHERE class_id IN(" +
+                        "SELECT class_id" +
+                        "FROM track_courses" +
+                        "WHERE user_id = " + user.UserId +
+                        " AND track_id = " + user.currentSelectedTrack +
+                        " )";
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    numRows = reader.GetInt32(0);
+                }
+            }
+
+            int[] classes = new int[numRows];
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query =
+                    "SELECT id " +
+                    "FROM courses " +
+                    "WHERE class_id IN(" +
+                        "SELECT class_id" +
+                        "FROM track_courses" +
+                        "WHERE user_id = " + user.UserId +
+                        " AND track_id = " + user.currentSelectedTrack +
+                        " )";
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    int index = 0;
+                    while (reader.Read())
+                    {
+                        classes[index] = reader.GetInt32("id");                             
+                        index++;
+                    }
+                }
+            }
+            return classes;
+        }
+
         /// <summary>
         /// Adds a prerequisite object to a pre-existing class
         /// </summary>
@@ -386,6 +432,53 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     command.ExecuteNonQuery();
                 }
             }
+        }
+
+        /// <summary>
+        /// Selects all the available classes a student will be able to take
+        /// </summary>
+        /// <returns></returns>
+        public static List<Class> AllAvailableClasses(UserInfo user)
+        {
+            List<Class> availableClasses = AllClassIDs();
+            foreach( Class course in availableClasses)
+            {
+                if (course.MeetsRequisites(user)) availableClasses.Add(course);
+            }
+            return availableClasses;
+        }
+
+        /// <summary>
+        /// Returns all classes in course table as Class objects
+        /// </summary>
+        /// <returns></returns>
+        public static List<Class> AllClassIDs()
+        {
+            List<Class> courses = new List<Class>();
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query =
+                    "SELECT * " +
+                    "FROM courses ";
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        courses.Add(new Class(
+                           reader.GetInt32("id"),                                              //id
+                           reader.GetString("course_name"),                                    //name
+                           reader.GetDouble("course_weight"),                                  //weight
+                           reader.GetString("description"),                                    //description
+                           reader.GetInt16("dual_enrolled"),                                   //dual_enrolled
+                           reader.GetDouble("hs_credit"),                                      //hs_credit
+                           reader.GetDouble("college_credit"),                                 //college credit
+                           Prerequisite.readFromJSON(reader.GetString("prerequisites")))      //prerequisite
+                        );
+                    }
+                }
+            }
+            return courses;
         }
 
         /// <summary>

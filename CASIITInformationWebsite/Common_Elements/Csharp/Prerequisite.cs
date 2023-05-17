@@ -14,8 +14,8 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 {
     public class Prerequisite
     {
-        private double min_GPA;
-        private int min_year;
+        public double min_GPA;
+        public int min_year;
         private ClassOption required_classes;
        
         // new Or( new And( new ClassOption(ENG101), new ClassOption(DB101) ), new And(  new ClassOption(ENG201), new ClassOption(DB201) ); 
@@ -47,6 +47,10 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return JsonConvert.DeserializeObject<Prerequisite>(serializedPrerequisite);
         }
 
+        public List<List<int>> PossibleRequiredClasses()
+        {
+            return required_classes.getClassSets();
+        }
 
     }
 }
