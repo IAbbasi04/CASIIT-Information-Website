@@ -12,7 +12,12 @@ namespace CASIITInformationWebsite
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            LoginButton.Text = "Sign Up | Login";
+        }
+
+        public void SetLoginButtonText(string text)
+        {
+            LoginButton.Text = text;
         }
     }
 }

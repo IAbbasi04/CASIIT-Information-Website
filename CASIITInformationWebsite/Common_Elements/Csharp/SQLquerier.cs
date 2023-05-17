@@ -225,7 +225,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
         }
 
-        // Returns a student with a given student ID
+        // Returns a student with a given username
         public static Student SelectStudent(int studentID)
         {
             string[] result = Parse("id, name");
@@ -233,7 +233,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 
             Student student = new Student(
                 result[0],                  // name
-                int.Parse(result[1]),       // student ID
+                int.Parse(result[1]),       // username
                 int.Parse(result[2]),       // grade level 
                 double.Parse(result[3]),    // gpa
                 int.Parse(result[4])        // counselor ID
@@ -241,6 +241,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 
             return student;
         }
+
 
         public static int getUID( string email, string password)
         {
