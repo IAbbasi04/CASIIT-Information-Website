@@ -165,9 +165,10 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
         }
 
-        /// <summary> Finds all classes a user can take, and returns them as an array of classes. </summary> 
+
+        /// <summary> Finds all classes a user has taken, and returns them as an array of classes. </summary> 
         /// <param name="user">user to correlate classes with</param>
-        public static  Class[] SelectAvailableClasses(UserInfo user)
+        public static  Class[] PreviousClasses(UserInfo user)
         {
             int numRows = 0;
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -360,6 +361,45 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     course_id;
 
                 using (MySqlCommand command = new MySqlCommand(insert, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates a temporary table filled with course IDs
+        /// </summary>
+        /// <param name="table_name"></param>
+        public static void CreateTempCourseTable( string table_name )
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String sql = ""+
+                    "CREATE TABLE " + table_name + "( " +
+                    "course_id int(5) primary key" +
+                    " )";
+
+                using (MySqlCommand command = new MySqlCommand(sql, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Drops a table from the database
+        /// </summary>
+        /// <param name="table_name"></param>
+        public static void DropTable(string table_name)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String sql = "DROP TABLE " + table_name;
+
+                using (MySqlCommand command = new MySqlCommand(sql, connection))
                 {
                     command.ExecuteNonQuery();
                 }

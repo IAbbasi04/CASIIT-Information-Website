@@ -39,7 +39,7 @@ namespace CASIITInformationWebsite.Common_Elements
         {
             for( int i = 0; i < courses.Length; i++)
             {
-                if()
+                
             }
             return false;
         }
