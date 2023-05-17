@@ -56,6 +56,12 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return elements;
         }
 
+        /// <summary>
+        /// Separates rows of data from delimited strings
+        /// </summary>
+        /// <param name="values">string to be parsed</param>
+        /// <param name="defaultValue">value if section of the string is null</param>
+        /// <returns></returns>
         public static int[] ToArray(string values, int defaultValue)
         {
             string[] valuesAsArray = values.Split(',');
@@ -74,6 +80,12 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return output;
         }
 
+        /// <summary>
+        /// Separates rows of data from delimited strings
+        /// </summary>
+        /// <param name="values">string to be parsed</param>
+        /// <param name="defaultValue">value if section of the string is null</param>
+        /// <returns></returns>
         public static double[] ToArray(string values, double defaultValue)
         {
             string[] valuesAsArray = values.Split(',');
@@ -94,7 +106,10 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return output;
         }
 
-
+        /// <summary>
+        /// Inserts a Class object into the database
+        /// </summary>
+        /// <param name="course">class to be inserted</param>
         public static void InsertClass(Class course)
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -124,7 +139,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
         }
 
-        // Returns a specific class based on its class id
+        /// <summary>
+        /// Returns a specific class based on its class id
+        /// </summary>
+        /// <param name="class_id"></param>
+        /// <returns></returns>
         public static Class SelectClass(int class_id)
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -146,15 +165,21 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
         }
 
-        // Finds all classes a student can take, and returns them as an array of classes
-        public static  Class[] SelectAvailableClasses(int class_id)
+        /// <summary> Finds all classes a user can take, and returns them as an array of classes. </summary> 
+        /// <param name="user">user to correlate classes with</param>
+        public static  Class[] SelectAvailableClasses(UserInfo user)
         {
             int numRows = 0;
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {
-                /* THIS NEEDS PROPER SQL --------------------------------------------*/
-                string query = "SELECT COUNT(id) FROM courses" + class_id;
-                /*-------------------------------------------------------------------*/
+                string query = "SELECT COUNT(id) " +
+                    "FROM courses " +
+                    "WHERE class_id IN(" +
+                        "SELECT class_id" +
+                        "FROM track_courses" +
+                        "WHERE user_id = " + user.UserId + 
+                        " AND track_id = " + user.currentSelectedTrack + 
+                        " )";
                 connection.Open();
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
@@ -165,9 +190,15 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             Class[] classes = new Class[numRows];
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {
-                /* THIS NEEDS PROPER SQL --------------------------------------------*/
-                string query = "SELECT * FROM courses";
-                /*-------------------------------------------------------------------*/
+                string query =
+                    "SELECT * " +
+                    "FROM courses " +
+                    "WHERE class_id IN(" +
+                        "SELECT class_id" +
+                        "FROM track_courses" +
+                        "WHERE user_id = " + user.UserId +
+                        " AND track_id = " + user.currentSelectedTrack +
+                        " )";
                 connection.Open();
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
@@ -190,7 +221,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return classes;
         }
 
-        //Adds a prerequisite object to the database, associated with a given class ID
+        /// <summary>
+        /// Adds a prerequisite object to a pre-existing class
+        /// </summary>
+        /// <param name="course">course id to add prereq to</param>
+        /// <param name="prereq"></param>
         public static void AddPrereqsToCourse(int course_id, Prerequisite prereq)
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -208,6 +243,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
         }
 
+        /// <summary>
+        /// Adds a prerequisite object to a pre-existing class
+        /// </summary>
+        /// <param name="course">course to add prereq to</param>
+        /// <param name="prereq"></param>
         public static void AddPrereqsToCourse(Class course, Prerequisite prereq)
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -225,7 +265,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
         }
 
-        // Returns a student with a given student ID
+        /// <summary>
+        /// Creates a student Object using a student ID using row data from students table
+        /// </summary>
+        /// <param name="studentID"></param>
+        /// <returns></returns>
         public static Student SelectStudent(int studentID)
         {
             string[] result = Parse("id, name");
@@ -242,7 +286,13 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return student;
         }
 
-        public static int getUID( string email, string password)
+        /// <summary>
+        /// Takes the email and password given and return the id of the user
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public static int getUID(string email, string password)
         {
             int uid = -1;
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -268,6 +318,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return uid;
         }
 
+        /// <summary>
+        /// Creates a new track to store classes in
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="trackname"></param>
         public static void CreateTrack( int uid, string trackname)
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -286,6 +341,12 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
         }
 
+        /// <summary>
+        /// Adds a class to a student's history
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="track_id"></param>
+        /// <param name="course_id"></param>
         public static void InsertClassIntoTrack( int uid, int track_id, int course_id )
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))

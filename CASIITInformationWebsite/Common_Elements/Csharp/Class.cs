@@ -30,9 +30,18 @@ namespace CASIITInformationWebsite.Common_Elements
             this.prerequisite = prerequisite;
         }
 
-        public string toString()
+        public override string ToString()
         {
             return id + "";
+        }
+
+        public Boolean MeetsRequisites(Class[] courses )
+        {
+            for( int i = 0; i < courses.Length; i++)
+            {
+                if()
+            }
+            return false;
         }
     }
 }

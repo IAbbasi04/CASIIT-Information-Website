@@ -15,7 +15,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 this.classID = classID;
             }
 
-            override public string toString()
+            override public string ToString()
             {
                 return classID + "";
             }
@@ -51,7 +51,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 ClassOption2 = new Option(classOption2);
             }
 
-            override public string toString()
+            override public string ToString()
             {
                 return "(" + ClassOption1 + " AND " + ClassOption2 + ")";
             }
@@ -86,12 +86,17 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
 
 
-            override public string toString()
+            override public string ToString()
             {
                 return "(" + ClassOption1 + " OR " + ClassOption2 + ")";
             }
         }
 
-        public abstract string toString();
+        public override abstract string ToString();
+
+        public int[][] getClassSets()
+        {
+            return new int[0][0];
+        }
     }
 }

@@ -6,6 +6,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 	{
 		public string Name;
 		public int UserId;
+		public int currentSelectedTrack;
 	}
 
 	public class TestStudent : UserInfo

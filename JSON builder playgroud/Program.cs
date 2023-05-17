@@ -25,3 +25,4 @@ ClassOption courses2 = new ClassOption.And( //classes (1 AND (2 AND (3 AND 4)))
 Prerequisite preq = new Prerequisite( min_GPA , min_year , courses1 );
 
 SQLQuerier.AddPrereqsToCourse(id, preq); */
+
