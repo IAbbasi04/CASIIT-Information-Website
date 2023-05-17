@@ -23,8 +23,10 @@ namespace CASIITInformationWebsite
                 firstLoad = true;
             }
 
-
-
+            //get rid of the footer for now (its too in the way right now, makes testing hard)
+            Page.ClientScript.RegisterStartupScript(GetType(), "NoFooter",
+            "document.getElementsByClassName('footer')[0].style.visibility = 'Hidden'\n"
+            , true);
             //load script to init Panzoom
             //Panzoom docs https://github.com/timmywil/panzoom
             Page.ClientScript.RegisterStartupScript(GetType(), "InitPanZoom",
