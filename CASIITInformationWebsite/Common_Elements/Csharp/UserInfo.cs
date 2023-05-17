@@ -31,4 +31,38 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 		}
 	}
 
+	public class Counselor : UserInfo
+	{
+		private int couselorID;
+
+		public TestStudent(string name, int userId, int counselorId)
+		{
+			base.Name = name;
+			base.UserId = userId;
+			this.CounselorId = counselorId;
+		}
+
+		public string getInfo()
+		{
+			Console.WriteLine("Name: " + Name + "\nID: " + UserId + "Counselor ID: " + CounselorId);
+			return ("Name: " + Name + "\nID: " + UserId + "Counselor ID: " + CounselorId);
+		}
+	}
+
+	public class Admin : UserInfo
+	{
+
+		public TestStudent(string name, int userId)
+		{
+			base.Name = name;
+			base.UserId = userId;
+		}
+
+		public string getInfo()
+		{
+			Console.WriteLine("Name: " + Name + "\nID: " + UserId);
+			return ("Name: " + Name + "\nID: " + UserId);
+		}
+	}
+
 }

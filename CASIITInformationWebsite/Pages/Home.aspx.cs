@@ -10,11 +10,11 @@ using static CASIITInformationWebsite.Common_Elements.Csharp.SQLQuerier;
 
 namespace CASIITInformationWebsite
 {
-    public partial class _Default : Page
+    public partial class Home : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            SQLQuerier.SelectStudent(1000);
+
         }
     }
 }
