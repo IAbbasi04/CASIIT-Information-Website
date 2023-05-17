@@ -56,7 +56,6 @@
                         <li><a runat="server" href="~/Pages/CourseTree">Course Tree</a></li>
                         <li><a runat="server" href="~/Pages/FacultyAndStaff">Faculty and Staff</a></li>
                         <li><a runat="server" href="~/Pages/FAQ">FAQ</a></li>
-                        <li><div class="divider"></div></li>
                         <li><asp:LinkButton runat="server" ID="TestButton" Font-Underline="true" ForeColor="LightSkyBlue" PostBackUrl="~/Pages/Login" CssClass="login-button">Sign up | Login</asp:LinkButton></li>
                     </ul>
                 </div>
