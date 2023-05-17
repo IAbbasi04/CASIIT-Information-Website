@@ -11,7 +11,7 @@ namespace CASIITInformationWebsite
 {
 
 
-    public partial class _Default
+    public partial class Home
     {
 
         /// <summary>
