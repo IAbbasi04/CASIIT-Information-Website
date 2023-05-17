@@ -95,7 +95,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         }
 
 
-        public static void Insert(Class course)
+        public static void InsertClass(Class course)
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {

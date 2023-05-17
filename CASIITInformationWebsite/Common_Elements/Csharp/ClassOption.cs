@@ -9,15 +9,15 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
     {
         public class Option : ClassOption
         {
-            Class c;
-            public Option(Class c)
+            int classID;
+            public Option(int classID)
             {
-                this.c = c;
+                this.classID = classID;
             }
 
             override public string toString()
             {
-                return c.toString();
+                return classID + "";
             }
 
         }
@@ -31,6 +31,24 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             {
                 ClassOption1 = classOption1;
                 ClassOption2 = classOption2;
+            }
+
+            public And(int classOption1, int classOption2)
+            {
+                ClassOption1 = new Option(classOption1);
+                ClassOption2 = new Option(classOption2);
+            }
+
+            public And(int classOption1, ClassOption classOption2)
+            {
+                ClassOption1 = new Option(classOption1);
+                ClassOption2 = classOption2;
+            }
+
+            public And(ClassOption classOption1, int classOption2)
+            {
+                ClassOption1 = classOption1;
+                ClassOption2 = new Option(classOption2);
             }
 
             override public string toString()
@@ -47,6 +65,24 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             {
                 ClassOption1 = classOption1;
                 ClassOption2 = classOption2;
+            }
+
+            public Or(int classOption1, int classOption2)
+            {
+                ClassOption1 = new Option(classOption1);
+                ClassOption2 = new Option(classOption2);
+            }
+
+            public Or(int classOption1, ClassOption classOption2)
+            {
+                ClassOption1 = new Option(classOption1);
+                ClassOption2 = classOption2;
+            }
+
+            public Or(ClassOption classOption1, int classOption2)
+            {
+                ClassOption1 = classOption1;
+                ClassOption2 = new Option(classOption2);
             }
 
 

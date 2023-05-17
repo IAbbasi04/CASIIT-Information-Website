@@ -33,9 +33,9 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 
 	public class Counselor : UserInfo
 	{
-		private int couselorID;
+		private int CounselorId;
 
-		public TestStudent(string name, int userId, int counselorId)
+		public Counselor(string name, int userId, int counselorId)
 		{
 			base.Name = name;
 			base.UserId = userId;
@@ -52,7 +52,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 	public class Admin : UserInfo
 	{
 
-		public TestStudent(string name, int userId)
+		public Admin(string name, int userId)
 		{
 			base.Name = name;
 			base.UserId = userId;
