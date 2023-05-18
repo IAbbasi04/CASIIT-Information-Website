@@ -334,22 +334,6 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// </summary>
         /// <param name="studentID"></param>
         /// <returns></returns>
-        public static Student SelectStudentParse(int studentID)
-        {
-            string[] result = Parse("id, name");
-            int studentIndex = result[0].IndexOf("" + studentID);
-
-            Student student = new Student(
-                result[0],                  // name
-                int.Parse(result[1]),       // student ID
-                int.Parse(result[2]),       // grade level 
-                double.Parse(result[3]),    // gpa
-                int.Parse(result[4])        // counselor ID
-            );
-
-            return student;
-        }
-
         public static Student SelectStudent(int studentID)
         {
             Student output;
@@ -370,6 +354,62 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                         DateTime.Now.Year - reader.GetInt32("year"),    //year
                         reader.GetDouble("gpa"),                        //gpa
                         reader.GetInt32("counselor_id"));               //counselorID
+                }
+            }
+            return output;
+        }
+
+        /// <summary>
+        ///Creates a Counselor Object from and instance in the database
+        /// </summary>
+        /// <param name="counselorID"></param>
+        /// <returns></returns>
+        public static Counselor SelectCounselor(int counselorID)
+        {
+            Counselor output;
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query = "" +
+                    "SELECT * " +
+                    "FROM users " +
+                    "JOIN counselors ON users.id = counselors.user_id " +
+                    "WHERE id = " + counselorID;
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    output = new Counselor(
+                        reader.GetString("first_name"),                 //first name
+                        reader.GetString("last_name"),                  //last name
+                        reader.GetInt32("id"),                          //userId
+                        reader.GetString("name_range_start"),           //name range start
+                        reader.GetString("name_range_end"));            //name range end
+                }
+            }
+            return output;
+        }
+
+        /// <summary>
+        ///Creates an Admin Object from and instance in the database
+        /// </summary>
+        /// <param name="adminID"></param>
+        /// <returns></returns>
+        public static Admin SelectAdmin( int adminID)
+        {
+            Admin output;
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query = "" +
+                    "SELECT * " +
+                    "FROM users " +
+                    "JOIN admins ON users.id = admins.user_id " +
+                    "WHERE id = " + adminID;
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    output = new Admin(
+                        reader.GetString("first_name"),                 //first name
+                        reader.GetString("last_name"),                  //last name
+                        reader.GetInt32("id"));                         //userId
                 }
             }
             return output;

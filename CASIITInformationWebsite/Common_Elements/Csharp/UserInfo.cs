@@ -52,15 +52,17 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 	{
 		private int CounselorId;
 		//Stores the Students a Counselor by last name.
-		private string[] StudentNameRange = new string[2];
+		public string NameRangeStart;
+		public string NameRangeEnd;
 
-        public Counselor(string firstName, string lastName, int userId, int counselorId, string[] StudentNameRange)
+        public Counselor(string firstName, string lastName, int userId, string nameRangeStart, string nameRangeEnd)
         {
             base.FirstName = firstName;
             base.LastName = lastName;
             base.UserId = userId;
-            this.CounselorId = counselorId;
-            this.StudentNameRange = StudentNameRange;
+            //this.CounselorId = counselorId;
+            this.NameRangeStart = nameRangeStart;
+			this.NameRangeEnd = nameRangeEnd;
         }
 
         public Counselor(string firstName, string middleName, string lastName, int userId, int counselorId, string[] StudentNameRange)
@@ -70,7 +72,8 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 			base.LastName = lastName;
 			base.UserId = userId;
 			this.CounselorId = counselorId;
-			this.StudentNameRange = StudentNameRange;
+			this.NameRangeStart = StudentNameRange[0];
+			this.NameRangeEnd = StudentNameRange[1];
 		}
 		/*
 		public string getInfo()
