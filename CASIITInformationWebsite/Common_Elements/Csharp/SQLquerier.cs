@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Runtime.Remoting.Services;
 using System.Security.Cryptography;
 using System.Web;
+using System.Web.DynamicData;
 using System.Web.Management;
+using Microsoft.Ajax.Utilities;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Asn1.X509.Qualified;
 
@@ -165,7 +168,6 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
         }
 
-
         /// <summary> Finds all classes a user has taken, and returns them as an array of classes. </summary> 
         /// <param name="user">user to correlate classes with</param>
         public static  Class[] PreviousClasses(UserInfo user)
@@ -293,7 +295,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     }
                     catch
                     {
-                        Console.WriteLine("Update Failed on course #" + course_id +);
+                        Console.WriteLine("Update Failed on course #" + course_id);
                     }
 
                 }
@@ -513,6 +515,43 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 }
             }
         }
+
+        public static List<Class> FilterMinYear( List<Class> courses , int min_year )
+        {
+            List<Class> filteredResult = new List<Class>();
+            foreach( Class course in courses)
+            {
+                if(course.prerequisite.min_year <= min_year) filteredResult.Add(course);
+            }
+            return filteredResult;
+        }
+
+        public static List<Class> FilterMinGPA(List<Class> courses, double min_GPA)
+        {
+            List<Class> filteredResult = new List<Class>();
+            foreach (Class course in courses)
+            {
+                if (course.prerequisite.min_GPA <= min_GPA) filteredResult.Add(course);
+            }
+            return filteredResult;
+        }
+
+        public static List<Class> Filter(List<Class> courses, List<Func<Class, bool>> filters)
+        {
+            List<Class> filteredClasses = new List<Class>();           
+            foreach (Class course in courses)
+            {
+                bool meetsCriteria = true;
+                foreach (Func<Class, bool> filter in filters)
+                {
+                    if( !filter(course) ) meetsCriteria = false;
+                }
+                if (meetsCriteria) filteredClasses.Add(course);
+            }
+            return filteredClasses;
+        }
     }
+
+
 
 }

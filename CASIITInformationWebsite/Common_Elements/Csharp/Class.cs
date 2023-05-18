@@ -18,6 +18,11 @@ namespace CASIITInformationWebsite.Common_Elements
         public double college_credit;
         public Prerequisite prerequisite;
 
+        public Class()
+        {
+
+        }
+
         public Class(int id, string course_name, double course_weight, string description, int dual_enrolled, double hs_credit, double college_credit, Prerequisite prerequisite)
         {
             this.id = id;
