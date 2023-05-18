@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CASIITInformationWebsite.Pages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,7 +12,12 @@ namespace CASIITInformationWebsite
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            LoginButton.Text = "Sign Up | Login";
+        }
 
+        public void SetLoginButtonText(string text)
+        {
+            LoginButton.Text = text;
         }
     }
 }
