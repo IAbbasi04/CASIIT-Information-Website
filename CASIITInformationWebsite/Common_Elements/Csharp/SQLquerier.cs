@@ -279,9 +279,9 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             {
                 connection.Open();
                 String insert = "" +
-                    "UPDATE courses" +
-                    "SET prerequisites = " + Prerequisite.writeJSON(prereq) + 
-                    "WHERE course_id = " + course_id;
+                    "UPDATE courses " +
+                    "SET prerequisites = '" + Prerequisite.writeJSON(prereq) + "' "+ 
+                    "WHERE id = " + course_id;
 
                 using (MySqlCommand command = new MySqlCommand(insert, connection))
                 {
@@ -301,9 +301,9 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             {
                 connection.Open();
                 String insert = "" +
-                    "UPDATE courses" +
-                    "SET prerequisites = " + Prerequisite.writeJSON(prereq) +
-                    "WHERE course_id = " + course.id;
+                    "UPDATE courses " +
+                    "SET prerequisites = '" + Prerequisite.writeJSON(prereq) + "' " +
+                    "WHERE id = " + course.id;
 
                 using (MySqlCommand command = new MySqlCommand(insert, connection))
                 {
@@ -440,7 +440,9 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <returns></returns>
         public static List<Class> AllAvailableClasses(UserInfo user)
         {
-            List<Class> availableClasses = AllClassIDs();
+            List<Class> allClasses = AllClassIDs();
+            List<Class> availableClasses = new List<Class>();
+            // goes through every class, if the user meets the requirements of a class then it is added to the list of available classes
             foreach( Class course in availableClasses)
             {
                 if (course.MeetsRequisites(user)) availableClasses.Add(course);

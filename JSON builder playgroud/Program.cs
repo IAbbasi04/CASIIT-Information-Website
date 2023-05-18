@@ -5,26 +5,13 @@ using System.Diagnostics;
 //HOW TO UPDATE PREREQUISITES --------------------------------------------------
 // Sample prerequisite insert
 // creates prerequisite object for a given class
-int id = 0; // target id
-int req_id1 = 1; // requisite id
-int req_id2 = 2; //second requisite id
-int req_id3 = 3;
-int req_id4 = 4; //etc.
+int id = 29; // target id
 double min_GPA = 0.0;
 int min_year = 0;
+//ClassOption courses1 = new ClassOption() ;
+Prerequisite preq = new Prerequisite( min_GPA , min_year );
+SQLQuerier.AddPrereqsToCourse(id, preq);
 
-ClassOption courses1 = new ClassOption.And( //classes (1 OR 2) AND (3 OR 4)
-    new ClassOption.Or(req_id1, req_id2) , 
-    new ClassOption.Or(req_id3, req_id4) ) ;
 
-ClassOption courses2 = new ClassOption.And( //classes (1 AND (2 AND (3 AND 4))) 
-    req_id1, 
-        new ClassOption.And(req_id2,
-            new ClassOption.And(req_id3, req_id4)));
-
-Prerequisite preq = new Prerequisite( min_GPA , min_year , courses1 );
-
-Console.WriteLine(courses1.getClassSets());
-Console.WriteLine(courses2.getClassSets());
 
 
