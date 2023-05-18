@@ -159,6 +159,7 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="fonts\Arvo-Regular.ttf" />
+    <None Include="Properties\PublishProfiles\FTPProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Images2\bobcat.jpg" />
     <Content Include="Images2\casiitlogo.png" />
@@ -167,9 +168,11 @@
     <Content Include="Images2\ribbon.png" />
     <Content Include="Pages\CourseCatalogue.aspx" />
     <Content Include="Pages\CourseTree.aspx" />
+    <Content Include="Pages\css\Test.css" />
     <Content Include="Pages\FacultyAndStaff.aspx" />
     <Content Include="Pages\FAQ.aspx" />
     <Content Include="Pages\Home.aspx" />
+    <Content Include="Pages\InputTab.aspx" />
     <Content Include="Pages\Login.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -177,6 +180,7 @@
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
+    <Content Include="Scripts\JS\Test.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\WebForms\DetailsView.js" />
     <Content Include="Scripts\WebForms\Focus.js" />
@@ -251,6 +255,13 @@
     </Compile>
     <Compile Include="Pages\Home.aspx.designer.cs">
       <DependentUpon>Home.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\InputTab.aspx.cs">
+      <DependentUpon>InputTab.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\InputTab.aspx.designer.cs">
+      <DependentUpon>InputTab.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>

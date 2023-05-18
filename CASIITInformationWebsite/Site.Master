@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="CASIITInformationWebsite.SiteMaster" %>
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="CASIITInformationWebsite.SiteMaster" %>
 <!--GUHUIpiweubwpeibweiu !-->
 <!DOCTYPE html>
 
@@ -59,6 +59,8 @@
                         <li><a runat="server" href="~/Pages/FacultyAndStaff">Faculty and Staff</a></li>
                         <li><a runat="server" href="~/Pages/FAQ">FAQ</a></li>
                         <li><asp:LinkButton runat="server" ID="LoginButton" ForeColor="LightSkyBlue" PostBackUrl="~/Pages/Login" CssClass="login-button">Sign up | Login</asp:LinkButton></li>
+                        <li><a runat="server" href="~/Pages/InputTab">InputTab</a></li>
+
                     </ul>
                 </div>
                 
