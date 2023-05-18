@@ -334,7 +334,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// </summary>
         /// <param name="studentID"></param>
         /// <returns></returns>
-        public static Student SelectStudent(int studentID)
+        public static Student SelectStudentParse(int studentID)
         {
             string[] result = Parse("id, name");
             int studentIndex = result[0].IndexOf("" + studentID);
@@ -348,6 +348,31 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             );
 
             return student;
+        }
+
+        public static Student SelectStudent(int studentID)
+        {
+            Student output;
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query = "" +
+                    "SELECT * " +
+                    "FROM users " +
+                    "JOIN students ON users.id = students.user_id " +
+                    "WHERE id = " + studentID;
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    output = new Student(
+                        reader.GetString("first_name"),                 //first name
+                        reader.GetString("last_name"),                  //last name
+                        reader.GetInt32("id"),                          //userId
+                        DateTime.Now.Year - reader.GetInt32("year"),    //year
+                        reader.GetDouble("gpa"),                        //gpa
+                        reader.GetInt32("counselor_id"));               //counselorID
+                }
+            }
+            return output;
         }
 
         /// <summary>

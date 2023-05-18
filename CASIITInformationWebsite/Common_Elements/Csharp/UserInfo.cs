@@ -17,7 +17,17 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 		public double GPA;
 		public int CounselorId;
 
-		public Student(string firstName, string middleName, string lastName, int userId, int year, double gpa, int counselorId)
+        public Student(string firstName, string lastName, int userId, int year, double gpa, int counselorId)
+        {
+            base.FirstName = firstName;
+			base.LastName = lastName;
+            base.UserId = userId;
+            this.Year = year;
+            this.GPA = gpa;
+            this.CounselorId = counselorId;
+        }
+
+        public Student(string firstName, string middleName, string lastName, int userId, int year, double gpa, int counselorId)
 		{
 			base.FirstName = firstName;
 			base.MiddleName = middleName;
@@ -44,7 +54,16 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 		//Stores the Students a Counselor by last name.
 		private string[] StudentNameRange = new string[2];
 
-		public Counselor(string firstName, string middleName, string lastName, int userId, int counselorId, string[] StudentNameRange)
+        public Counselor(string firstName, string lastName, int userId, int counselorId, string[] StudentNameRange)
+        {
+            base.FirstName = firstName;
+            base.LastName = lastName;
+            base.UserId = userId;
+            this.CounselorId = counselorId;
+            this.StudentNameRange = StudentNameRange;
+        }
+
+        public Counselor(string firstName, string middleName, string lastName, int userId, int counselorId, string[] StudentNameRange)
 		{
 			base.FirstName = firstName;
 			base.MiddleName = middleName;
@@ -65,7 +84,16 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 	public class Admin : UserInfo
 	{
 		private int AdminId;
-		public Admin(string firstName, string middleName, string lastName, int userId, int adminId)
+
+        public Admin(string firstName, string lastName, int userId, int adminId)
+        {
+            base.FirstName = firstName;
+            base.LastName = lastName;
+            base.UserId = userId;
+            this.AdminId = adminId;
+        }
+
+        public Admin(string firstName, string middleName, string lastName, int userId, int adminId)
 		{
 			base.FirstName = firstName;
 			base.MiddleName = middleName;
