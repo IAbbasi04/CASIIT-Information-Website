@@ -236,7 +236,7 @@
     <Compile Include="Common_Elements\Csharp\EmailSender.cs" />
     <Compile Include="Common_Elements\Csharp\Prerequisite.cs" />
     <Compile Include="Common_Elements\Csharp\SQLQuerier.cs" />
-    <Compile Include="Common_Elements\Csharp\Student.cs" />
+    <Compile Include="Common_Elements\Csharp\UserInfo.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

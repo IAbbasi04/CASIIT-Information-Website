@@ -56,6 +56,12 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return elements;
         }
 
+        /// <summary>
+        /// Separates rows of data from delimited strings
+        /// </summary>
+        /// <param name="values">string to be parsed</param>
+        /// <param name="defaultValue">value if section of the string is null</param>
+        /// <returns></returns>
         public static int[] ToArray(string values, int defaultValue)
         {
             string[] valuesAsArray = values.Split(',');
@@ -74,6 +80,12 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return output;
         }
 
+        /// <summary>
+        /// Separates rows of data from delimited strings
+        /// </summary>
+        /// <param name="values">string to be parsed</param>
+        /// <param name="defaultValue">value if section of the string is null</param>
+        /// <returns></returns>
         public static double[] ToArray(string values, double defaultValue)
         {
             string[] valuesAsArray = values.Split(',');
@@ -94,8 +106,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return output;
         }
 
-
-        public static void Insert(Class course)
+        /// <summary>
+        /// Inserts a Class object into the database
+        /// </summary>
+        /// <param name="course">class to be inserted</param>
+        public static void InsertClass(Class course)
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {
@@ -124,7 +139,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
         }
 
-        // Returns a specific class based on its class id
+        /// <summary>
+        /// Returns a specific class based on its class id
+        /// </summary>
+        /// <param name="class_id"></param>
+        /// <returns></returns>
         public static Class SelectClass(int class_id)
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -146,15 +165,22 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
         }
 
-        // Finds all classes a student can take, and returns them as an array of classes
-        public static  Class[] SelectAvailableClasses(int class_id)
+
+        /// <summary> Finds all classes a user has taken, and returns them as an array of classes. </summary> 
+        /// <param name="user">user to correlate classes with</param>
+        public static  Class[] PreviousClasses(UserInfo user)
         {
             int numRows = 0;
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {
-                /* THIS NEEDS PROPER SQL --------------------------------------------*/
-                string query = "SELECT COUNT(id) FROM courses" + class_id;
-                /*-------------------------------------------------------------------*/
+                string query = "SELECT COUNT(id) " +
+                    "FROM courses " +
+                    "WHERE class_id IN(" +
+                        "SELECT class_id" +
+                        "FROM track_courses" +
+                        "WHERE user_id = " + user.UserId + 
+                        " AND track_id = " + user.currentSelectedTrack + 
+                        " )";
                 connection.Open();
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
@@ -165,9 +191,15 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             Class[] classes = new Class[numRows];
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {
-                /* THIS NEEDS PROPER SQL --------------------------------------------*/
-                string query = "SELECT * FROM courses";
-                /*-------------------------------------------------------------------*/
+                string query =
+                    "SELECT * " +
+                    "FROM courses " +
+                    "WHERE class_id IN(" +
+                        "SELECT class_id" +
+                        "FROM track_courses" +
+                        "WHERE user_id = " + user.UserId +
+                        " AND track_id = " + user.currentSelectedTrack +
+                        " )";
                 connection.Open();
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
@@ -190,33 +222,101 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return classes;
         }
 
-        //Adds a prerequisite object to the database, associated with a given class ID
+        public static int[] PreviousClassIDs(UserInfo user)
+        {
+            int numRows = 0;
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query = "SELECT COUNT(id) " +
+                    "FROM courses " +
+                    "WHERE class_id IN(" +
+                        "SELECT class_id" +
+                        "FROM track_courses" +
+                        "WHERE user_id = " + user.UserId +
+                        " AND track_id = " + user.currentSelectedTrack +
+                        " )";
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    numRows = reader.GetInt32(0);
+                }
+            }
+
+            int[] classes = new int[numRows];
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query =
+                    "SELECT id " +
+                    "FROM courses " +
+                    "WHERE class_id IN(" +
+                        "SELECT class_id" +
+                        "FROM track_courses" +
+                        "WHERE user_id = " + user.UserId +
+                        " AND track_id = " + user.currentSelectedTrack +
+                        " )";
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    int index = 0;
+                    while (reader.Read())
+                    {
+                        classes[index] = reader.GetInt32("id");                             
+                        index++;
+                    }
+                }
+            }
+            return classes;
+        }
+
+        /// <summary>
+        /// Adds a prerequisite object to a pre-existing class
+        /// </summary>
+        /// <param name="course">course id to add prereq to</param>
+        /// <param name="prereq"></param>
         public static void AddPrereqsToCourse(int course_id, Prerequisite prereq)
         {
+            int rowsAffected = 0;
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {
                 connection.Open();
                 String insert = "" +
-                    "UPDATE courses" +
-                    "SET prerequisites = " + Prerequisite.writeJSON(prereq) + 
-                    "WHERE course_id = " + course_id;
+                    "UPDATE courses " +
+                    "SET prerequisites = '" + Prerequisite.writeJSON(prereq) + "' "+ 
+                    "WHERE id = " + course_id;
 
                 using (MySqlCommand command = new MySqlCommand(insert, connection))
                 {
-                    command.ExecuteNonQuery();
+                    
+                    try{
+                        rowsAffected = command.ExecuteNonQuery();
+                        Console.WriteLine("Prerequisite for course #" + course_id + " Added Succesfully");
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Update Failed on course #" + course_id +);
+                    }
+
                 }
             }
+
+            Console.WriteLine("Rows Affected: " + rowsAffected);
+            Console.WriteLine("JSON: " + Prerequisite.writeJSON(prereq) + "\n");
         }
 
+        /// <summary>
+        /// Adds a prerequisite object to a pre-existing class
+        /// </summary>
+        /// <param name="course">course to add prereq to</param>
+        /// <param name="prereq"></param>
         public static void AddPrereqsToCourse(Class course, Prerequisite prereq)
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {
                 connection.Open();
                 String insert = "" +
-                    "UPDATE courses" +
-                    "SET prerequisites = " + Prerequisite.writeJSON(prereq) +
-                    "WHERE course_id = " + course.id;
+                    "UPDATE courses " +
+                    "SET prerequisites = '" + Prerequisite.writeJSON(prereq) + "' " +
+                    "WHERE id = " + course.id;
 
                 using (MySqlCommand command = new MySqlCommand(insert, connection))
                 {
@@ -225,7 +325,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
         }
 
-        // Returns a student with a given username
+        /// <summary>
+        /// Creates a student Object using a student ID using row data from students table
+        /// </summary>
+        /// <param name="studentID"></param>
+        /// <returns></returns>
         public static Student SelectStudent(int studentID)
         {
             string[] result = Parse("id, name");
@@ -242,8 +346,13 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return student;
         }
 
-
-        public static int getUID( string email, string password)
+        /// <summary>
+        /// Takes the email and password given and return the id of the user
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public static int getUID(string email, string password)
         {
             int uid = -1;
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -269,6 +378,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return uid;
         }
 
+        /// <summary>
+        /// Creates a new track to store classes in
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="trackname"></param>
         public static void CreateTrack( int uid, string trackname)
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -287,6 +401,12 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
         }
 
+        /// <summary>
+        /// Adds a class to a student's history
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="track_id"></param>
+        /// <param name="course_id"></param>
         public static void InsertClassIntoTrack( int uid, int track_id, int course_id )
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -300,6 +420,94 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     course_id;
 
                 using (MySqlCommand command = new MySqlCommand(insert, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates a temporary table filled with course IDs
+        /// </summary>
+        /// <param name="table_name"></param>
+        public static void CreateTempCourseTable( string table_name )
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String sql = ""+
+                    "CREATE TABLE " + table_name + "( " +
+                    "course_id int(5) primary key" +
+                    " )";
+
+                using (MySqlCommand command = new MySqlCommand(sql, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Selects all the available classes a student will be able to take
+        /// </summary>
+        /// <returns></returns>
+        public static List<Class> AllAvailableClasses(UserInfo user)
+        {
+            List<Class> allClasses = AllClassIDs();
+            List<Class> availableClasses = new List<Class>();
+            // goes through every class, if the user meets the requirements of a class then it is added to the list of available classes
+            foreach( Class course in availableClasses)
+            {
+                if (course.MeetsRequisites(user)) availableClasses.Add(course);
+            }
+            return availableClasses;
+        }
+
+        /// <summary>
+        /// Returns all classes in course table as Class objects
+        /// </summary>
+        /// <returns></returns>
+        public static List<Class> AllClassIDs()
+        {
+            List<Class> courses = new List<Class>();
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query =
+                    "SELECT * " +
+                    "FROM courses ";
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        courses.Add(new Class(
+                           reader.GetInt32("id"),                                              //id
+                           reader.GetString("course_name"),                                    //name
+                           reader.GetDouble("course_weight"),                                  //weight
+                           reader.GetString("description"),                                    //description
+                           reader.GetInt16("dual_enrolled"),                                   //dual_enrolled
+                           reader.GetDouble("hs_credit"),                                      //hs_credit
+                           reader.GetDouble("college_credit"),                                 //college credit
+                           Prerequisite.readFromJSON(reader.GetString("prerequisites")))      //prerequisite
+                        );
+                    }
+                }
+            }
+            return courses;
+        }
+
+        /// <summary>
+        /// Drops a table from the database
+        /// </summary>
+        /// <param name="table_name"></param>
+        public static void DropTable(string table_name)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String sql = "DROP TABLE " + table_name;
+
+                using (MySqlCommand command = new MySqlCommand(sql, connection))
                 {
                     command.ExecuteNonQuery();
                 }

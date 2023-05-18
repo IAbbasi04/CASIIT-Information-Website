@@ -6,15 +6,16 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 	{
 		public string Name;
 		public int UserId;
+		public int currentSelectedTrack;
 	}
 
-	public class TestStudent : UserInfo
+	public class Student : UserInfo
 	{
 		public int Year;
 		public double GPA;
 		public int CounselorId;
 
-		public TestStudent(string name, int userId, int year, double gpa, int counselorId)
+		public Student(string name, int userId, int year, double gpa, int counselorId)
 		{
 			base.Name = name;
 			base.UserId = userId;
@@ -33,9 +34,9 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 
 	public class Counselor : UserInfo
 	{
-		private int couselorID;
+		private int CounselorId;
 
-		public TestStudent(string name, int userId, int counselorId)
+		public Counselor(string name, int userId, int counselorId)
 		{
 			base.Name = name;
 			base.UserId = userId;
@@ -52,7 +53,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 	public class Admin : UserInfo
 	{
 
-		public TestStudent(string name, int userId)
+		public Admin(string name, int userId)
 		{
 			base.Name = name;
 			base.UserId = userId;

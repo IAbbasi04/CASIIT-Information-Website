@@ -30,9 +30,59 @@ namespace CASIITInformationWebsite.Common_Elements
             this.prerequisite = prerequisite;
         }
 
-        public string toString()
+        public override string ToString()
         {
             return id + "";
+        }
+
+        public bool MeetsRequisites(UserInfo user)
+        {
+            List<List<int>> possibleCourses = this.prerequisite.PossibleRequiredClasses();
+            int[] classesTaken = SQLQuerier.PreviousClassIDs(user);
+            foreach (List<int> courseSet in possibleCourses)
+            {
+                bool meetsRequirements = true;
+                foreach( int id in courseSet)
+                {
+                    if (!classesTaken.Contains(id))
+                    {
+                        meetsRequirements = false;
+                        break;
+                    }
+
+                }
+                if( meetsRequirements)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool MeetsRequisites(Student user)
+        {
+            if (!((user.GPA <= prerequisite.min_GPA) && (user.Year <= prerequisite.min_year))) return false;
+
+            List<List<int>> possibleCourses = this.prerequisite.PossibleRequiredClasses();
+            int[] classesTaken = SQLQuerier.PreviousClassIDs(user);
+            foreach (List<int> courseSet in possibleCourses)
+            {
+                bool meetsRequirements = true;
+                foreach (int id in courseSet)
+                {
+                    if (!classesTaken.Contains(id))
+                    {
+                        meetsRequirements = false;
+                        break;
+                    }
+
+                }
+                if (meetsRequirements)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
