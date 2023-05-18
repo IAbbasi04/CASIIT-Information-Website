@@ -516,39 +516,128 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
         }
 
-        public static List<Class> FilterMinYear( List<Class> courses , int min_year )
+        private static List<Class> FilterMinYear( List<Class> courses , int min_year )
         {
             List<Class> filteredResult = new List<Class>();
             foreach( Class course in courses)
             {
-                if(course.prerequisite.min_year <= min_year) filteredResult.Add(course);
+                if(course.prerequisite.min_year >= min_year) filteredResult.Add(course);
             }
             return filteredResult;
         }
 
-        public static List<Class> FilterMinGPA(List<Class> courses, double min_GPA)
+        private static List<Class> FilterMinGPA(List<Class> courses, double min_GPA)
         {
             List<Class> filteredResult = new List<Class>();
             foreach (Class course in courses)
             {
-                if (course.prerequisite.min_GPA <= min_GPA) filteredResult.Add(course);
+                if (course.prerequisite.min_GPA >= min_GPA) filteredResult.Add(course);
             }
             return filteredResult;
         }
 
-        public static List<Class> Filter(List<Class> courses, List<Func<Class, bool>> filters)
+        private static List<Class> FilterMaxGPA(List<Class> courses, double max_GPA)
         {
-            List<Class> filteredClasses = new List<Class>();           
+            List<Class> filteredResult = new List<Class>();
             foreach (Class course in courses)
             {
-                bool meetsCriteria = true;
-                foreach (Func<Class, bool> filter in filters)
-                {
-                    if( !filter(course) ) meetsCriteria = false;
-                }
-                if (meetsCriteria) filteredClasses.Add(course);
+                if (course.prerequisite.min_GPA <= max_GPA) filteredResult.Add(course);
             }
-            return filteredClasses;
+            return filteredResult;
+        }
+
+        private static List<Class> FilterMaxYear(List<Class> courses, int maxYear)
+        {
+            List<Class> filteredResult = new List<Class>();
+            foreach (Class course in courses)
+            {
+                if (course.prerequisite.min_year <= maxYear) filteredResult.Add(course);
+            }
+            return filteredResult;
+        }
+
+        /// <summary>
+        /// Returns a list of classes from the database that conform to the set of parameters. Parameters are optional, and can be entered as null if necessary.
+        /// Enter parameters in this format: SQLQuerier.FilterSelect(courseWeightMin: *Value* , gpaMin *Value* , etc. );
+        /// </summary>
+        /// <param name="courseWeightMin"></param>
+        /// <param name="courseWeightMax"></param>
+        /// <param name="isDualEnrolled"></param>
+        /// <param name="hsCrediMin"></param>
+        /// <param name="hsCreditMax"></param>
+        /// <param name="collegeCreditMin"></param>
+        /// <param name="collegeCreditMax"></param>
+        /// <param name="gpaMin"></param>
+        /// <param name="gpaMax"></param>
+        /// <param name="yearMin"></param>
+        /// <param name="yearMax"></param>
+        /// <returns></returns>
+        public static List<Class> FilterSelect(
+                double courseWeightMin = 0,
+                double courseWeightMax = 5.0,
+                bool isDualEnrolled = false,
+                double hsCrediMin = 0,
+                double hsCreditMax = 10,
+                double collegeCreditMin = 0,
+                double collegeCreditMax = 10,
+                double gpaMin = 0.0,
+                double gpaMax = 5,
+                int yearMin = 0,
+                int yearMax = 4)
+        {
+            List<Class> courses = new List<Class>();
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                //Query without dual enrolled filter
+                string query =
+                    "SELECT * " +
+                    "FROM courses " +
+                    "WHERE course weight >= " + courseWeightMin + " AND " +
+                    "course weight <= " + courseWeightMax + " AND " +
+                    "hs_credit >= " + hsCrediMin + " AND " +
+                    "hs_credit <= " + hsCreditMax + " AND " +
+                    "college_credit >= " + collegeCreditMin + " AND " +
+                    "college_credit <= " + collegeCreditMax;
+                    ;
+                //With dual enrolled filter
+                if (isDualEnrolled)
+                {
+                    query =
+                   "SELECT * " +
+                   "FROM courses " +
+                   "WHERE course weight >= " + courseWeightMin + " AND " +
+                   "course weight <= " + courseWeightMax + " AND " +
+                   "hs_credit >= " + hsCrediMin + " AND " +
+                   "hs_credit <= " + hsCreditMax + " AND " +
+                   "college_credit >= " + collegeCreditMin + " AND " +
+                   "college_credit <= " + collegeCreditMax + " AND " +
+                   "dual_enrolled = 1";
+                }
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        courses.Add(new Class(
+                           reader.GetInt32("id"),                                               //id
+                           reader.GetString("course_name"),                                     //name
+                           reader.GetDouble("course_weight"),                                   //weight
+                           reader.GetString("description"),                                     //description
+                           reader.GetInt16("dual_enrolled"),                                    //dual_enrolled
+                           reader.GetDouble("hs_credit"),                                       //hs_credit
+                           reader.GetDouble("college_credit"),                                  //college credit
+                           Prerequisite.readFromJSON(reader.GetString("prerequisites")))        //prerequisite
+                        );
+                    }
+                }
+            }
+
+            courses = FilterMinGPA( courses, gpaMin);
+            courses = FilterMaxGPA(courses, gpaMax);
+            courses = FilterMinYear(courses, yearMin);
+            courses = FilterMaxYear(courses, yearMax);
+
+            return courses;
         }
     }
 
