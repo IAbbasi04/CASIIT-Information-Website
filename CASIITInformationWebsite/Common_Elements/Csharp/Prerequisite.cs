@@ -16,7 +16,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
     {
         public double min_GPA;
         public int min_year; //0 - 4 for freshman to senior year 
-        private ClassOption required_classes;
+        public ClassOption required_classes;
        
         // new Or( new And( new ClassOption(ENG101), new ClassOption(DB101) ), new And(  new ClassOption(ENG201), new ClassOption(DB201) ); 
         //ex classes required

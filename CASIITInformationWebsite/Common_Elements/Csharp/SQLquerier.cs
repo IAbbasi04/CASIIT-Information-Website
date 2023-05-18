@@ -285,9 +285,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 
                 using (MySqlCommand command = new MySqlCommand(insert, connection))
                 {
-                    command.ExecuteNonQuery();
+                    int rowsAffected = command.ExecuteNonQuery();
                 }
             }
+            Console.WriteLine("JSON: " + Prerequisite.writeJSON(prereq));
+            Console.WriteLine("Prerequisite added succesfully");
         }
 
         /// <summary>

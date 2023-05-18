@@ -5,11 +5,11 @@ using System.Diagnostics;
 //HOW TO UPDATE PREREQUISITES --------------------------------------------------
 // Sample prerequisite insert
 // creates prerequisite object for a given class
-int id = 29; // target id
-double min_GPA = 0.0;
+int id = 3; // target id
+double min_GPA = 2.5;
 int min_year = 0;
-//ClassOption courses1 = new ClassOption() ;
-Prerequisite preq = new Prerequisite( min_GPA , min_year );
+ClassOption courses = new ClassOption.Option(28);
+Prerequisite preq = new Prerequisite( min_GPA , min_year, courses );
 SQLQuerier.AddPrereqsToCourse(id, preq);
 
 
