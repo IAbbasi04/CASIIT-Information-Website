@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="CASIITInformationWebsite.SiteMaster" %>
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="CASIITInformationWebsite.SiteMaster" %>
 <!--GUHUIpiweubwpeibweiu !-->
 <!DOCTYPE html>
 
@@ -15,6 +15,8 @@
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <link rel="stylesheet" href="~/StyleSheet.css" type="text/css"/>
+
+    <link href="~/Styles.css" rel="stylesheet" type="text/css" />
 
 </head>
 <body>
@@ -47,7 +49,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" runat="server" href="~/Pages/Home">Application name</a>
+                    <%--<a class="navbar-brand" runat="server" href="~/Pages/Home">Application name</a>--%>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
@@ -56,9 +58,10 @@
                         <li><a runat="server" href="~/Pages/CourseTree">Course Tree</a></li>
                         <li><a runat="server" href="~/Pages/FacultyAndStaff">Faculty and Staff</a></li>
                         <li><a runat="server" href="~/Pages/FAQ">FAQ</a></li>
+                        <li><asp:LinkButton runat="server" ID="LoginButton" ForeColor="LightSkyBlue" PostBackUrl="~/Pages/Login" CssClass="login-button">Sign up | Login</asp:LinkButton></li>
+                        <li><a runat="server" href="~/Pages/InputTab">InputTab</a></li>
 
                     </ul>
-                    
                 </div>
                 
 
@@ -66,7 +69,7 @@
         </div>
         <div class="container body-content">
             <div >
-                <asp:Button runat="server" Text="Login" title="loginButton"   onmouseup=""  BorderWidth="0" />
+                <%--<asp:Button runat="server" Text="Login" title="loginButton"   onmouseup=""  BorderWidth="0" />--%>
             </div>
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
