@@ -20,16 +20,26 @@ namespace CASIITInformationWebsite.Pages
 
         public static PersonType personType = PersonType.GUEST;
 
-        public void Reset()
+        public void Reset(object sender, EventArgs e)
         {
+            LoginEmailLabel.Visible = false;
             PasswordLabel.Visible = false;
+            SignUpEmailLabel.Visible = false;
+            SignUpPasswordLabel.Visible = false;
+            SignUpFirstNameLabel.Visible = false;
+            SignUpLastNameLabel.Visible = false;
+
             PersonTypeTable.Visible = true;
+            SignUpTable.Visible = false;
+            LoginTable.Visible = false;
+            
             personType = PersonType.GUEST;
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            LinkButton lb = Master.FindControl("LoginButton") as LinkButton;
+            lb.Click += Reset;
         }
 
         protected void Login_Click(object sender, EventArgs e)
@@ -140,6 +150,7 @@ namespace CASIITInformationWebsite.Pages
                 SignUpTable.Visible = false;
                 LinkButton lb = Master.FindControl("LoginButton") as LinkButton;
                 lb.Text = "Sign Out";
+                Server.TransferRequest("~/Pages/Home");
             }
 
         }
