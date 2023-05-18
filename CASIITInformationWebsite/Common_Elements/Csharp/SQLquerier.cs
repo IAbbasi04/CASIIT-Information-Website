@@ -156,14 +156,15 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
                     return new Class(
-                        reader.GetInt32(0),                                 //id
-                        reader.GetString(1),                                //name
-                        reader.GetDouble(2),                                //weight
-                        reader.GetString(3),                                //description
-                        reader.GetInt16(4),                                 //dual_enrolled
-                        reader.GetDouble(5),                                //hs_credit
-                        reader.GetDouble(6),                                //college credit
-                        Prerequisite.readFromJSON(reader.GetString(7)));    //prerequisite
+                        reader.GetInt32("id"),                                          //id
+                        reader.GetString("course_name"),                                //name
+                        reader.GetDouble("course_weight"),                              //weight
+                        reader.GetString("description"),                                //description
+                        reader.GetString("concentration"),                              //concentration
+                        reader.GetInt16("dual_enrolled"),                               //dual_enrolled
+                        reader.GetDouble("hs_credit"),                                  //hs_credit
+                        reader.GetDouble("college_credit"),                             //college credit
+                        Prerequisite.readFromJSON(reader.GetString("prerequisites"))) ;               //prerequisite
                 }
             }
         }
@@ -213,10 +214,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                            reader.GetString("course_name"),                                    //name
                            reader.GetDouble("course_weight"),                                  //weight
                            reader.GetString("description"),                                    //description
+                           reader.GetString("concentration"),
                            reader.GetInt16("dual_enrolled"),                                   //dual_enrolled
                            reader.GetDouble("hs_credit"),                                      //hs_credit
                            reader.GetDouble("college_credit"),                                 //college credit
-                           Prerequisite.readFromJSON(reader.GetString("prerequisites")));      //prerequisite
+                           Prerequisite.readFromJSON(reader.GetString("prerequisites"))) ;      //prerequisite
                         index++;
                     }
                 }
@@ -354,7 +356,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <param name="email"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public static int getUID(string email, string password)
+        public static int GetUID(string email, string password)
         {
             int uid = -1;
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -458,7 +460,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             List<Class> allClasses = AllClassIDs();
             List<Class> availableClasses = new List<Class>();
             // goes through every class, if the user meets the requirements of a class then it is added to the list of available classes
-            foreach( Class course in availableClasses)
+            foreach( Class course in allClasses)
             {
                 if (course.MeetsRequisites(user)) availableClasses.Add(course);
             }
@@ -487,6 +489,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                            reader.GetString("course_name"),                                    //name
                            reader.GetDouble("course_weight"),                                  //weight
                            reader.GetString("description"),                                    //description
+                           reader.GetString("concentration"),                                  //concentration
                            reader.GetInt16("dual_enrolled"),                                   //dual_enrolled
                            reader.GetDouble("hs_credit"),                                      //hs_credit
                            reader.GetDouble("college_credit"),                                 //college credit
@@ -583,7 +586,8 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 double gpaMin = 0.0,
                 double gpaMax = 5,
                 int yearMin = 0,
-                int yearMax = 4)
+                int yearMax = 4,
+                string concentration = "")
         {
             List<Class> courses = new List<Class>();
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -598,21 +602,17 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     "hs_credit <= " + hsCreditMax + " AND " +
                     "college_credit >= " + collegeCreditMin + " AND " +
                     "college_credit <= " + collegeCreditMax;
-                    ;
+                 
                 //With dual enrolled filter
                 if (isDualEnrolled)
                 {
-                    query =
-                   "SELECT * " +
-                   "FROM courses " +
-                   "WHERE course weight >= " + courseWeightMin + " AND " +
-                   "course weight <= " + courseWeightMax + " AND " +
-                   "hs_credit >= " + hsCrediMin + " AND " +
-                   "hs_credit <= " + hsCreditMax + " AND " +
-                   "college_credit >= " + collegeCreditMin + " AND " +
-                   "college_credit <= " + collegeCreditMax + " AND " +
-                   "dual_enrolled = 1";
+                    query += " AND dual_enrolled = 1";
                 }
+                if( concentration.Length != 0)
+                {
+                    query += " AND concentration LIKE '" + concentration + "'"; 
+                }
+
                 connection.Open();
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
@@ -623,6 +623,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                            reader.GetString("course_name"),                                     //name
                            reader.GetDouble("course_weight"),                                   //weight
                            reader.GetString("description"),                                     //description
+                           reader.GetString("concentration"),                                   //concentration
                            reader.GetInt16("dual_enrolled"),                                    //dual_enrolled
                            reader.GetDouble("hs_credit"),                                       //hs_credit
                            reader.GetDouble("college_credit"),                                  //college credit
