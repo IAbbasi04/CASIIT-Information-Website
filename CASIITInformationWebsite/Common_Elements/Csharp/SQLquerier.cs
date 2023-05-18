@@ -293,7 +293,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     }
                     catch
                     {
-                        Console.WriteLine("Update Failed on course #" + course_id +);
+                        Console.WriteLine("Update Failed on course #" + course_id);
                     }
 
                 }
