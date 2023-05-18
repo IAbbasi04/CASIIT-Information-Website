@@ -7,7 +7,7 @@
     --toggler-line-size: calc(var(--toggler-size) / (var(--toggler-line-number) + var(--toggler-line-number) - 1));
     --toggler-offset-left: 10px;
     --toggler-offset-top: 10px;
-    --toggler-color: Tomato;
+    --toggler-color: Purple;
     --toggler-color-hover: Wheat;
 }
 
@@ -159,7 +159,7 @@ html {
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    color: #bb5555;
+    color: #d01bf5;
     transition: background 0.3s;
 }
 
