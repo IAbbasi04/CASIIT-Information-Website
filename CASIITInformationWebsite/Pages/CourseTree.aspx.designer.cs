@@ -7,13 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CASIITInformationWebsite
-{
-
-
-    public partial class CourseTree
-    {
-
+namespace CASIITInformationWebsite {
+    
+    
+    public partial class CourseTree {
+        
         /// <summary>
         /// ResetViewButton control.
         /// </summary>
@@ -22,7 +20,7 @@ namespace CASIITInformationWebsite
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button ResetViewButton;
-
+        
         /// <summary>
         /// Panel1 control.
         /// </summary>
@@ -31,7 +29,7 @@ namespace CASIITInformationWebsite
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel Panel1;
-
+        
         /// <summary>
         /// Panel2 control.
         /// </summary>
@@ -40,7 +38,7 @@ namespace CASIITInformationWebsite
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel Panel2;
-
+        
         /// <summary>
         /// UpdatePanel1 control.
         /// </summary>
@@ -49,7 +47,7 @@ namespace CASIITInformationWebsite
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel1;
-
+        
         /// <summary>
         /// ClearSelectionButton control.
         /// </summary>
