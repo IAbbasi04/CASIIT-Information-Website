@@ -8,7 +8,7 @@
     --toggler-offset-left: 10px;
     --toggler-offset-top: 10px;
     --toggler-color: Purple;
-    --toggler-color-hover: Wheat;
+    --toggler-color-hover: Purple;
 }
 
 * {
@@ -80,7 +80,7 @@ html {
 }
 
     .menu__link:hover, .menu__link:focus, .menu__link:active {
-        color: Gold;
+        color: mediumpurple;
     }
 
 .menu-toggler {
@@ -166,5 +166,5 @@ html {
     .sb-link:hover,
     .sb-link:focus,
     .sb-link:active {
-        background: #f7f7f7;
+        background: #d01bf5;
     }

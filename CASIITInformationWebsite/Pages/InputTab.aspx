@@ -34,7 +34,7 @@
 
   <nav id="sidebar" class="sidebar" role="navigation" aria-labelledby="menuTogglerLabel" aria-hidden="true">
     <ul id="menubar" class="menu" role="menubar" aria-orientation="vertical">
-        <li class="menu__item" role"none"><a class="menu__link" href="#" role="menuitem" tabindex="-1">Select Courses</a></li>
+        <li class="menu__item"><a class="menu__link" href="#" role="menuitem" tabindex="-1">Select Courses</a></li>
         <asp:ListBox ID="lstFruits" runat="server" SelectionMode="Multiple">
             <asp:ListItem Text="IT Fundementals DE"></asp:ListItem>
             <asp:ListItem Text="Data Structures and Algorithms"></asp:ListItem>
@@ -43,19 +43,19 @@
             <asp:ListItem Text="Adv Computer Math"></asp:ListItem>
             <asp:ListItem Text="Graphic Design I"></asp:ListItem>
         </asp:ListBox>
-      <li class="menu__item" role"none"><a class="menu__link" href="#" role="menuitem" tabindex="-1">Select Upcoming Grade</a></li>
+      <li class="menu__item"><a class="menu__link" href="#" role="menuitem" tabindex="-1">Select Upcoming Grade</a></li>
         <asp:RadioButtonList runat="server">
             <asp:ListItem>9th</asp:ListItem>
             <asp:ListItem>10th</asp:ListItem>
             <asp:ListItem>11th</asp:ListItem>
             <asp:ListItem>12th</asp:ListItem>
         </asp:RadioButtonList>
-      <li class="menu__item" role"none"><a class="menu__link" href="#" role="menuitem" tabindex="-1">Math Completed</a></li>
+      <li class="menu__item"><a class="menu__link" href="#" role="menuitem" tabindex="-1">Math Completed</a></li>
         <asp:CheckBoxList runat="server">
             <asp:ListItem>Geometry</asp:ListItem>
             <asp:ListItem>Algebra</asp:ListItem>
         </asp:CheckBoxList>
-      <li class="menu__item" role"none"><a class="menu__link" href="#" role="menuitem" tabindex="-1">Current GPA</a></li>
+      <li class="menu__item"><a class="menu__link" href="#" role="menuitem" tabindex="-1">Current GPA</a></li>
         <asp:TextBox runat="server"></asp:TextBox>
     </ul>
   </nav>
