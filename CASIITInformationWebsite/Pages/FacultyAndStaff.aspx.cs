@@ -1,4 +1,4 @@
-﻿using MySqlConnector;
+﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Web.UI.WebControls;
 
 namespace CASIITInformationWebsite
 {
-    public partial class WebForm1 : System.Web.UI.Page
+    public partial class FacultyAndStaff : Page
     {
         void testMethod()
         {
