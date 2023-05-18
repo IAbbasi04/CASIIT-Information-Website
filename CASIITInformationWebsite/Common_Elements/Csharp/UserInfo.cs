@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace CASIITInformationWebsite.Common_Elements.Csharp
 {
@@ -88,12 +88,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 	{
 		private int AdminId;
 
-        public Admin(string firstName, string lastName, int userId, int adminId)
+        public Admin(string firstName, string lastName, int userId)
         {
             base.FirstName = firstName;
             base.LastName = lastName;
             base.UserId = userId;
-            this.AdminId = adminId;
         }
 
         public Admin(string firstName, string middleName, string lastName, int userId, int adminId)
