@@ -275,6 +275,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <param name="prereq"></param>
         public static void AddPrereqsToCourse(int course_id, Prerequisite prereq)
         {
+            int rowsAffected = 0;
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {
                 connection.Open();
@@ -285,11 +286,21 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 
                 using (MySqlCommand command = new MySqlCommand(insert, connection))
                 {
-                    int rowsAffected = command.ExecuteNonQuery();
+                    
+                    try{
+                        rowsAffected = command.ExecuteNonQuery();
+                        Console.WriteLine("Prerequisite for course #" + course_id + " Added Succesfully");
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Update Failed on course #" + course_id +);
+                    }
+
                 }
             }
-            Console.WriteLine("JSON: " + Prerequisite.writeJSON(prereq));
-            Console.WriteLine("Prerequisite added succesfully");
+
+            Console.WriteLine("Rows Affected: " + rowsAffected);
+            Console.WriteLine("JSON: " + Prerequisite.writeJSON(prereq) + "\n");
         }
 
         /// <summary>
