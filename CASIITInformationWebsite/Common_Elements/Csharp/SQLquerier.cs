@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Runtime.Remoting.Services;
 using System.Security.Cryptography;
 using System.Web;
+using System.Web.DynamicData;
 using System.Web.Management;
+using Microsoft.Ajax.Utilities;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Asn1.X509.Qualified;
 
@@ -153,18 +156,18 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
                     return new Class(
-                        reader.GetInt32(0),                                 //id
-                        reader.GetString(1),                                //name
-                        reader.GetDouble(2),                                //weight
-                        reader.GetString(3),                                //description
-                        reader.GetInt16(4),                                 //dual_enrolled
-                        reader.GetDouble(5),                                //hs_credit
-                        reader.GetDouble(6),                                //college credit
-                        Prerequisite.readFromJSON(reader.GetString(7)));    //prerequisite
+                        reader.GetInt32("id"),                                          //id
+                        reader.GetString("course_name"),                                //name
+                        reader.GetDouble("course_weight"),                              //weight
+                        reader.GetString("description"),                                //description
+                        reader.GetString("concentration"),                              //concentration
+                        reader.GetInt16("dual_enrolled"),                               //dual_enrolled
+                        reader.GetDouble("hs_credit"),                                  //hs_credit
+                        reader.GetDouble("college_credit"),                             //college credit
+                        Prerequisite.readFromJSON(reader.GetString("prerequisites"))) ;               //prerequisite
                 }
             }
         }
-
 
         /// <summary> Finds all classes a user has taken, and returns them as an array of classes. </summary> 
         /// <param name="user">user to correlate classes with</param>
@@ -211,10 +214,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                            reader.GetString("course_name"),                                    //name
                            reader.GetDouble("course_weight"),                                  //weight
                            reader.GetString("description"),                                    //description
+                           reader.GetString("concentration"),
                            reader.GetInt16("dual_enrolled"),                                   //dual_enrolled
                            reader.GetDouble("hs_credit"),                                      //hs_credit
                            reader.GetDouble("college_credit"),                                 //college credit
-                           Prerequisite.readFromJSON(reader.GetString("prerequisites")));      //prerequisite
+                           Prerequisite.readFromJSON(reader.GetString("prerequisites"))) ;      //prerequisite
                         index++;
                     }
                 }
@@ -332,18 +336,83 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <returns></returns>
         public static Student SelectStudent(int studentID)
         {
-            string[] result = Parse("id, name");
-            int studentIndex = result[0].IndexOf("" + studentID);
+            Student output;
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query = "" +
+                    "SELECT * " +
+                    "FROM users " +
+                    "JOIN students ON users.id = students.user_id " +
+                    "WHERE id = " + studentID;
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    output = new Student(
+                        reader.GetString("first_name"),                 //first name
+                        reader.GetString("last_name"),                  //last name
+                        reader.GetInt32("id"),                          //userId
+                        DateTime.Now.Year - reader.GetInt32("year"),    //year
+                        reader.GetDouble("gpa"),                        //gpa
+                        reader.GetInt32("counselor_id"));               //counselorID
+                }
+            }
+            return output;
+        }
 
-            Student student = new Student(
-                result[0],                  // name
-                int.Parse(result[1]),       // username
-                int.Parse(result[2]),       // grade level 
-                double.Parse(result[3]),    // gpa
-                int.Parse(result[4])        // counselor ID
-            );
+        /// <summary>
+        ///Creates a Counselor Object from and instance in the database
+        /// </summary>
+        /// <param name="counselorID"></param>
+        /// <returns></returns>
+        public static Counselor SelectCounselor(int counselorID)
+        {
+            Counselor output;
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query = "" +
+                    "SELECT * " +
+                    "FROM users " +
+                    "JOIN counselors ON users.id = counselors.user_id " +
+                    "WHERE id = " + counselorID;
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    output = new Counselor(
+                        reader.GetString("first_name"),                 //first name
+                        reader.GetString("last_name"),                  //last name
+                        reader.GetInt32("id"),                          //userId
+                        reader.GetString("name_range_start"),           //name range start
+                        reader.GetString("name_range_end"));            //name range end
+                }
+            }
+            return output;
+        }
 
-            return student;
+        /// <summary>
+        ///Creates an Admin Object from and instance in the database
+        /// </summary>
+        /// <param name="adminID"></param>
+        /// <returns></returns>
+        public static Admin SelectAdmin( int adminID)
+        {
+            Admin output;
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query = "" +
+                    "SELECT * " +
+                    "FROM users " +
+                    "JOIN admins ON users.id = admins.user_id " +
+                    "WHERE id = " + adminID;
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    output = new Admin(
+                        reader.GetString("first_name"),                 //first name
+                        reader.GetString("last_name"),                  //last name
+                        reader.GetInt32("id"));                         //userId
+                }
+            }
+            return output;
         }
 
         /// <summary>
@@ -352,7 +421,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <param name="email"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public static int getUID(string email, string password)
+        public static int GetUID(string email, string password)
         {
             int uid = -1;
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -456,7 +525,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             List<Class> allClasses = AllClassIDs();
             List<Class> availableClasses = new List<Class>();
             // goes through every class, if the user meets the requirements of a class then it is added to the list of available classes
-            foreach( Class course in availableClasses)
+            foreach( Class course in allClasses)
             {
                 if (course.MeetsRequisites(user)) availableClasses.Add(course);
             }
@@ -485,6 +554,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                            reader.GetString("course_name"),                                    //name
                            reader.GetDouble("course_weight"),                                  //weight
                            reader.GetString("description"),                                    //description
+                           reader.GetString("concentration"),                                  //concentration
                            reader.GetInt16("dual_enrolled"),                                   //dual_enrolled
                            reader.GetDouble("hs_credit"),                                      //hs_credit
                            reader.GetDouble("college_credit"),                                 //college credit
@@ -513,6 +583,130 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 }
             }
         }
+
+        private static List<Class> FilterMinYear( List<Class> courses , int min_year )
+        {
+            List<Class> filteredResult = new List<Class>();
+            foreach( Class course in courses)
+            {
+                if(course.prerequisite.min_year >= min_year) filteredResult.Add(course);
+            }
+            return filteredResult;
+        }
+
+        private static List<Class> FilterMinGPA(List<Class> courses, double min_GPA)
+        {
+            List<Class> filteredResult = new List<Class>();
+            foreach (Class course in courses)
+            {
+                if (course.prerequisite.min_GPA >= min_GPA) filteredResult.Add(course);
+            }
+            return filteredResult;
+        }
+
+        private static List<Class> FilterMaxGPA(List<Class> courses, double max_GPA)
+        {
+            List<Class> filteredResult = new List<Class>();
+            foreach (Class course in courses)
+            {
+                if (course.prerequisite.min_GPA <= max_GPA) filteredResult.Add(course);
+            }
+            return filteredResult;
+        }
+
+        private static List<Class> FilterMaxYear(List<Class> courses, int maxYear)
+        {
+            List<Class> filteredResult = new List<Class>();
+            foreach (Class course in courses)
+            {
+                if (course.prerequisite.min_year <= maxYear) filteredResult.Add(course);
+            }
+            return filteredResult;
+        }
+
+        /// <summary>
+        /// Returns a list of classes from the database that conform to the set of parameters. Parameters are optional, and can be entered as null if necessary.
+        /// Enter parameters in this format: SQLQuerier.FilterSelect(courseWeightMin: *Value* , gpaMin *Value* , etc. );
+        /// </summary>
+        /// <param name="courseWeightMin"></param>
+        /// <param name="courseWeightMax"></param>
+        /// <param name="isDualEnrolled"></param>
+        /// <param name="hsCrediMin"></param>
+        /// <param name="hsCreditMax"></param>
+        /// <param name="collegeCreditMin"></param>
+        /// <param name="collegeCreditMax"></param>
+        /// <param name="gpaMin"></param>
+        /// <param name="gpaMax"></param>
+        /// <param name="yearMin"></param>
+        /// <param name="yearMax"></param>
+        /// <returns></returns>
+        public static List<Class> FilterSelect(
+                double courseWeightMin = 0,
+                double courseWeightMax = 5.0,
+                bool isDualEnrolled = false,
+                double hsCrediMin = 0,
+                double hsCreditMax = 10,
+                double collegeCreditMin = 0,
+                double collegeCreditMax = 10,
+                double gpaMin = 0.0,
+                double gpaMax = 5,
+                int yearMin = 0,
+                int yearMax = 4,
+                string concentration = "")
+        {
+            List<Class> courses = new List<Class>();
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                //Query without dual enrolled filter
+                string query =
+                    "SELECT * " +
+                    "FROM courses " +
+                    "WHERE course weight >= " + courseWeightMin + " AND " +
+                    "course weight <= " + courseWeightMax + " AND " +
+                    "hs_credit >= " + hsCrediMin + " AND " +
+                    "hs_credit <= " + hsCreditMax + " AND " +
+                    "college_credit >= " + collegeCreditMin + " AND " +
+                    "college_credit <= " + collegeCreditMax;
+                 
+                //With dual enrolled filter
+                if (isDualEnrolled)
+                {
+                    query += " AND dual_enrolled = 1";
+                }
+                if( concentration.Length != 0)
+                {
+                    query += " AND concentration LIKE '" + concentration + "'"; 
+                }
+
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        courses.Add(new Class(
+                           reader.GetInt32("id"),                                               //id
+                           reader.GetString("course_name"),                                     //name
+                           reader.GetDouble("course_weight"),                                   //weight
+                           reader.GetString("description"),                                     //description
+                           reader.GetString("concentration"),                                   //concentration
+                           reader.GetInt16("dual_enrolled"),                                    //dual_enrolled
+                           reader.GetDouble("hs_credit"),                                       //hs_credit
+                           reader.GetDouble("college_credit"),                                  //college credit
+                           Prerequisite.readFromJSON(reader.GetString("prerequisites")))        //prerequisite
+                        );
+                    }
+                }
+            }
+
+            courses = FilterMinGPA( courses, gpaMin);
+            courses = FilterMaxGPA(courses, gpaMax);
+            courses = FilterMinYear(courses, yearMin);
+            courses = FilterMaxYear(courses, yearMax);
+
+            return courses;
+        }
     }
+
+
 
 }
