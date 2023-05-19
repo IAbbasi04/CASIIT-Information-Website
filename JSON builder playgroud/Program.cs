@@ -20,6 +20,8 @@ using System.Diagnostics;
         Console.WriteLine(course);
     }
 
+    Console.WriteLine("Available Classes");
+
     courses = SQLQuerier.AllAvailableClasses(user);
     foreach (Class course in courses)
     {

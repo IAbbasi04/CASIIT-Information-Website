@@ -531,7 +531,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// Selects all the available classes a student will be able to take
         /// </summary>
         /// <returns></returns>
-        public static List<Class> AllAvailableClasses(UserInfo user)
+        public static List<Class> AllAvailableClasses(Student user)
         {
             List<Class> allClasses = AllClasses();
             List<Class> availableClasses = new List<Class>();
@@ -541,6 +541,31 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 if (course.MeetsRequisites(user)) availableClasses.Add(course);
             }
             return availableClasses;
+        }
+        
+        /// <summary>
+        /// Returns a List of all the classes a student can take with their current status, filtered by a certain grade level
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="year">the year to filter by</param>
+        /// <returns></returns>
+        public static List<Class> AllAvailableYearClasses(Student user, int year)
+        {
+            List<Class> courses = AllAvailableClasses(user);
+            courses = FilterMinYear(courses, year);
+            return courses = FilterMaxYear(courses, year);
+        }
+
+        /// <summary>
+        /// Returns a List of all the classes a student can take in the coming year
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static List<Class> AllAvailableNextYearClasses(Student user)
+        {
+            List<Class> courses = AllAvailableClasses(user);
+            courses = FilterMinYear(courses, user.Year + 1);
+            return courses = FilterMaxYear(courses, user.Year + 1);
         }
 
         /// <summary>
