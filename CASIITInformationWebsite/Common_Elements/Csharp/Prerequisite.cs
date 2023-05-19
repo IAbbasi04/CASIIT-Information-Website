@@ -58,12 +58,21 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 
         public static Prerequisite readFromJSON(string serializedPrerequisite)
         {
+            if (string.IsNullOrEmpty(serializedPrerequisite)) return new Prerequisite();
             return JsonConvert.DeserializeObject<Prerequisite>(serializedPrerequisite);
         }
 
         public List<List<int>> PossibleRequiredClasses()
         {
+            if (required_classes == null) return new List<List<int>>();
             return required_classes.getClassSets();
+        }
+
+        public override string ToString()
+        {
+            return "\tmin GPA: " + min_GPA + "\n" +
+                "\tmin Year: " + min_year + "\n" +
+                "\tClasses: " + required_classes;
         }
 
     }

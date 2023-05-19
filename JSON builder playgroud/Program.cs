@@ -8,30 +8,23 @@ using System.Diagnostics;
 // creates prerequisite object for a given class
 
 {
-    int id = 1;
-    double min_GPA = 2.5;
-    int min_year = 1;
-    ClassOption courses = null;
-    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
-    SQLQuerier.AddPrereqsToCourse(id, preq);
-}
 
-{
-    int id = 2;
-    double min_GPA = 2.5;
-    int min_year = 1;
-    ClassOption courses = null;
-    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
-    SQLQuerier.AddPrereqsToCourse(id, preq);
-}
+    List<Class> courses = new List<Class>();
 
-{
-    int id = 3;
-    double min_GPA = 2.5;
-    int min_year = 1;
-    ClassOption courses = null;
-    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
-    SQLQuerier.AddPrereqsToCourse(id, preq);
+    Student user = SQLQuerier.SelectStudent(2);
+    user.currentSelectedTrack = 1;
+    Console.WriteLine(user);
+
+    foreach (Class course in SQLQuerier.PreviousClasses(user))
+    {
+        Console.WriteLine(course);
+    }
+
+    courses = SQLQuerier.AllAvailableClasses(user);
+    foreach (Class course in courses)
+    {
+        Console.WriteLine( course );
+    }
 }
 
 

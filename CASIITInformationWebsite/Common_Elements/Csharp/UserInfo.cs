@@ -8,7 +8,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 		public string MiddleName;
 		public string LastName;
 		public int UserId;
-		public int currentSelectedTrack;
+		public int currentSelectedTrack = 1;
 	}
 
 	public class Student : UserInfo
@@ -37,6 +37,18 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 			this.GPA = gpa;
 			this.CounselorId = counselorId;
 		}
+
+		public override string ToString()
+		{
+			return "ID: " + UserId + "\n" +
+				"Firstname: " + FirstName + "\n" +
+				"Lastname: " + LastName + "\n" +
+				"Middlename: " + MiddleName + "\n" +
+				"Year: " + Year + "\n" +
+				"GPA: " + GPA + "\n" +
+				"Counselor ID: " + CounselorId + "\n";
+
+        }
 
 		/*
 		public string getInfo()

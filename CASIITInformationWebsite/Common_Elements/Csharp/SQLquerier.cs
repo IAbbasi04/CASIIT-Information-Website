@@ -151,22 +151,23 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {
-                string query = "SELECT * FROM block7_table WHERE id = " + class_id;
+                string query = "SELECT * FROM courses WHERE id = " + class_id;
                 connection.Open();
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
-                    return new Class(
-                        reader.GetInt32("id"),                                          //id
-                        reader.GetString("course_name"),                                //name
-                        reader.GetDouble("course_weight"),                              //weight
-                        reader.GetString("description"),                                //description
-                        reader.GetString("concentration"),                              //concentration
-                        reader.GetInt16("dual_enrolled"),                               //dual_enrolled
-                        reader.GetDouble("hs_credit"),                                  //hs_credit
-                        reader.GetDouble("college_credit"),                             //college credit
-                        Prerequisite.readFromJSON(reader.GetString("prerequisites"))) ;               //prerequisite
+                    if(reader.Read()) return new Class(
+                        reader.GetInt32("id"),
+                        reader.IsDBNull(reader.GetOrdinal("course_name")) ? string.Empty : reader.GetString("course_name"),
+                        reader.IsDBNull(reader.GetOrdinal("course_weight")) ? 0.0 : reader.GetDouble("course_weight"),
+                        reader.IsDBNull(reader.GetOrdinal("description")) ? string.Empty : reader.GetString("description"),
+                        reader.IsDBNull(reader.GetOrdinal("concentration")) ? string.Empty : reader.GetString("concentration"),
+                        reader.IsDBNull(reader.GetOrdinal("dual_enrolled")) ? (short)0 : reader.GetInt16("dual_enrolled"),
+                        reader.IsDBNull(reader.GetOrdinal("hs_credit")) ? 0.0 : reader.GetDouble("hs_credit"),
+                        reader.IsDBNull(reader.GetOrdinal("college_credit")) ? 0.0 : reader.GetDouble("college_credit"),
+                        Prerequisite.readFromJSON(reader.IsDBNull(reader.GetOrdinal("prerequisites")) ? string.Empty : reader.GetString("prerequisites")));
                 }
             }
+            return new Class();
         }
 
         /// <summary> Finds all classes a user has taken, and returns them as an array of classes. </summary> 
@@ -178,16 +179,16 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             {
                 string query = "SELECT COUNT(id) " +
                     "FROM courses " +
-                    "WHERE class_id IN(" +
-                        "SELECT class_id" +
-                        "FROM track_courses" +
+                    "WHERE id IN(" +
+                        "SELECT course_id " +
+                        "FROM track_courses " +
                         "WHERE user_id = " + user.UserId + 
                         " AND track_id = " + user.currentSelectedTrack + 
                         " )";
                 connection.Open();
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
-                    numRows = reader.GetInt32(0);
+                    if(reader.Read()) numRows = reader.GetInt32(0);
                 }
             }
 
@@ -197,9 +198,9 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 string query =
                     "SELECT * " +
                     "FROM courses " +
-                    "WHERE class_id IN(" +
-                        "SELECT class_id" +
-                        "FROM track_courses" +
+                    "WHERE id IN(" +
+                        "SELECT course_id " +
+                        "FROM track_courses " +
                         "WHERE user_id = " + user.UserId +
                         " AND track_id = " + user.currentSelectedTrack +
                         " )";
@@ -210,15 +211,15 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     while (reader.Read())
                     {
                         classes[index] = new Class(
-                           reader.GetInt32("id"),                                              //id
-                           reader.GetString("course_name"),                                    //name
-                           reader.GetDouble("course_weight"),                                  //weight
-                           reader.GetString("description"),                                    //description
-                           reader.GetString("concentration"),
-                           reader.GetInt16("dual_enrolled"),                                   //dual_enrolled
-                           reader.GetDouble("hs_credit"),                                      //hs_credit
-                           reader.GetDouble("college_credit"),                                 //college credit
-                           Prerequisite.readFromJSON(reader.GetString("prerequisites"))) ;      //prerequisite
+                            reader.GetInt32("id"),
+                            reader.IsDBNull(reader.GetOrdinal("course_name")) ? string.Empty : reader.GetString("course_name"),
+                            reader.IsDBNull(reader.GetOrdinal("course_weight")) ? 0.0 : reader.GetDouble("course_weight"),
+                            reader.IsDBNull(reader.GetOrdinal("description")) ? string.Empty : reader.GetString("description"),
+                            reader.IsDBNull(reader.GetOrdinal("concentration")) ? string.Empty : reader.GetString("concentration"),
+                            reader.IsDBNull(reader.GetOrdinal("dual_enrolled")) ? (short)0 : reader.GetInt16("dual_enrolled"),
+                            reader.IsDBNull(reader.GetOrdinal("hs_credit")) ? 0.0 : reader.GetDouble("hs_credit"),
+                            reader.IsDBNull(reader.GetOrdinal("college_credit")) ? 0.0 : reader.GetDouble("college_credit"),
+                            Prerequisite.readFromJSON(reader.IsDBNull(reader.GetOrdinal("prerequisites")) ? string.Empty : reader.GetString("prerequisites")));     //prerequisite
                         index++;
                     }
                 }
@@ -233,16 +234,16 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             {
                 string query = "SELECT COUNT(id) " +
                     "FROM courses " +
-                    "WHERE class_id IN(" +
-                        "SELECT class_id" +
-                        "FROM track_courses" +
+                    "WHERE id IN(" +
+                        "SELECT course_id " +
+                        "FROM track_courses " +
                         "WHERE user_id = " + user.UserId +
                         " AND track_id = " + user.currentSelectedTrack +
                         " )";
                 connection.Open();
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
-                    numRows = reader.GetInt32(0);
+                    if(reader.Read()) numRows = reader.GetInt32(0);
                 }
             }
 
@@ -252,9 +253,9 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 string query =
                     "SELECT id " +
                     "FROM courses " +
-                    "WHERE class_id IN(" +
-                        "SELECT class_id" +
-                        "FROM track_courses" +
+                    "WHERE id IN(" +
+                        "SELECT course_id " +
+                        "FROM track_courses " +
                         "WHERE user_id = " + user.UserId +
                         " AND track_id = " + user.currentSelectedTrack +
                         " )";
@@ -347,13 +348,20 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 connection.Open();
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
-                    output = new Student(
-                        reader.GetString("first_name"),                 //first name
-                        reader.GetString("last_name"),                  //last name
-                        reader.GetInt32("id"),                          //userId
-                        DateTime.Now.Year - reader.GetInt32("year"),    //year
-                        reader.GetDouble("gpa"),                        //gpa
-                        reader.GetInt32("counselor_id"));               //counselorID
+                    if (reader.Read())
+                    {
+                        output = new Student(
+                            reader.IsDBNull(reader.GetOrdinal("first_name")) ? string.Empty : reader.GetString("first_name"),                 //first name
+                            reader.IsDBNull(reader.GetOrdinal("last_name")) ? string.Empty : reader.GetString("last_name"),                  //last name
+                            reader.GetInt32("id"),                                                                                  //userId
+                            reader.IsDBNull(reader.GetOrdinal("year")) ? 0 : DateTime.Now.Year - reader.GetInt32("year"),    //year
+                            reader.IsDBNull(reader.GetOrdinal("gpa")) ? 0.0 : reader.GetDouble("gpa"),                        //gpa
+                            reader.IsDBNull(reader.GetOrdinal("counselor_id")) ? 0 : reader.GetInt32("counselor_id"));               //counselorID
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
             }
             return output;
@@ -377,12 +385,13 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 connection.Open();
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
-                    output = new Counselor(
-                        reader.GetString("first_name"),                 //first name
-                        reader.GetString("last_name"),                  //last name
+                    if (reader.Read()) output = new Counselor(
+                        reader.IsDBNull(reader.GetOrdinal("first_name")) ? string.Empty : reader.GetString("first_name"),                 //first name
+                        reader.IsDBNull(reader.GetOrdinal("last_name")) ? string.Empty : reader.GetString("last_name"),
                         reader.GetInt32("id"),                          //userId
-                        reader.GetString("name_range_start"),           //name range start
-                        reader.GetString("name_range_end"));            //name range end
+                        reader.IsDBNull(reader.GetOrdinal("name_range_start")) ? "A" : reader.GetString("name_range_start"),           //name range start
+                        reader.IsDBNull(reader.GetOrdinal("name_range_end")) ? "A" : reader.GetString("name_range_emd"));
+                    else return null;
                 }
             }
             return output;
@@ -406,10 +415,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 connection.Open();
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
-                    output = new Admin(
-                        reader.GetString("first_name"),                 //first name
-                        reader.GetString("last_name"),                  //last name
-                        reader.GetInt32("id"));                         //userId
+                    if (reader.Read()) output = new Admin(
+                        reader.IsDBNull(reader.GetOrdinal("first_name")) ? string.Empty : reader.GetString("first_name"),                 //first name
+                        reader.IsDBNull(reader.GetOrdinal("last_name")) ? string.Empty : reader.GetString("last_name"),
+                        reader.GetInt32("id"));
+                    else return null;
                 }
             }
             return output;
@@ -434,6 +444,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 connection.Open();
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
+                    reader.Read();
                     try
                     {
                         uid = reader.GetInt32("id");
@@ -522,7 +533,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <returns></returns>
         public static List<Class> AllAvailableClasses(UserInfo user)
         {
-            List<Class> allClasses = AllClassIDs();
+            List<Class> allClasses = AllClasses();
             List<Class> availableClasses = new List<Class>();
             // goes through every class, if the user meets the requirements of a class then it is added to the list of available classes
             foreach( Class course in allClasses)
@@ -536,7 +547,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// Returns all classes in course table as Class objects
         /// </summary>
         /// <returns></returns>
-        public static List<Class> AllClassIDs()
+        public static List<Class> AllClasses()
         {
             List<Class> courses = new List<Class>();
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -550,21 +561,47 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     while (reader.Read())
                     {
                         courses.Add(new Class(
-                           reader.GetInt32("id"),                                              //id
-                           reader.GetString("course_name"),                                    //name
-                           reader.GetDouble("course_weight"),                                  //weight
-                           reader.GetString("description"),                                    //description
-                           reader.GetString("concentration"),                                  //concentration
-                           reader.GetInt16("dual_enrolled"),                                   //dual_enrolled
-                           reader.GetDouble("hs_credit"),                                      //hs_credit
-                           reader.GetDouble("college_credit"),                                 //college credit
-                           Prerequisite.readFromJSON(reader.GetString("prerequisites")))      //prerequisite
-                        );
+                            reader.GetInt32("id"),
+                            reader.IsDBNull(reader.GetOrdinal("course_name")) ? string.Empty : reader.GetString("course_name"),
+                            reader.IsDBNull(reader.GetOrdinal("course_weight")) ? 0.0 : reader.GetDouble("course_weight"),
+                            reader.IsDBNull(reader.GetOrdinal("description")) ? string.Empty : reader.GetString("description"),
+                            reader.IsDBNull(reader.GetOrdinal("concentration")) ? string.Empty : reader.GetString("concentration"),
+                            reader.IsDBNull(reader.GetOrdinal("dual_enrolled")) ? (short)0 : reader.GetInt16("dual_enrolled"),
+                            reader.IsDBNull(reader.GetOrdinal("hs_credit")) ? 0.0 : reader.GetDouble("hs_credit"),
+                            reader.IsDBNull(reader.GetOrdinal("college_credit")) ? 0.0 : reader.GetDouble("college_credit"),
+                            Prerequisite.readFromJSON(reader.IsDBNull(reader.GetOrdinal("prerequisites")) ? string.Empty : reader.GetString("prerequisites"))
+                        )) ;
                     }
                 }
             }
             return courses;
         }
+
+        /// <summary>
+        /// Returns all classes in course table as Class objects
+        /// </summary>
+        /// <returns></returns>
+        public static List<int> AllClassIDs()
+        {
+            List<int> courses = new List<int>();
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query =
+                    "SELECT * " +
+                    "FROM courses ";
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        courses.Add(
+                           reader.GetInt32("id"));
+                    }
+                }
+            }
+            return courses;
+        }
+
 
         /// <summary>
         /// Drops a table from the database
@@ -584,7 +621,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
         }
 
-        private static List<Class> FilterMinYear( List<Class> courses , int min_year )
+        private static List<Class> FilterMinYear( List<Class> courses , int min_year = 0)
         {
             List<Class> filteredResult = new List<Class>();
             foreach( Class course in courses)
@@ -594,7 +631,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return filteredResult;
         }
 
-        private static List<Class> FilterMinGPA(List<Class> courses, double min_GPA)
+        private static List<Class> FilterMinGPA(List<Class> courses, double min_GPA = 0)
         {
             List<Class> filteredResult = new List<Class>();
             foreach (Class course in courses)
@@ -604,7 +641,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return filteredResult;
         }
 
-        private static List<Class> FilterMaxGPA(List<Class> courses, double max_GPA)
+        private static List<Class> FilterMaxGPA(List<Class> courses, double max_GPA = 5)
         {
             List<Class> filteredResult = new List<Class>();
             foreach (Class course in courses)
@@ -614,7 +651,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return filteredResult;
         }
 
-        private static List<Class> FilterMaxYear(List<Class> courses, int maxYear)
+        private static List<Class> FilterMaxYear(List<Class> courses, int maxYear = 4)
         {
             List<Class> filteredResult = new List<Class>();
             foreach (Class course in courses)
@@ -661,13 +698,12 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 string query =
                     "SELECT * " +
                     "FROM courses " +
-                    "WHERE course weight >= " + courseWeightMin + " AND " +
-                    "course weight <= " + courseWeightMax + " AND " +
-                    "hs_credit >= " + hsCrediMin + " AND " +
-                    "hs_credit <= " + hsCreditMax + " AND " +
-                    "college_credit >= " + collegeCreditMin + " AND " +
-                    "college_credit <= " + collegeCreditMax;
-                 
+                    "WHERE IFNULL(course_weight, 0) >= " + courseWeightMin + " AND " +
+                    "IFNULL(course_weight, 0) <= " + courseWeightMax + " AND " +
+                    "IFNULL(hs_credit, 0) >= " + hsCrediMin + " AND " +
+                    "IFNULL(hs_credit, 0) <= " + hsCreditMax + " AND " +
+                    "IFNULL(college_credit, 0) >= " + collegeCreditMin + " AND " +
+                    "IFNULL(college_credit, 0) <= " + collegeCreditMax;
                 //With dual enrolled filter
                 if (isDualEnrolled)
                 {
@@ -683,28 +719,28 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 {
                     while (reader.Read())
                     {
-                        courses.Add(new Class(
-                           reader.GetInt32("id"),                                               //id
-                           reader.GetString("course_name"),                                     //name
-                           reader.GetDouble("course_weight"),                                   //weight
-                           reader.GetString("description"),                                     //description
-                           reader.GetString("concentration"),                                   //concentration
-                           reader.GetInt16("dual_enrolled"),                                    //dual_enrolled
-                           reader.GetDouble("hs_credit"),                                       //hs_credit
-                           reader.GetDouble("college_credit"),                                  //college credit
-                           Prerequisite.readFromJSON(reader.GetString("prerequisites")))        //prerequisite
-                        );
+                        courses.Add(new Class(reader.GetInt32("id"),
+                        reader.IsDBNull(reader.GetOrdinal("course_name")) ? string.Empty : reader.GetString("course_name"),
+                        reader.IsDBNull(reader.GetOrdinal("course_weight")) ? 0.0 : reader.GetDouble("course_weight"),
+                        reader.IsDBNull(reader.GetOrdinal("description")) ? string.Empty : reader.GetString("description"),
+                        reader.IsDBNull(reader.GetOrdinal("concentration")) ? string.Empty : reader.GetString("concentration"),
+                        reader.IsDBNull(reader.GetOrdinal("dual_enrolled")) ? (short)0 : reader.GetInt16("dual_enrolled"),
+                        reader.IsDBNull(reader.GetOrdinal("hs_credit")) ? 0.0 : reader.GetDouble("hs_credit"),
+                        reader.IsDBNull(reader.GetOrdinal("college_credit")) ? 0.0 : reader.GetDouble("college_credit"),
+                        Prerequisite.readFromJSON(reader.IsDBNull(reader.GetOrdinal("prerequisites")) ? string.Empty : reader.GetString("prerequisites"))
+                        ));
                     }
                 }
             }
 
-            courses = FilterMinGPA( courses, gpaMin);
+            courses = FilterMinGPA(courses, gpaMin);
             courses = FilterMaxGPA(courses, gpaMax);
             courses = FilterMinYear(courses, yearMin);
             courses = FilterMaxYear(courses, yearMax);
 
             return courses;
         }
+
     }
 
 

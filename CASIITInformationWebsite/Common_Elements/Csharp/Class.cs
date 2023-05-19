@@ -37,11 +37,6 @@ namespace CASIITInformationWebsite.Common_Elements
             this.prerequisite = prerequisite;
         }
 
-        public override string ToString()
-        {
-            return id + "";
-        }
-
         public bool MeetsRequisites(UserInfo user)
         {
             List<List<int>> possibleCourses = this.prerequisite.PossibleRequiredClasses();
@@ -68,9 +63,9 @@ namespace CASIITInformationWebsite.Common_Elements
 
         public bool MeetsRequisites(Student user)
         {
-            if (!((user.GPA <= prerequisite.min_GPA) && (user.Year <= prerequisite.min_year))) return false;
-
+            if (user.GPA < prerequisite.min_GPA || user.Year < prerequisite.min_year) return false;
             List<List<int>> possibleCourses = this.prerequisite.PossibleRequiredClasses();
+            if (possibleCourses.Count() == 0) return true;
             int[] classesTaken = SQLQuerier.PreviousClassIDs(user);
             foreach (List<int> courseSet in possibleCourses)
             {
@@ -90,6 +85,18 @@ namespace CASIITInformationWebsite.Common_Elements
                 }
             }
             return false;
+        }
+
+        public override string ToString()
+        {
+            return "ID: " + id + "\n" +
+                "Course Name: " + course_name + "\n" +
+                "Course Weight: " + course_weight + "\n" +
+                "Concentration: " + concentration + "\n" +
+                "Dual_enrolled: " + dual_enrolled + "\n" +
+                "HS credit: " + hs_credit + "\n" +
+                "College Credit: " + college_credit + "\n" +
+                "Prerequisites: \n" + prerequisite + "\n";
         }
     }
 }
