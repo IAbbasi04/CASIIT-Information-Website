@@ -133,7 +133,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     course.dual_enrolled + ", " +
                     course.hs_credit + ", " +
                     course.college_credit + ", " +
-                    course.prerequisite.ToString() + ")";
+                    Prerequisite.writeJSON(course.prerequisite) + ")";
 
                 using (MySqlCommand command = new MySqlCommand(insert, connection))
                 {
@@ -331,6 +331,42 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         }
 
         /// <summary>
+        /// Inserts an instance of a Student into the database
+        /// </summary>
+        /// <param name="user"></param>
+        public static void InsertStudent(Student user)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String insertUser = "" +
+                    "INSERT INTO users " +
+                    "(id, first_name, last_name, email, password) VALUES " +
+                    user.UserId + ", " +
+                    user.FirstName + ", " +
+                    user.LastName + ", " +
+                    user.email + ", " +
+                    user.password;
+                String insertStudent = "" +
+                    "INSERT INTO students " +
+                    "(user_id, year, gpa, counselor_id) VALUES " +
+                    user.UserId + ", " +
+                    user.Year + ", " +
+                    user.GPA + ", " +
+                    user.CounselorId;
+
+                using (MySqlCommand command = new MySqlCommand(insertUser, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+                using (MySqlCommand command = new MySqlCommand(insertStudent, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
         /// Creates a student Object using a student ID using row data from students table
         /// </summary>
         /// <param name="studentID"></param>
@@ -356,7 +392,9 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                             reader.GetInt32("id"),                                                                                  //userId
                             reader.IsDBNull(reader.GetOrdinal("year")) ? 0 : DateTime.Now.Year - reader.GetInt32("year"),    //year
                             reader.IsDBNull(reader.GetOrdinal("gpa")) ? 0.0 : reader.GetDouble("gpa"),                        //gpa
-                            reader.IsDBNull(reader.GetOrdinal("counselor_id")) ? 0 : reader.GetInt32("counselor_id"));               //counselorID
+                            reader.IsDBNull(reader.GetOrdinal("counselor_id")) ? 0 : reader.GetInt32("counselor_id"),
+                            reader.IsDBNull(reader.GetOrdinal("email")) ? string.Empty : reader.GetString("email"),                 //first name
+                            reader.IsDBNull(reader.GetOrdinal("password")) ? string.Empty : reader.GetString("password"));               //counselorID
                     }
                     else
                     {
@@ -365,6 +403,62 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 }
             }
             return output;
+        }
+
+        /// <summary>
+        /// Deletes a student's record from the database
+        /// </summary>
+        /// <param name="uid"></param>
+        public static void DeleteStudent( int uid) 
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string delete = "" +
+                    "DELETE " +
+                    "FROM users " +
+                    "JOIN students ON users.id = students.user_id " +
+                    "WHERE id = " + uid;
+                connection.Open();
+                using (MySqlCommand command = new MySqlCommand(delete, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Inserts and instance of a Counselor into the database
+        /// </summary>
+        /// <param name="user"></param>
+        public static void InsertCounselor(Counselor user)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String insertUser = "" +
+                    "INSERT INTO users " +
+                    "(id, first_name, last_name, email, password) VALUES " +
+                    user.UserId + ", " +
+                    user.FirstName + ", " +
+                    user.LastName + ", " +
+                    user.email + ", " +
+                    user.password;
+                String insertCounselor = "" +
+                    "INSERT INTO counselors " +
+                    "(user_id, name_range_start, name_range_end) VALUES " +
+                    user.UserId + ", " +
+                    user.NameRangeStart + ", " +
+                    user.NameRangeEnd;
+
+                using (MySqlCommand command = new MySqlCommand(insertUser, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+                using (MySqlCommand command = new MySqlCommand(insertCounselor, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         /// <summary>
@@ -390,11 +484,67 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                         reader.IsDBNull(reader.GetOrdinal("last_name")) ? string.Empty : reader.GetString("last_name"),
                         reader.GetInt32("id"),                          //userId
                         reader.IsDBNull(reader.GetOrdinal("name_range_start")) ? "A" : reader.GetString("name_range_start"),           //name range start
-                        reader.IsDBNull(reader.GetOrdinal("name_range_end")) ? "A" : reader.GetString("name_range_emd"));
+                        reader.IsDBNull(reader.GetOrdinal("name_range_end")) ? "A" : reader.GetString("name_range_emd"),
+                        reader.IsDBNull(reader.GetOrdinal("email")) ? string.Empty : reader.GetString("email"),                 //first name
+                        reader.IsDBNull(reader.GetOrdinal("password")) ? string.Empty : reader.GetString("password"));         
                     else return null;
                 }
             }
             return output;
+        }
+
+        /// <summary>
+        /// Deletes a counselor's record from the database
+        /// </summary>
+        /// <param name="uid"></param>
+        public static void DeleteCounselor(int uid)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string delete = "" +
+                    "DELETE " +
+                    "FROM users " +
+                    "JOIN counselors ON users.id = counselors.user_id " +
+                    "WHERE id = " + uid;
+                connection.Open();
+                using (MySqlCommand command = new MySqlCommand(delete, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Inserts an instance of an Admin into the database
+        /// </summary>
+        /// <param name="user"></param>
+        public static void InsertAdmin(Admin user)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String insertUser = "" +
+                    "INSERT INTO users " +
+                    "(id, first_name, last_name, email, password) VALUES " +
+                    user.UserId + ", " +
+                    user.FirstName + ", " +
+                    user.LastName + ", " +
+                    user.email + ", " +
+                    user.password;
+                String insertAdmin = "" +
+                    "INSERT INTO admins " +
+                    "(user_id) VALUES " +
+                    user.UserId;
+
+                using (MySqlCommand command = new MySqlCommand(insertUser, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+                using (MySqlCommand command = new MySqlCommand(insertAdmin, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         /// <summary>
@@ -418,11 +568,34 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     if (reader.Read()) output = new Admin(
                         reader.IsDBNull(reader.GetOrdinal("first_name")) ? string.Empty : reader.GetString("first_name"),                 //first name
                         reader.IsDBNull(reader.GetOrdinal("last_name")) ? string.Empty : reader.GetString("last_name"),
-                        reader.GetInt32("id"));
-                    else return null;
+                        reader.GetInt32("id"),
+                        reader.IsDBNull(reader.GetOrdinal("email")) ? string.Empty : reader.GetString("email"),                 //first name
+                        reader.IsDBNull(reader.GetOrdinal("password")) ? string.Empty : reader.GetString("password"));               //counselorID
+                  else return null;
                 }
             }
             return output;
+        }
+
+        /// <summary>
+        /// Deletes an Admin's record from the database
+        /// </summary>
+        /// <param name="uid"></param>
+        public static void DeleteAdmin(int uid)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string delete = "" +
+                    "DELETE " +
+                    "FROM users " +
+                    "JOIN admins ON users.id = admins.user_id " +
+                    "WHERE id = " + uid;
+                connection.Open();
+                using (MySqlCommand command = new MySqlCommand(delete, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         /// <summary>
@@ -437,10 +610,10 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {
                 string query = "" +
-                    "SELECT id" +
-                    "FROM users" +
+                    "SELECT id " +
+                    "FROM users " +
                     "WHERE email = " + email +
-                    "AND password = " + password;
+                    " AND password = " + password;
                 connection.Open();
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
@@ -469,7 +642,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             {
                 connection.Open();
                 String insert = "" +
-                    "INSERT INTO tracks" +
+                    "INSERT INTO tracks " +
                     "(user_id, track_name) VALUES " +
                     "" + uid + ", " + 
                     trackname;
@@ -493,11 +666,29 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             {
                 connection.Open();
                 String insert = "" +
-                    "INSERT INTO track_courses" +
+                    "INSERT INTO track_courses " +
                     "(user_id, track_id, course_id) VALUES " +
                     uid + ", " +
                     track_id + ", " +
                     course_id;
+
+                using (MySqlCommand command = new MySqlCommand(insert, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static void DeleteClassFromTrack( int uid, int track_id, int course_id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String insert = "" +
+                    "DELETE FROM track_courses " +
+                    "WHERE user_id = " + uid + " AND " +
+                    "track_id = " + track_id + " AND " +
+                    "course_id = " + course_id;
 
                 using (MySqlCommand command = new MySqlCommand(insert, connection))
                 {
