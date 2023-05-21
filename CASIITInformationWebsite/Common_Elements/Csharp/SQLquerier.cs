@@ -533,12 +533,13 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <returns></returns>
         public static List<Class> AllAvailableClasses(Student user)
         {
+            int[] previouslyTakenCourses = PreviousClassIDs(user);
             List<Class> allClasses = AllClasses();
             List<Class> availableClasses = new List<Class>();
             // goes through every class, if the user meets the requirements of a class then it is added to the list of available classes
             foreach( Class course in allClasses)
             {
-                if (course.MeetsRequisites(user)) availableClasses.Add(course);
+                if (course.MeetsRequisites(user) && !previouslyTakenCourses.Contains(course.id)) availableClasses.Add(course);
             }
             return availableClasses;
         }

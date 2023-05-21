@@ -32,14 +32,15 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         {
             this.min_GPA = min_GPA;
             this.min_year = min_year;
-            required_classes = null;
+            required_classes = new ClassOption();
         }
 
         public Prerequisite(double min_GPA, int min_year, ClassOption required_classes)
         {
             this.min_GPA = min_GPA;
             this.min_year = min_year;
-            this.required_classes = required_classes;
+            if (required_classes == null) this.required_classes = new ClassOption();
+            else this.required_classes = required_classes;
         }
 
         public string toString()

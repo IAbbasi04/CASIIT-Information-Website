@@ -1,5 +1,4 @@
 using CASIITInformationWebsite;
-using CASIITInformationWebsite.Common_Elements;
 using CASIITInformationWebsite.Common_Elements.Csharp;
 using System.Diagnostics;
 
@@ -8,25 +7,262 @@ using System.Diagnostics;
 // creates prerequisite object for a given class
 
 {
-
-    List<Class> courses = new List<Class>();
-
-    Student user = SQLQuerier.SelectStudent(2);
-    user.currentSelectedTrack = 1;
-    Console.WriteLine(user);
-
-    foreach (Class course in SQLQuerier.PreviousClasses(user))
-    {
-        Console.WriteLine(course);
-    }
-
-    Console.WriteLine("Available Classes");
-
-    courses = SQLQuerier.AllAvailableClasses(user);
-    foreach (Class course in courses)
-    {
-        Console.WriteLine( course );
-    }
+    int id = 1;
+    double min_GPA = 2.5;
+    int min_year = 0;
+    ClassOption courses = null;
+    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
 }
 
+{
+    int id = 2;
+    double min_GPA = 2.5;
+    int min_year = 0;
+    ClassOption courses = null;
+    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
 
+{
+    int id = 3;
+    double min_GPA = 2.5;
+    int min_year = 0;
+    ClassOption courses = new ClassOption.Option(28);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 4;
+    double min_GPA = 3.25;
+    int min_year = 0;
+    ClassOption courses = null;
+    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 5;
+    double min_GPA = 2.5;
+    int min_year = 0;
+    ClassOption courses = null;
+    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 6;
+    double min_GPA = 2.5;
+    int min_year = 1;
+    ClassOption courses = new ClassOption.Or(1, 2);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 7;
+    double min_GPA = 2.5;
+    int min_year = 1;
+    ClassOption courses = new ClassOption.Or(1, 2);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 8;
+    double min_GPA = 2.5;
+    int min_year = 1;
+    ClassOption courses = new ClassOption.Or(4, 13);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 9;
+    double min_GPA = 2.5;
+    int min_year = 1;
+    ClassOption courses = new ClassOption.Option(3);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 10;
+    double min_GPA = 2.5;
+    int min_year = 1;
+    ClassOption courses = new ClassOption.Option(29);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 11;
+    double min_GPA = 2.5;
+    int min_year = 1;
+    ClassOption courses = new ClassOption.Or(4, 13);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 12;
+    double min_GPA = 2.5;
+    int min_year = 1;
+    ClassOption courses = null;
+    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 13;
+    double min_GPA = 3.25;
+    int min_year = 0;
+    ClassOption courses = null;
+    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 14;
+    double min_GPA = 2.5;
+    int min_year = 2;
+    ClassOption courses = new ClassOption.Option(6);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 15;
+    double min_GPA = 2.5;
+    int min_year = 2;
+    ClassOption courses = new ClassOption.Option(6);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 16;
+    double min_GPA = 2.5;
+    int min_year = 2;
+    ClassOption courses = new ClassOption.Option(6);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 17;
+    double min_GPA = 2.5;
+    int min_year = 2;
+    ClassOption courses = null;
+    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 18;
+    double min_GPA = 2.5;
+    int min_year = 2;
+    ClassOption courses = new ClassOption.Option(6);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 19;
+    double min_GPA = 2.5;
+    int min_year = 2;
+    ClassOption courses = new ClassOption.Option(9);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 20;
+    double min_GPA = 2.5;
+    int min_year = 3;
+    ClassOption courses = new ClassOption.Option(19);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 21;
+    double min_GPA = 2.5;
+    int min_year = 2;
+    ClassOption courses = new ClassOption.Option(8);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 22;
+    double min_GPA = 2.5;
+    int min_year = 2;
+    ClassOption courses = new ClassOption.Option(10);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 23;
+    double min_GPA = 2.5;
+    int min_year = 2;
+    ClassOption courses = null;
+    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 24;
+    double min_GPA = 2.5;
+    int min_year = 2;
+    ClassOption courses = new ClassOption.Option(12);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 25;
+    double min_GPA = 2.5;
+    int min_year = 2;
+    ClassOption courses = new ClassOption.Option(11);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 26;
+    double min_GPA = 2.5;
+    int min_year = 2;
+    ClassOption courses = null;
+    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 27;
+    double min_GPA = 2.5;
+    int min_year = 3;
+    ClassOption courses = new ClassOption.Option(26);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 28;
+    double min_GPA = 0;
+    int min_year = 0;
+    ClassOption courses = null;
+    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 29;
+    double min_GPA = 0;
+    int min_year = 0;
+    ClassOption courses = null;
+    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
