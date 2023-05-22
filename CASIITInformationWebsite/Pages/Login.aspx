@@ -44,7 +44,7 @@
                     <asp:TableRow>
                         <asp:TableCell>
                             <asp:Button ID="bLogin" runat="server" Text="Login" />
-                            <asp:Button ID="bCreateAccount" runat="server" Text="CreateAccount" />
+                            <asp:Button ID="bCreateAccount" runat="server" Text="CreateAccount" OnClick="bCreateAccount_Click" />
                         </asp:TableCell>
                     </asp:TableRow>
 

@@ -1,26 +1,93 @@
 ﻿<%@ Page Title="CreateAccount" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CreateAccount.aspx.cs" Inherits="CASIITInformationWebsite.Pages.CreateAccount" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    <div>
-        
+    <div style="position:relative; left:100px;">
         <asp:UpdatePanel runat="server" ID="upCreateAccount">
             <ContentTemplate>
-                <asp:Label ID="lbCreateAccountFirstName" runat="server" Text="Label"></asp:Label>
-                <asp:TextBox ID="tbCreateAccountFirstName" runat="server" />
+                <asp:Table runat="server">
+                    <%--First Name--%>
+                    <asp:TableRow>
+                        <asp:TableCell>
+                            <asp:Label ID="lbCreateAccountFirstName" runat="server" ForeColor="White" Text="First Name"></asp:Label>
+                        </asp:TableCell>
+                    </asp:TableRow>
+                    <asp:TableRow>
+                        <asp:TableCell>
+                            <%--Add spacing--%>
+                            <div style="padding-bottom:25px;"> 
+                                <asp:TextBox ID="tbCreateAccountFirstName" runat="server" />
+                            </div>
+                        </asp:TableCell>
+                    </asp:TableRow>
 
-                <asp:Label ID="lbCreateAccountLastName" runat="server" Text="Label"></asp:Label>
-                <asp:TextBox ID="tbCreateAccountLastName" runat="server" />
+                    <%--Last Name--%>
+                    <asp:TableRow>
+                        <asp:TableCell>
+                            <asp:Label ID="lbCreateAccountLastName" runat="server" ForeColor="White" Text="Last Name"></asp:Label>
+                        </asp:TableCell>
+                    </asp:TableRow>
+                    <asp:TableRow>
+                        <asp:TableCell>
+                            <%--Add spacing--%>
+                            <div style="padding-bottom:25px;"> 
+                                <asp:TextBox ID="tbCreateAccountLastName" runat="server" />
+                            </div>
+                        </asp:TableCell>
+                    </asp:TableRow>
 
-                <asp:Label ID="lbCreateAccountEmail" runat="server" Text="Label"></asp:Label>
-                <asp:TextBox ID="tbCreateAccountEmail" runat="server" />
+                    <%--Email--%>
+                    <asp:TableRow>
+                        <asp:TableCell>
+                            <asp:Label ID="lbCreateAccountEmail" runat="server" ForeColor="White" Text="Email"></asp:Label>
+                        </asp:TableCell>
+                    </asp:TableRow>
+                    <asp:TableRow>
+                        <asp:TableCell>
+                            <%--Add spacing--%>
+                            <div style="padding-bottom:25px;"> 
+                                <asp:TextBox ID="tbCreateAccountEmail" runat="server" />
+                            </div>
+                        </asp:TableCell>
+                    </asp:TableRow>
 
-                <asp:Label ID="lbCreateAccountPassword" runat="server" Text="Label"></asp:Label>
-                <asp:TextBox ID="tbCreateAccountPassword" runat="server" />
+                    <%--Password--%>
+                    <asp:TableRow>
+                        <asp:TableCell>
+                            <asp:Label ID="lbCreateAccountPassword" runat="server" ForeColor="White" Text="Password"></asp:Label>
+                        </asp:TableCell>
+                    </asp:TableRow>
+                    <asp:TableRow>
+                        <asp:TableCell>
+                            <%--Add spacing--%>
+                            <div style="padding-bottom:25px;"> 
+                                <asp:TextBox ID="tbCreateAccountPassword" runat="server" />
+                            </div>
+                        </asp:TableCell>
+                    </asp:TableRow>
 
-                <asp:Label ID="lbCreateAccountConfirmPassword" runat="server" Text="Label"></asp:Label>
-                <asp:TextBox ID="tbCreateAccountConfirmPassword" runat="server" />
+                    <%--Confirm Password--%>
+                    <asp:TableRow>
+                        <asp:TableCell>
+                            <asp:Label ID="lbCreateAccountConfirmPassword" runat="server" ForeColor="White" Text="Confirm Password"></asp:Label>
+                        </asp:TableCell>
+                    </asp:TableRow>
+                    <asp:TableRow>
+                        <asp:TableCell>
+                            <%--Add spacing--%>
+                            <div style="padding-bottom:25px;"> 
+                                <asp:TextBox ID="tbCreateAccountConfirmPassword" runat="server" />
+                            </div>
+                        </asp:TableCell>
+                    </asp:TableRow>
 
-                <asp:Button ID="Button1" runat="server" Text="CreateAccount" />
+                    <%--Create Account Button--%>
+                    <asp:TableRow>
+                        <asp:TableCell>
+                            <asp:Button ID="bCreateAccount" runat="server" Text="CreateAccount" OnClick="Button1_Click"/>
+                        </asp:TableCell>
+                    </asp:TableRow>
+
+                </asp:Table>
 
             </ContentTemplate>
         </asp:UpdatePanel>

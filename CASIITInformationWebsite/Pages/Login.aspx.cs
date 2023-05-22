@@ -10,10 +10,11 @@ namespace CASIITInformationWebsite.Pages
 {
     public partial class Login : Page
     {
-        protected void bSendForgotPasswordEmailRequest_Click(object sender, EventArgs e)
+        protected void bCreateAccount_Click(object sender, EventArgs e)
         {
-
+            Response.Redirect("CreateAccount.aspx");
         }
+
         //public enum PersonType
         //{
         //    STUDENT,
