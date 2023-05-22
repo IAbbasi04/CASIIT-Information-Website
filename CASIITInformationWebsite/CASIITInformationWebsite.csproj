@@ -181,6 +181,7 @@
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Images2\bobcat.jpg" />
     <Content Include="Images2\casiitlogo.png" />
+    <Content Include="Images2\circuit.png" />
     <Content Include="Images2\graduation.png" />
     <Content Include="Images2\nova_logo.jpg" />
     <Content Include="Images2\ribbon.png" />
