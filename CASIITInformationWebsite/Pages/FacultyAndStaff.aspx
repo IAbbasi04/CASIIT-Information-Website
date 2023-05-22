@@ -1,6 +1,17 @@
 ﻿<%@ Page Title="FacultyAndStaff" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="FacultyAndStaff.aspx.cs" Inherits="CASIITInformationWebsite.FacultyAndStaff" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+
+    <div id="nav-placeholder">
+
+    </div>
+
+    <script>
+        $(function () {
+            $("#nav-placeholder").load("nav.aspx");
+        });
+    </script>
+
     <asp:Table ID="Table1" CellPadding="30" runat="server">
         <asp:TableRow>
             <asp:TableCell cellspacing="10px" BorderWidth="20px" BorderColor="White" cellpadding="10px" RowSpan="4">

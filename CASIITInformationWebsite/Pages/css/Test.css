@@ -5,7 +5,7 @@
     --toggler-size: 30px;
     --toggler-line-number: 3;
     --toggler-line-size: calc(var(--toggler-size) / (var(--toggler-line-number) + var(--toggler-line-number) - 1));
-    --toggler-offset-left: 25px;
+    --toggler-offset-left: 20px;
     --toggler-offset-top: 70px;
     --toggler-color: Purple;
     --toggler-color-hover: Purple;
@@ -54,13 +54,14 @@ html {
     align-items: center;
     position: absolute;
     top: 0;
+    left: 0;
     height: 100vh;
     opacity: 0.5;
 }
 
 .content {
     width: 100%;
-    display: flex;
+    display: block;
     align-items: center;
     justify-content: center;
     flex-direction: column;
@@ -149,7 +150,7 @@ html {
     }
 
 .wrapper {
-    height: calc(100vh - 50px);
+    /*height: calc(100vh - 50px);*/
 }
 
 .sb-link {
