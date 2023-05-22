@@ -14,7 +14,8 @@ namespace CASIITInformationWebsite
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            //string[] names = SQLQuerier.GetAllStudents();
+            //SQLQuerier.GetRow(5);
         }
     }
 }
