@@ -8,7 +8,7 @@
                     <%--First Name--%>
                     <asp:TableRow>
                         <asp:TableCell>
-                            <asp:Label ID="lbCreateAccountFirstName" runat="server" ForeColor="White" Text="First Name"></asp:Label>
+                            <asp:Label ID="lbCreateAccountFirstName" runat="server" ForeColor="White"><br />First Name</asp:Label>
                         </asp:TableCell>
                     </asp:TableRow>
                     <asp:TableRow>
@@ -23,7 +23,7 @@
                     <%--Last Name--%>
                     <asp:TableRow>
                         <asp:TableCell>
-                            <asp:Label ID="lbCreateAccountLastName" runat="server" ForeColor="White" Text="Last Name"></asp:Label>
+                            <asp:Label ID="lbCreateAccountLastName" runat="server" ForeColor="White">Last Name</asp:Label>
                         </asp:TableCell>
                     </asp:TableRow>
                     <asp:TableRow>
