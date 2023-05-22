@@ -11,6 +11,8 @@ using System.Security.Cryptography;
 using System.Web;
 using System.Web.DynamicData;
 using System.Web.Management;
+using System.Web.UI;
+using K4os.Compression.LZ4.Streams.Abstractions;
 using Microsoft.Ajax.Utilities;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Asn1.X509.Qualified;
@@ -22,24 +24,6 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
     {
         public const string CONNECTION_STRING = "server=p3nlmysql165plsk.secureserver.net;uid=CSIsAwesome;pwd=Casiit2117Class;database=battlefield_casiit";
 
-        //private enum Columns
-        //{
-        //    ID,
-        //    ID(0),
-        //    FIRST_NAME(1),
-        //    LAST_NAME(2),
-        //    EMAIL(3),
-        //    PASSWORD(4),
-        //    SOME_OTHER_RANDOM_NUMBER(6)
-        //    ;
-
-        //    private int column;
-        //    Columns(int column)
-        //    {
-        //        this.column = column;
-        //    }
-        //}
-
         private const int ID_COL = 0;
         private const int FIRST_NAME_COL = 1;
         private const int LAST_NAME_COL = 2;
@@ -48,10 +32,35 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         private const int VERIFIED_COL = 5;
         private const int ROLE_ID_COL = 6;
 
+        public static string[] GetRow(int row)
+        {
+            string query = "SELECT * FROM users LIMIT " + row + ",1";
+            List<string> output = new List<string>();
+
+            using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
+            {
+                conn.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, conn).ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        for(int i = 0; i < reader.FieldCount; i++)
+                        {
+                            if (i != 5)
+                            {
+                                output.Add(reader.GetString(i));
+                            }
+                        }
+                    }
+                }
+            }
+
+            return output.ToArray();
+        }
 
         public static string[] GetColNames(string table)
         {
-            string query = String.Format("SELECT * FROM users");
+            string query = "SELECT * FROM users";
             MySqlConnection conn = new MySqlConnection(CONNECTION_STRING);
             MySqlCommand cmd = new MySqlCommand(query, conn);
             conn.Open();
@@ -88,39 +97,6 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
 
             return names.ToArray();
-        }
-
-        public static bool InsertStudent(string name, string email, string password)
-        {
-            bool exists = false;
-            string query = "INSERT INTO users(" +
-                        "id, " +
-                        "first_name, " +
-                        "last_name, " +
-                        "email, " +
-                        "password, " +
-                        "verified, " +
-                        "role_id " +
-                    ") VALUES (" + 
-                        "0, " + 
-                        name.Split(' ')[0] + ", " +
-                        name.Split(' ')[1] + ", " +
-                        email + ", " +
-                        password + ", " +
-                        "0" + ", " +
-                        "0)"
-                        ;
-
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
-            {
-                connection.Open();
-                using (MySqlCommand command = new MySqlCommand(query, connection))
-                {
-                    command.ExecuteNonQuery();
-                }
-            }
-
-            return exists;
         }
 
         public static string[] Parse(string item)

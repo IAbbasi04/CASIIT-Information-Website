@@ -14,11 +14,8 @@ namespace CASIITInformationWebsite
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //string[] test = SQLQuerier.Parse("*", "users");
-            //string test = SQLQuerier.ParseAll();
-            //string[] cols = SQLQuerier.GetColNames("users");
-            SQLQuerier.InsertStudent("Ibrahim Abbasi", "Ibrahimzabbasi04@gmail.com", "Password");
-            string[] names = SQLQuerier.GetAllStudents();
+            //string[] names = SQLQuerier.GetAllStudents();
+            //SQLQuerier.GetRow(5);
         }
     }
 }

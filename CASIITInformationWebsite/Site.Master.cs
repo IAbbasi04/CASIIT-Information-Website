@@ -10,14 +10,17 @@ namespace CASIITInformationWebsite
 {
     public partial class SiteMaster : MasterPage
     {
+        public static bool loggedIn = false;
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            LoginButton.Text = "Sign Up | Login";
-        }
-
-        public void SetLoginButtonText(string text)
-        {
-            LoginButton.Text = text;
+            if (loggedIn)
+            {
+                LoginButton.Text = "Sign Out";
+            } else
+            {
+                LoginButton.Text = "Sign Up | Login";
+            }
         }
     }
 }
