@@ -405,17 +405,17 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     String insertUser = "" +
                         "INSERT INTO users " +
                         "(id, first_name, last_name, email, password) VALUES " +
-                        user.UserId + ", " +
-                        user.FirstName + ", " +
-                        user.LastName + ", " +
-                        user.email + ", " +
-                        user.password;
+                        user.UserId + " , '" +
+                        user.FirstName + "' , '" +
+                        user.LastName + "' , '" +
+                        user.email + "' , '" +
+                        user.password + "' ";
                     String insertStudent = "" +
                         "INSERT INTO students " +
                         "(user_id, year, gpa, counselor_id) VALUES " +
-                        user.UserId + ", " +
-                        user.Year + ", " +
-                        user.GPA + ", " +
+                        user.UserId + " , " +
+                        user.Year + " , " +
+                        user.GPA + " , " +
                         user.CounselorId;
 
                     using (MySqlCommand command = new MySqlCommand(insertUser, connection))
@@ -522,17 +522,17 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     String insertUser = "" +
                         "INSERT INTO users " +
                         "(id, first_name, last_name, email, password) VALUES " +
-                        user.UserId + ", " +
-                        user.FirstName + ", " +
-                        user.LastName + ", " +
-                        user.email + ", " +
-                        user.password;
+                        user.UserId + ", '" +
+                        user.FirstName + "' , '" +
+                        user.LastName + "' , '" +
+                        user.email + "' , '" +
+                        user.password + "'";
                     String insertCounselor = "" +
                         "INSERT INTO counselors " +
                         "(user_id, name_range_start, name_range_end) VALUES " +
-                        user.UserId + ", " +
-                        user.NameRangeStart + ", " +
-                        user.NameRangeEnd;
+                        user.UserId + ", '" +
+                        user.NameRangeStart + "' , '" +
+                        user.NameRangeEnd + "'";
 
                     using (MySqlCommand command = new MySqlCommand(insertUser, connection))
                     {
@@ -631,11 +631,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     String insertUser = "" +
                         "INSERT INTO users " +
                         "(id, first_name, last_name, email, password) VALUES " +
-                        user.UserId + ", " +
-                        user.FirstName + ", " +
-                        user.LastName + ", " +
-                        user.email + ", " +
-                        user.password;
+                        user.UserId + ", '" +
+                        user.FirstName + "' , '" +
+                        user.LastName + "' , '" +
+                        user.email + "' , '" +
+                        user.password + "'";
                     String insertAdmin = "" +
                         "INSERT INTO admins " +
                         "(user_id) VALUES " +
@@ -893,7 +893,20 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
             return availableClasses;
         }
-        
+
+        public static List<Class> AllAvailableClasses(UserInfo user)
+        {
+            int[] previouslyTakenCourses = PreviousClassIDs(user);
+            List<Class> allClasses = AllClasses();
+            List<Class> availableClasses = new List<Class>();
+            // goes through every class, if the user meets the requirements of a class then it is added to the list of available classes
+            foreach (Class course in allClasses)
+            {
+                if (course.MeetsRequisites(user) && !previouslyTakenCourses.Contains(course.id)) availableClasses.Add(course);
+            }
+            return availableClasses;
+        }
+
         /// <summary>
         /// Returns a List of all the classes a student can take with their current status, filtered by a certain grade level
         /// </summary>
