@@ -124,6 +124,19 @@ namespace CASIITInformationWebsite.Pages
 
         protected void Guest_Click(object sender, EventArgs e)
         {
+            Student student = new Student(
+                "first",
+                "last",
+                0,
+                1,
+                4.0,
+                0,
+                "email@gmail.com",
+                "password"
+            );
+
+            SQLQuerier.InsertStudent(student);
+
             Server.TransferRequest("~/Pages/Home");
             SiteMaster.loggedIn = false;
         }
