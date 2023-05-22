@@ -408,7 +408,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                         user.FirstName + "' , '" +
                         user.LastName + "' , '" +
                         user.email + "' , '" +
-                        user.password + ")";
+                        user.password + "')";
 
                     using (MySqlCommand command = new MySqlCommand(insert, connection))
                     {
@@ -441,7 +441,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                         user_id + " , " +
                         user.GPA + " , " +
                         user.Year + " , " +
-                        user.GPA;
+                        user.GPA + ")";
 
                     using (MySqlCommand command = new MySqlCommand(insert, connection))
                     {
@@ -546,7 +546,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                         user.FirstName + "' , '" +
                         user.LastName + "' , '" +
                         user.email + "' , '" +
-                        user.password + ")";
+                        user.password + "')";
 
                     using (MySqlCommand command = new MySqlCommand(insert, connection))
                     {
@@ -676,7 +676,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                         user.FirstName + "' , '" +
                         user.LastName + "' , '" +
                         user.email + "' , '" +
-                        user.password + ")";
+                        user.password + "')";
 
                     using (MySqlCommand command = new MySqlCommand(insert, connection))
                     {
