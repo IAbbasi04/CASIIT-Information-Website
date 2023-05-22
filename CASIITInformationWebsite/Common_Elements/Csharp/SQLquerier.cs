@@ -528,27 +528,17 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
                     connection.Open();
-                    String insertUser = "" +
-                        "INSERT INTO users " +
-                        "(id, first_name, last_name, email, password) VALUES " +
-                        user.UserId + " , '" +
+                    String insert = "" +
+                        "INSERT INTO (JOIN users ON users.id = students.user_id)" +
+                        "(first_name, last_name, email, password, year, gpa) VALUES '" +
                         user.FirstName + "' , '" +
                         user.LastName + "' , '" +
                         user.email + "' , '" +
-                        user.password + "' ";
-                    String insertStudent = "" +
-                        "INSERT INTO students " +
-                        "(user_id, year, gpa, counselor_id) VALUES " +
-                        user.UserId + " , " +
+                        user.password + "' , " +
                         user.Year + " , " +
-                        user.GPA + " , " +
-                        user.CounselorId;
+                        user.GPA;
 
-                    using (MySqlCommand command = new MySqlCommand(insertUser, connection))
-                    {
-                        command.ExecuteNonQuery();
-                    }
-                    using (MySqlCommand command = new MySqlCommand(insertStudent, connection))
+                    using (MySqlCommand command = new MySqlCommand(insert, connection))
                     {
                         command.ExecuteNonQuery();
                     }
