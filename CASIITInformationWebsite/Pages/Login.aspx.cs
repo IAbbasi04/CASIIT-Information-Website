@@ -188,6 +188,7 @@ namespace CASIITInformationWebsite.Pages
 
             if (canMoveOn)
             {
+                SQLQuerier.InsertStudent(new Student(FirstNameTextBox.Text, LastNameTextBox.Text, 0, 4.0, SignUpEmailTextBox.Text, SignUpPasswordTextBox.Text));
                 SignUpTable.Visible = false;
                 LinkButton lb = Master.FindControl("LoginButton") as LinkButton;
                 lb.Text = "Sign Out";
