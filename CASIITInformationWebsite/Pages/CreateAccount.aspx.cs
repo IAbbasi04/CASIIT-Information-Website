@@ -22,64 +22,39 @@ namespace CASIITInformationWebsite.Pages
             
         }
 
-        private void Send_Verification_Email(string recipientEmail)
+        private bool Send_Verification_Email(string recipientEmail)
         {
-            var fromAddress = new MailAddress("kyle@houchin.us", "From Name");
-            var toAddress = new MailAddress("kyle@houchin.us", "To Name");
-            const string fromPassword = "jdrccotbsqzanxfy";
-            const string subject = "Subject";
-            const string body = "Body";
+            // try to send email
+            try
+            {
+                var fromAddress = new MailAddress("BattlefieldCasiit@gmail.com", "From Name");
+                var toAddress = new MailAddress(recipientEmail, "To Name");
+                const string fromPassword = "vkjjgqhbdocmhatn"; // Account Settings > Security > 2Factor Authentication > API KEys
+                const string subject = "Subject";
+                const string body = "Body";
 
-            var smtp = new SmtpClient
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com",
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+                };
+                using (var message = new MailMessage(fromAddress, toAddress) { Subject = subject, Body = body })
+                {
+                    smtp.Send(message);
+                }
+            }
+            catch
             {
-                Host = "smtp.gmail.com",
-                Port = 587,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
-            };
-            using (var message = new MailMessage(fromAddress, toAddress)
-            {
-                Subject = subject,
-                Body = body
-            })
-            {
-                smtp.Send(message);
+                // email failed to send
+                return false;
             }
 
-            //try
-            //{
-            //    MailMessage newMail = new MailMessage();
-            //    // use the Gmail SMTP Host
-            //    SmtpClient client = new SmtpClient("smtp.gmail.com");
-
-            //    // Follow the RFS 5321 Email Standard
-            //    newMail.From = new MailAddress("BattlefieldCasiit@gmail.com", "Battlefield Casiit");
-
-            //    newMail.To.Add(recipientEmail);// declare the email subject
-
-            //    newMail.Subject = "Test Subject"; // use HTML for the email body
-
-            //    newMail.Body = "This is a really cool body";
-            //    //newMail.IsBodyHtml = true; newMail.Body = "<h1> This is my first Templated Email in C# </h1>";
-
-            //    // enable SSL for encryption across channels
-            //    client.EnableSsl = true;
-            //    // Port 465 for SSL communication
-            //    client.Port = 465;
-            //    // Provide authentication information with Gmail SMTP server to authenticate your sender account
-            //    client.Credentials = new System.Net.NetworkCredential("BattlefieldCasiit@gmail.com", "AIzaSyC2Ml1ovmI0DhBZMM");
-
-            //    client.Send(newMail); // Send the constructed mail
-            //    Console.WriteLine("Email Sent");
-            //}
-            //catch
-            //{
-            //    return false;
-            //}
-
-            //return true;
+            // email sent successfully
+            return true;
         }
 
         protected void bCreateAccount_Click(object sender, EventArgs e)
