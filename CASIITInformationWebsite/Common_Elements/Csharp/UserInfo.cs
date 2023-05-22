@@ -29,6 +29,16 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 		public double GPA;
 		public int CounselorId;
 
+        public Student(string firstName, string lastName, int year, double gpa, string email, string password)
+        {
+            base.FirstName = firstName;
+            base.LastName = lastName;
+            this.Year = year;
+            this.GPA = gpa;
+            this.email = email;
+            this.password = password;
+        }
+
         public Student(string firstName, string lastName, int userId, int year, double gpa, int counselorId, string email, string password)
         {
             base.FirstName = firstName;
@@ -83,6 +93,16 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 		public string NameRangeStart;
 		public string NameRangeEnd;
 
+        public Counselor(string firstName, string lastName, string nameRangeStart, string nameRangeEnd, string email, string password)
+        {
+            base.FirstName = firstName;
+            base.LastName = lastName;
+            this.NameRangeStart = nameRangeStart;
+            this.NameRangeEnd = nameRangeEnd;
+            this.email = email;
+            this.password = password;
+        }
+
         public Counselor(string firstName, string lastName, int userId, string nameRangeStart, string nameRangeEnd, string email, string password)
         {
             base.FirstName = firstName;
@@ -119,6 +139,14 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 	public class Admin : UserInfo
 	{
 		private int AdminId;
+
+        public Admin(string firstName, string lastName, string email, string password)
+        {
+            base.FirstName = firstName;
+            base.LastName = lastName;
+            this.email = email;
+            this.password = password;
+        }
 
         public Admin(string firstName, string lastName, int userId, string email, string password)
         {

@@ -11,6 +11,7 @@ using System.Web.Management;
 using Microsoft.Ajax.Utilities;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Asn1.X509.Qualified;
+using Org.BouncyCastle.Utilities.Collections;
 
 namespace CASIITInformationWebsite.Common_Elements.Csharp
 {
@@ -404,12 +405,12 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     connection.Open();
                     String insert = "" +
                         "INSERT INTO users" +
-                        "(first_name, last_name, email, password, year, gpa) VALUES ('" +
+                        "(first_name, last_name, email, password, role_id) VALUES ('" +
                         user.FirstName + "' , '" +
                         user.LastName + "' , '" +
                         user.email + "' , '" +
-                        user.password + "')";
-
+                        user.password + "', 1 )";
+                    Console.WriteLine(insert);
                     using (MySqlCommand command = new MySqlCommand(insert, connection))
                     {
                         command.ExecuteNonQuery();
@@ -420,10 +421,10 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 {
                     connection.Open();
                     String query = "SELECT id FROM users WHERE " +
-                        "email LIKE" + user.email + " AND " +
-                        "password LIKE " + user.password;
-
-                    using(MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                        "email LIKE '" + user.email + "' AND " +
+                        "password LIKE '" + user.password + "'";
+                    Console.WriteLine(query);
+                    using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                     {
                         if (reader.Read())
                         {
@@ -437,12 +438,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     connection.Open();
                     String insert = "" +
                         "INSERT INTO students" +
-                        "(id, gpa, year, counselor_id) VALUES (" +
+                        "(id, gpa, year) VALUES (" +
                         user_id + " , " +
                         user.GPA + " , " +
-                        user.Year + " , " +
-                        user.GPA + ")";
-
+                        user.Year + ")";
+                    Console.WriteLine(insert);
                     using (MySqlCommand command = new MySqlCommand(insert, connection))
                     {
                         command.ExecuteNonQuery();
@@ -546,7 +546,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                         user.FirstName + "' , '" +
                         user.LastName + "' , '" +
                         user.email + "' , '" +
-                        user.password + "')";
+                        user.password + "' , 2)";
 
                     using (MySqlCommand command = new MySqlCommand(insert, connection))
                     {
@@ -558,8 +558,8 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 {
                     connection.Open();
                     String query = "SELECT id FROM users WHERE " +
-                        "email LIKE" + user.email + " AND " +
-                        "password LIKE " + user.password;
+                        "email LIKE '" + user.email + "' AND " +
+                        "password LIKE '" + user.password + "'";
 
                     using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                     {
@@ -676,7 +676,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                         user.FirstName + "' , '" +
                         user.LastName + "' , '" +
                         user.email + "' , '" +
-                        user.password + "')";
+                        user.password + "' , 3)";
 
                     using (MySqlCommand command = new MySqlCommand(insert, connection))
                     {
@@ -688,8 +688,8 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 {
                     connection.Open();
                     String query = "SELECT id FROM users WHERE " +
-                        "email LIKE" + user.email + " AND " +
-                        "password LIKE " + user.password;
+                        "email LIKE '" + user.email + "' AND " +
+                        "password LIKE '" + user.password + "'";
 
                     using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                     {
