@@ -24,6 +24,8 @@ namespace CASIITInformationWebsite.Pages
 
         public void Reset(object sender, EventArgs e)
         {
+            LinkButton lb = sender as LinkButton;
+
             LoginEmailLabel.Visible = false;
             PasswordLabel.Visible = false;
             SignUpEmailLabel.Visible = false;
@@ -34,26 +36,49 @@ namespace CASIITInformationWebsite.Pages
             PersonTypeTable.Visible = true;
             SignUpTable.Visible = false;
             LoginTable.Visible = false;
-            
-            personType = PersonType.GUEST;
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
             LinkButton lb = Master.FindControl("LoginButton") as LinkButton;
             lb.Click += Reset;
+
+            if (SiteMaster.loggedIn)
+            {
+                Server.TransferRequest("~/Pages/Home");
+                SiteMaster.loggedIn = false;
+            }
         }
 
         protected void Login_Click(object sender, EventArgs e)
         {
-            PasswordLabel.Visible = true;
+            bool canMoveOn = true;
+
             if (!IsValidEmail(LoginEmailBox.Text))
             {
+                canMoveOn = false;
                 LoginEmailLabel.Visible = true;
             }
             else
             {
                 LoginEmailLabel.Visible = false;
+            }
+
+            if (LoginPasswordBox.Text == "")
+            {
+                canMoveOn = false;
+                PasswordLabel.Visible = true;
+            } else
+            {
+                PasswordLabel.Visible = false;
+            }
+
+            if (canMoveOn)
+            {
+                LinkButton lb = Master.FindControl("LoginButton") as LinkButton;
+                lb.Text = "Sign Out";
+                SiteMaster.loggedIn = true;
+                Server.TransferRequest("~/Pages/Home");
             }
         }
 
@@ -77,7 +102,7 @@ namespace CASIITInformationWebsite.Pages
         {
             Button button = sender as Button;
 
-            switch (button.Text) {
+            switch (button.ID) {
                 case "Student":
                     personType = PersonType.STUDENT;
                     break;
@@ -101,7 +126,21 @@ namespace CASIITInformationWebsite.Pages
 
         protected void Guest_Click(object sender, EventArgs e)
         {
+            Student student = new Student(
+                "first",
+                "last",
+                0,
+                1,
+                4.0,
+                0,
+                "email@gmail.com",
+                "password"
+            );
+
+            SQLQuerier.InsertStudent(student);
+
             Server.TransferRequest("~/Pages/Home");
+            SiteMaster.loggedIn = false;
         }
 
         protected void SignUp_Click(object sender, EventArgs e)
@@ -152,6 +191,7 @@ namespace CASIITInformationWebsite.Pages
                 SignUpTable.Visible = false;
                 LinkButton lb = Master.FindControl("LoginButton") as LinkButton;
                 lb.Text = "Sign Out";
+                SiteMaster.loggedIn = true;
                 Server.TransferRequest("~/Pages/Home");
             }
 
