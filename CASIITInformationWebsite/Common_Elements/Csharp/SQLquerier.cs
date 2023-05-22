@@ -926,8 +926,8 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     string query = "" +
                         "SELECT id " +
                         "FROM users " +
-                        "WHERE email = " + email +
-                        " AND password = " + password;
+                        "WHERE email LIKE '" + email +
+                        "' AND password LIKE '" + password + "'";
                     connection.Open();
                     using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                     {
