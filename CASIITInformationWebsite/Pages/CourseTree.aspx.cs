@@ -76,28 +76,24 @@ namespace CASIITInformationWebsite
 
             //create panels TODO: do this properly
             List<Panel> panels = new List<Panel>();
-            panels.Add(CreateBox("test1", "test", 9, null, new string[] {  }));
-            panels.Add(CreateBox("test2", "test", 9, null, new string[] { "test1" }));
-            panels.Add(CreateBox("test3", "test", 9, null, new string[] { "test1" }));
-            panels.Add(CreateBox("test4", "test", 9, null, new string[] { "test2" }));
-            panels.Add(CreateBox("test5", "test", 9, null, new string[] { "test2" }));
-            panels.Add(CreateBox("test6", "test", 9, null, new string[] { "test3" }));
-            panels.Add(CreateBox("test7", "test", 9, null, new string[] { "test3" }));
-            panels.Add(CreateBox("test8", "test", 9, null, new string[] { "test4" }));
-            panels.Add(CreateBox("test9", "test", 9, null, new string[] { "test4" }));
-            panels.Add(CreateBox("test10", "test", 9, null, new string[] { "test5" }));
-
             panels.Add(CreateBox("Adv Computer Math", "math bro", 9, null, new string[] { "Algebra 1" }));
             panels.Add(CreateBox("AP Computer Science", "science bro", 10, null, new string[] { "Geometry", "Adv Computer Math" }));
+            panels.Add(CreateBox("Data Structures and Algorithms", "data bro", 11, null, new string[] { "AP Computer Science", "Algebra 2" }));
+            panels.Add(CreateBox("Adv Computer Studies", "someone remind me to look at these really long descriptions to make sure they don't look weird", 11, null, new string[] { "AP Computer Science" }));
             panels.Add(CreateBox("IT Fundamentals", "it bro", 9, null, null));
             panels.Add(CreateBox("IT Programming DE", "python bro", 10, null, new string[] { "IT Fundamentals" }));
+            panels.Add(CreateBox("IT Adv Programming DE", "hey i think i took this class", 10, null, new string[] { "IT Programming DE" }));
             panels.Add(CreateBox("Cybersecurity Systems Tech DE", "security bro", 10, null, new string[] { "IT Fundamentals" }));
-            panels.Add(CreateBox("Comp Networking I, II DE", "networks bro", 10, 2.5f, new string[] { }));
+            panels.Add(CreateBox("Comp Networking I, II DE", "networks bro", 10, 2.5f, new string[] { "IT Fundamentals" }));
+            panels.Add(CreateBox("Comp Networking III, IV DE", "no idea if this is right, mostly just want to see what it does to the tree", 10, 2.5f, new string[] { "IT Fundamentals", "Comp Networking I, II DE" }));
             panels.Add(CreateBox("IT Graphics Design", "art bro", 9, null, new string[] { }));
             panels.Add(CreateBox("IT Computer Graphics I", "graphics bro", 10, null, new string[] { "IT Graphics Design:OR:", "Art 1:OR:" }));
             panels.Add(CreateBox("Photography I", "pictures bro", 10, null, new string[] { "IT Graphics Design:OR:", "Art 1:OR:" }));
             panels.Add(CreateBox("IT Web Tech", "web bro", 9, null, new string[] { }));
-            panels.Add(CreateBox("Engineering and Robotics", "robots bro", 9, null, new string[] { "Geometry" }));
+            panels.Add(CreateBox("Engineering and Robotics", "robots bro", 10, null, new string[] { "Geometry" }));
+            panels.Add(CreateBox("Engineering and Robotics II", "did you really expect me to hunt down the descriptions for all these classes? no that's the database people's job", 11, null, new string[] { "Engineering and Robotics" }));
+            panels.Add(CreateBox("Sustainability and Renewable Technology", "long name club", 11, null, new string[] {}));
+
 
             //string myConnectionString = "server=p3nlmysql165plsk.secureserver.net;uid=CSIsAwesome;pwd=Casiit2117Class;database=battlefield_casiit";
 
@@ -141,12 +137,12 @@ namespace CASIITInformationWebsite
             //find postrequisites
             foreach (Panel panel in panels)
             {
-                foreach (string prereq in ((HiddenField)panel.FindControl($"{panel.ID}_preq")).Value.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (string prereq in ((HiddenField)panel.FindControl($"{panel.ID}_preq")).Value.Split(new string[] { ",," }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     Panel item = (Panel)panel.Parent.FindControl(prereq.Replace(":OR:", ""));
                     if (item != null)
                     {
-                        ((HiddenField)panel.FindControl($"{item.ID}_ptrq")).Value += panel.ID + ", ";
+                        ((HiddenField)panel.FindControl($"{item.ID}_ptrq")).Value += panel.ID + ",,";
                     }
                 }
             }
@@ -183,7 +179,7 @@ namespace CASIITInformationWebsite
             {
                 AddParentOffsetToChildren(panel);
             }
-            //line up pannels 
+            //line up panels 
             FixLinePanelRelations(panels);
             string[] data = Request.Form["__EVENTARGUMENT"].Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 3; i < UpdatePanel1.ContentTemplateContainer.Controls.Count; i++)
@@ -202,7 +198,7 @@ namespace CASIITInformationWebsite
                 //get the list of prerequisites
                 string prereqs = ((HiddenField)panel.FindControl($"{panel.ID}_preq")).Value;
                 //for every prerequisite
-                foreach (string prereq in prereqs.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (string prereq in prereqs.Split(new string[] { ",," }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     //check if it has a tree element, since some may not (ex. geometry)
                     Panel item = (Panel)panel.Parent.FindControl(prereq.Replace(":OR:", ""));
@@ -327,7 +323,7 @@ namespace CASIITInformationWebsite
         /// <param name="panel">The parent element whos offset to propigate</param>
         private void AddParentOffsetToChildren(Panel panel)
         {
-            foreach (string pstreq in ((HiddenField)panel.FindControl($"{panel.ID}_ptrq")).Value.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string pstreq in ((HiddenField)panel.FindControl($"{panel.ID}_ptrq")).Value.Split(new string[] { ",," }, StringSplitOptions.RemoveEmptyEntries))
             {
                 Panel item = (Panel)panel.Parent.FindControl(pstreq);
                 item.Style["left"] = $"{int.Parse(item.Style["left"].Replace("px", "")) + int.Parse(panel.Style["left"].Replace("px", ""))}px";
@@ -345,12 +341,12 @@ namespace CASIITInformationWebsite
             //once at bottom, offset = 0 and go up 1
             //offset = (widths[i] / 2) + (avgPanelWidth / 2) + prevOffset - (totalNeededWidth / 2) - (avgPanelWidth / 2)
             //go back down the tree later adding parent offset to children
-            int items = ((HiddenField)panel.FindControl($"{panel.ID}_ptrq")).Value.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries).Length;
+            int items = ((HiddenField)panel.FindControl($"{panel.ID}_ptrq")).Value.Split(new string[] { ",," }, StringSplitOptions.RemoveEmptyEntries).Length;
             if (items == 0)
             {
                 return avgPanelWidth;
             }
-            string[] array = ((HiddenField)panel.FindControl($"{panel.ID}_ptrq")).Value.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
+            string[] array = ((HiddenField)panel.FindControl($"{panel.ID}_ptrq")).Value.Split(new string[] { ",," }, StringSplitOptions.RemoveEmptyEntries);
 
             int[] widths = new int[array.Length];
             int totalNeededWidth = 0;
@@ -391,7 +387,7 @@ namespace CASIITInformationWebsite
             //get the list of prerequisites
             string prereqs = ((HiddenField)panel.FindControl($"{panel.ID}_preq")).Value;
             //for every prerequisite
-            foreach (string prereq in prereqs.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string prereq in prereqs.Split(new string[] { ",," }, StringSplitOptions.RemoveEmptyEntries))
             {
                 //check if it has a tree element, since some may not (ex. geometry)
                 Panel item = (Panel)panel.Parent.FindControl(prereq.Replace(":OR:", ""));
@@ -431,7 +427,7 @@ namespace CASIITInformationWebsite
             {
                 for (int i = 0; i < prerequisites.Length; i++)
                 {
-                    prereqs += prerequisites[i] + ", ";
+                    prereqs += prerequisites[i] + ",,";
                     if (prerequisites[i].EndsWith(":OR:") && i + 1 < prerequisites.Length && prerequisites[i + 1].EndsWith(":OR:"))
                     {
                         prereqsDisplay += prerequisites[i].Replace(":OR:", "") + " or ";
@@ -452,14 +448,44 @@ namespace CASIITInformationWebsite
             panel.Style.Add("position", "absolute");
 
             Button button = new Button();
-            button.Text = $"Class: {className}\nMinimum Grade: {minGrade}th" + (minGPA == 0 ? "" : $"\nMinimum GPA: {minGPA}");
+            string bText = $"Class: {className}\nMinimum Grade: {minGrade}th" + (minGPA == 0 ? "" : $"\nMinimum GPA: {minGPA}");
+            for (int i = 0; i < bText.Split('\n').Length; i++)
+            {
+                if (bText.Split('\n')[i].Length > 30)
+                {
+                    if (bText.Split('\n')[i].Substring(4, 26).Contains(' '))
+                    {
+                        bText = bText.Replace(bText.Split('\n')[i], bText.Split('\n')[i].Insert(bText.Split('\n')[i].LastIndexOf(' ', 30), "\n "));
+                    }
+                    else
+                    { 
+                        bText = bText.Replace(bText.Split('\n')[i], bText.Split('\n')[i].Insert(30, "\n ")); 
+                    }
+                }
+            }
+            button.Text = bText;
             button.Style.Add("text-align", "left");
             button.Style.Add("width", "100%");
             button.Style.Add("height", "100%");
             button.Style.Add("background-color", "var(--button-background)");
 
             Button button2 = new Button();
-            button2.Text = $"Class: {className}\nDescription: {description}\nMinimum Grade: {minGrade}th" + (minGPA == 0 ? "" : $"\nMinimum GPA: {minGPA}") + (prereqs == "" ? "" : $"\nPrerequisites: {prereqsDisplay}");
+            string b2Text = $"Class: {className}\nDescription: {description}\nMinimum Grade: {minGrade}th" + (minGPA == 0 ? "" : $"\nMinimum GPA: {minGPA}") + (prereqs == "" ? "" : $"\nPrerequisites: {prereqsDisplay}");
+            for (int i = 0; i < b2Text.Split('\n').Length; i++)
+            {
+                if (b2Text.Split('\n')[i].Length > 30)
+                {
+                    if (b2Text.Split('\n')[i].Substring(4, 26).Contains(' '))
+                    {
+                        b2Text = b2Text.Replace(b2Text.Split('\n')[i], b2Text.Split('\n')[i].Insert(b2Text.Split('\n')[i].LastIndexOf(' ', 30), "\n "));
+                    }
+                    else
+                    {
+                        b2Text = b2Text.Replace(b2Text.Split('\n')[i], b2Text.Split('\n')[i].Insert(30, "\n "));
+                    }
+                }
+            }
+            button2.Text = b2Text;
             button2.Style.Add("text-align", "left");
             button2.Style.Add("width", "100%");
             button2.Style.Add("height", "100%");
