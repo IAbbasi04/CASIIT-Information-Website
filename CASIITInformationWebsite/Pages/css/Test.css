@@ -5,8 +5,8 @@
     --toggler-size: 30px;
     --toggler-line-number: 3;
     --toggler-line-size: calc(var(--toggler-size) / (var(--toggler-line-number) + var(--toggler-line-number) - 1));
-    --toggler-offset-left: 200px;
-    --toggler-offset-top: 200px;
+    --toggler-offset-left: 25px;
+    --toggler-offset-top: 70px;
     --toggler-color: Purple;
     --toggler-color-hover: Purple;
 }

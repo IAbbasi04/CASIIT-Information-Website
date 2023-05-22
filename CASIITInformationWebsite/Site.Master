@@ -60,7 +60,6 @@
                                     <li><a runat="server" href="~/Pages/CourseTree">Course Tree</a></li>
                                     <li><a runat="server" href="~/Pages/FacultyAndStaff">Faculty and Staff</a></li>
                                     <li><a runat="server" href="~/Pages/FAQ">FAQ</a></li>
-                                    <li><a runat="server" href="~/Pages/InputTab">InputTab</a></li>
                                 </ul>
                             </asp:TableCell>
                             <asp:TableCell/>

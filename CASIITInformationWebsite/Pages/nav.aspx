@@ -1,12 +1,11 @@
-<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeBehind="nav.aspx.cs" Inherits="CASIITInformationWebsite.Pages.nav" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="nav.aspx.cs" Inherits="CASIITInformationWebsite.Pages.nav" %>
 
 <!DOCTYPE html>
 
-   
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head runat="server">
-    <link rel ="stylesheet" href="css/Test.css" />
+        <link rel="stylesheet" href="css/Test.css"/>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css"
         rel="stylesheet" type="text/css" />
