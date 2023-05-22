@@ -10,6 +10,8 @@ namespace CASIITInformationWebsite.Pages
 {
     public partial class Login : Page
     {
+        public static UserInfo currentUser;
+
         public enum PersonType
         {
             STUDENT,

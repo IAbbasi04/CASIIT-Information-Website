@@ -34,7 +34,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
 
             public static string ToString( ClassOption option)
             {
-                return "ID: " + option.classID;
+                return SQLQuerier.SelectClass(option.classID).course_name;
             }
 
         }
