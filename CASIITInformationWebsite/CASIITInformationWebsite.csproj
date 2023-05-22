@@ -185,6 +185,15 @@
     <Content Include="Images2\graduation.png" />
     <Content Include="Images2\nova_logo.jpg" />
     <Content Include="Images2\ribbon.png" />
+    <Content Include="Images\BishopGD.jpg" />
+    <Content Include="Images\ClarkeCN.jpg" />
+    <Content Include="Images\EversSL.jpg" />
+    <Content Include="Images\GoetzMA.jpg" />
+    <Content Include="Images\LevinRS.jpg" />
+    <Content Include="Images\McGaugMR.jpg" />
+    <Content Include="Images\MettsTR.jpg" />
+    <Content Include="Images\MoffatGR.jpg" />
+    <Content Include="Images\SheparBN.jpg" />
     <Content Include="Pages\CourseCatalogue.aspx" />
     <Content Include="Pages\CourseTree.aspx" />
     <Content Include="Pages\css\Test.css" />
@@ -316,7 +325,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Common_Elements\ASP.Net\" />
-    <Folder Include="Images\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
