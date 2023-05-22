@@ -529,15 +529,45 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 {
                     connection.Open();
                     String insert = "" +
-                        "INSERT INTO (JOIN users ON users.id = students.user_id)" +
-                        "(first_name, last_name, email, password, year, gpa) VALUES '" +
+                        "INSERT INTO users" +
+                        "(first_name, last_name, email, password, role_id) VALUES ('" +
                         user.FirstName + "' , '" +
                         user.LastName + "' , '" +
                         user.email + "' , '" +
-                        user.password + "' , " +
-                        user.Year + " , " +
-                        user.GPA;
-
+                        user.password + "', 1 )";
+                    Console.WriteLine(insert);
+                    using (MySqlCommand command = new MySqlCommand(insert, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                }
+                int user_id;
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+                {
+                    connection.Open();
+                    String query = "SELECT id FROM users WHERE " +
+                        "email LIKE '" + user.email + "' AND " +
+                        "password LIKE '" + user.password + "'";
+                    Console.WriteLine(query);
+                    using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            user_id = reader.GetInt32("id");
+                        }
+                        else user_id = -1;
+                    }
+                }
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+                {
+                    connection.Open();
+                    String insert = "" +
+                        "INSERT INTO students" +
+                        "(id, gpa, year) VALUES (" +
+                        user_id + " , " +
+                        user.GPA + " , " +
+                        user.Year + ")";
+                    Console.WriteLine(insert);
                     using (MySqlCommand command = new MySqlCommand(insert, connection))
                     {
                         command.ExecuteNonQuery();
@@ -635,26 +665,47 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
                     connection.Open();
-                    String insertUser = "" +
-                        "INSERT INTO users " +
-                        "(id, first_name, last_name, email, password) VALUES " +
-                        user.UserId + ", '" +
+                    String insert = "" +
+                        "INSERT INTO users" +
+                        "(first_name, last_name, email, password, year, gpa) VALUES ('" +
                         user.FirstName + "' , '" +
                         user.LastName + "' , '" +
                         user.email + "' , '" +
-                        user.password + "'";
-                    String insertCounselor = "" +
-                        "INSERT INTO counselors " +
-                        "(user_id, name_range_start, name_range_end) VALUES " +
-                        user.UserId + ", '" +
-                        user.NameRangeStart + "' , '" +
-                        user.NameRangeEnd + "'";
+                        user.password + "' , 2)";
 
-                    using (MySqlCommand command = new MySqlCommand(insertUser, connection))
+                    using (MySqlCommand command = new MySqlCommand(insert, connection))
                     {
                         command.ExecuteNonQuery();
                     }
-                    using (MySqlCommand command = new MySqlCommand(insertCounselor, connection))
+                }
+                int user_id;
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+                {
+                    connection.Open();
+                    String query = "SELECT id FROM users WHERE " +
+                        "email LIKE '" + user.email + "' AND " +
+                        "password LIKE '" + user.password + "'";
+
+                    using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            user_id = reader.GetInt32("id");
+                        }
+                        else user_id = -1;
+                    }
+                }
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+                {
+                    connection.Open();
+                    String insert = "" +
+                        "INSERT INTO counselors" +
+                        "(id, name_range_start, name_range_end) VALUES (" +
+                        user_id + " , " +
+                        user.NameRangeStart + " , " +
+                        user.NameRangeEnd + ")";
+
+                    using (MySqlCommand command = new MySqlCommand(insert, connection))
                     {
                         command.ExecuteNonQuery();
                     }
@@ -744,24 +795,45 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
                     connection.Open();
-                    String insertUser = "" +
-                        "INSERT INTO users " +
-                        "(id, first_name, last_name, email, password) VALUES " +
-                        user.UserId + ", '" +
+                    String insert = "" +
+                        "INSERT INTO users" +
+                        "(first_name, last_name, email, password, year, gpa) VALUES ('" +
                         user.FirstName + "' , '" +
                         user.LastName + "' , '" +
                         user.email + "' , '" +
-                        user.password + "'";
-                    String insertAdmin = "" +
-                        "INSERT INTO admins " +
-                        "(user_id) VALUES " +
-                        user.UserId;
+                        user.password + "' , 3)";
 
-                    using (MySqlCommand command = new MySqlCommand(insertUser, connection))
+                    using (MySqlCommand command = new MySqlCommand(insert, connection))
                     {
                         command.ExecuteNonQuery();
                     }
-                    using (MySqlCommand command = new MySqlCommand(insertAdmin, connection))
+                }
+                int user_id;
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+                {
+                    connection.Open();
+                    String query = "SELECT id FROM users WHERE " +
+                        "email LIKE '" + user.email + "' AND " +
+                        "password LIKE '" + user.password + "'";
+
+                    using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            user_id = reader.GetInt32("id");
+                        }
+                        else user_id = -1;
+                    }
+                }
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+                {
+                    connection.Open();
+                    String insert = "" +
+                        "INSERT INTO admins" +
+                        "(id) VALUES (" +
+                        user_id + ")";
+
+                    using (MySqlCommand command = new MySqlCommand(insert, connection))
                     {
                         command.ExecuteNonQuery();
                     }
