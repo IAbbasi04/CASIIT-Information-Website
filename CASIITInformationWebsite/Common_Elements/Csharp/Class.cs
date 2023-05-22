@@ -63,7 +63,7 @@ namespace CASIITInformationWebsite.Common_Elements
 
         public bool MeetsRequisites(Student user)
         {
-            if (user.GPA < prerequisite.min_GPA || user.Year < prerequisite.min_year) return false;
+            if (user.GPA < prerequisite.min_GPA || user.Year < prerequisite.min_year - 1) return false;
             List<List<int>> possibleCourses = this.prerequisite.PossibleRequiredClasses();
             if (possibleCourses.Count() == 0) return true;
             int[] classesTaken = SQLQuerier.PreviousClassIDs(user);
