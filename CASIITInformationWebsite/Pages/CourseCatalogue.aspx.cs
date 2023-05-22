@@ -26,7 +26,7 @@ namespace CASIITInformationWebsite
             {
                 PopulateDropDownList();
             }
-            
+            PropogateList();
         }
 
             //for(int i = 0; i < NUMCLASSES; i++)
@@ -144,6 +144,7 @@ namespace CASIITInformationWebsite
         protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
         {
             concentrationFilter = DropDownList1.SelectedItem.Text;
+            PropogateList();
         }
 
         protected void TextBox1_TextChanged(object sender, EventArgs e)
@@ -157,11 +158,13 @@ namespace CASIITInformationWebsite
             {
                 Label3.Visible = true;
             }
+            PropogateList();
         }
 
         protected void DropDownList2_SelectedIndexChanged(object sender, EventArgs e)
         {
             yearFilter = int.Parse(DropDownList2.SelectedValue);
+            PropogateList();
         }
 
         protected void GoButton_Click(object sender, EventArgs e)
@@ -190,11 +193,6 @@ namespace CASIITInformationWebsite
 
             //if (CheckBox1.Checked && Pages.Login.currentUser != null) courses = SQLQuerier.AllAvailableClasses(Pages.Login.currentUser);
              courses = SQLQuerier.FilterSelect(gpaMin: gpaFilter, yearMin: DropDownList2.SelectedIndex, concentration: concentrationFilter );
-            //Class1.Visible = ((Class1Concentration.Text.Equals(concentrationFilter) ||
-            //concentrationFilter == "None") &&
-            //Double.Parse(Class1MinGPA.Text) < gpaFilter &&
-            //int.Parse(Class1MinYear.Text) <= yearFilter) ||
-            //concentrationFilter == "None";
 
             foreach (Class course in courses)
             {
