@@ -4,7 +4,7 @@
     <div style="position:relative; left:100px;">
         <asp:UpdatePanel runat="server" ID="upCreateAccount">
             <ContentTemplate>
-                <asp:Table runat="server">
+                <asp:Table runat="server" ID="tableCreateAccount">
                     <%--First Name--%>
                     <asp:TableRow>
                         <asp:TableCell>
@@ -83,7 +83,7 @@
                     <%--Create Account Button--%>
                     <asp:TableRow>
                         <asp:TableCell>
-                            <asp:Button ID="bCreateAccount" runat="server" Text="CreateAccount" OnClick="Button1_Click"/>
+                            <asp:Button ID="bCreateAccount" runat="server" Text="CreateAccount" OnClick="bCreateAccount_Click"/>
                         </asp:TableCell>
                     </asp:TableRow>
 
