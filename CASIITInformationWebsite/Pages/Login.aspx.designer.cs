@@ -15,165 +15,75 @@ namespace CASIITInformationWebsite.Pages
     {
 
         /// <summary>
-        /// PersonTypeTable control.
+        /// upLogin control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Table PersonTypeTable;
+        protected global::System.Web.UI.UpdatePanel upLogin;
 
         /// <summary>
-        /// Student control.
+        /// lbLoginEmail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Student;
+        protected global::System.Web.UI.WebControls.Label lbLoginEmail;
 
         /// <summary>
-        /// Counselor control.
+        /// tbLoginEmail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Counselor;
+        protected global::System.Web.UI.WebControls.TextBox tbLoginEmail;
 
         /// <summary>
-        /// Admin control.
+        /// lbLoginPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Admin;
+        protected global::System.Web.UI.WebControls.Label lbLoginPassword;
 
         /// <summary>
-        /// SignUpTable control.
+        /// tbLoginPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Table SignUpTable;
+        protected global::System.Web.UI.WebControls.TextBox tbLoginPassword;
 
         /// <summary>
-        /// FirstNameTextBox control.
+        /// hlForgotPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox FirstNameTextBox;
+        protected global::System.Web.UI.WebControls.HyperLink hlForgotPassword;
 
         /// <summary>
-        /// SignUpFirstNameLabel control.
+        /// bLogin control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SignUpFirstNameLabel;
+        protected global::System.Web.UI.WebControls.Button bLogin;
 
         /// <summary>
-        /// LastNameTextBox control.
+        /// bCreateAccount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox LastNameTextBox;
-
-        /// <summary>
-        /// SignUpLastNameLabel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SignUpLastNameLabel;
-
-        /// <summary>
-        /// SignUpEmailTextBox control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox SignUpEmailTextBox;
-
-        /// <summary>
-        /// SignUpEmailLabel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SignUpEmailLabel;
-
-        /// <summary>
-        /// SignUpPasswordTextBox control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox SignUpPasswordTextBox;
-
-        /// <summary>
-        /// SignUpPasswordLabel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SignUpPasswordLabel;
-
-        /// <summary>
-        /// LoginTable control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Table LoginTable;
-
-        /// <summary>
-        /// LoginEmailBox control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox LoginEmailBox;
-
-        /// <summary>
-        /// LoginEmailLabel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LoginEmailLabel;
-
-        /// <summary>
-        /// LoginPasswordBox control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox LoginPasswordBox;
-
-        /// <summary>
-        /// PasswordLabel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label PasswordLabel;
+        protected global::System.Web.UI.WebControls.Button bCreateAccount;
     }
 }

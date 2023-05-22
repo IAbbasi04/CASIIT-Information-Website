@@ -1,55 +1,26 @@
-﻿<%@ Page Title="Login Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="CASIITInformationWebsite.Pages.Login" %>
+﻿<%@ Page Title="CreateAccount" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CreateAccount.aspx.cs" Inherits="CASIITInformationWebsite.Pages.CreateAccount" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    <div style="position:relative; left:100px;">
-        <asp:UpdatePanel runat="server" ID="upLogin">
+    <div>
+        
+        <asp:UpdatePanel runat="server" ID="upCreateAccount">
             <ContentTemplate>
-                <asp:Table runat="server">
-                    <%--Login Email--%>
-                    <asp:TableRow>
-                        <asp:TableCell>
-                            <asp:Label ID="lbLoginEmail" runat="server" ForeColor="White" Text="Email"></asp:Label>
-                        </asp:TableCell>
-                    </asp:TableRow>
-                    <asp:TableRow>
-                        <asp:TableCell>
-                            <%--Add spacing--%>
-                            <div style="padding-bottom:25px;"> 
-                                <asp:TextBox ID="tbLoginEmail" runat="server" />
-                            </div>
-                        </asp:TableCell>
-                    </asp:TableRow>
+                <asp:Label ID="lbCreateAccountFirstName" runat="server" Text="Label"></asp:Label>
+                <asp:TextBox ID="tbCreateAccountFirstName" runat="server" />
 
-                    <%--Login Password--%>
-                    <asp:TableRow>
-                        <asp:TableCell>
-                            <asp:Label ID="lbLoginPassword" runat="server" ForeColor="White" Text="Password"></asp:Label>
-                        </asp:TableCell>
-                    </asp:TableRow>
-                    <asp:TableRow>
-                        <asp:TableCell>
-                            <asp:TextBox ID="tbLoginPassword" runat="server" />
-                        </asp:TableCell>
-                    </asp:TableRow>
-                    <asp:TableRow>
-                        <asp:TableCell>
-                            <%--Add spacing--%>
-                            <div style="padding-bottom:25px;"> 
-                                <asp:HyperLink ID="hlForgotPassword" runat="server" ForeColor="White" NavigateUrl="~/Pages/ForgotPassword">Forgot Password?</asp:HyperLink>
-                            </div>
-                        </asp:TableCell>
-                    </asp:TableRow>
+                <asp:Label ID="lbCreateAccountLastName" runat="server" Text="Label"></asp:Label>
+                <asp:TextBox ID="tbCreateAccountLastName" runat="server" />
 
-                    <%--Login Button--%>
-                    <asp:TableRow>
-                        <asp:TableCell>
-                            <asp:Button ID="bLogin" runat="server" Text="Login" />
-                            <asp:Button ID="bCreateAccount" runat="server" Text="CreateAccount" />
-                        </asp:TableCell>
-                    </asp:TableRow>
+                <asp:Label ID="lbCreateAccountEmail" runat="server" Text="Label"></asp:Label>
+                <asp:TextBox ID="tbCreateAccountEmail" runat="server" />
 
+                <asp:Label ID="lbCreateAccountPassword" runat="server" Text="Label"></asp:Label>
+                <asp:TextBox ID="tbCreateAccountPassword" runat="server" />
 
-                </asp:Table>
+                <asp:Label ID="lbCreateAccountConfirmPassword" runat="server" Text="Label"></asp:Label>
+                <asp:TextBox ID="tbCreateAccountConfirmPassword" runat="server" />
+
+                <asp:Button ID="Button1" runat="server" Text="CreateAccount" />
 
             </ContentTemplate>
         </asp:UpdatePanel>

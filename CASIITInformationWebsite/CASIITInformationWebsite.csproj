@@ -186,12 +186,15 @@
     <Content Include="Images2\ribbon.png" />
     <Content Include="Pages\CourseCatalogue.aspx" />
     <Content Include="Pages\CourseTree.aspx" />
+    <Content Include="Pages\CreateAccount.aspx" />
     <Content Include="Pages\css\Test.css" />
     <Content Include="Pages\FacultyAndStaff.aspx" />
     <Content Include="Pages\FAQ.aspx" />
+    <Content Include="Pages\ForgotPassword.aspx" />
     <Content Include="Pages\Home.aspx" />
     <Content Include="Pages\InputTab.aspx" />
     <Content Include="Pages\Login.aspx" />
+    <Content Include="Pages\AccountVerification.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -254,6 +257,13 @@
     <Compile Include="Pages\CourseTree.aspx.designer.cs">
       <DependentUpon>CourseTree.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Pages\CreateAccount.aspx.cs">
+      <DependentUpon>CreateAccount.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\CreateAccount.aspx.designer.cs">
+      <DependentUpon>CreateAccount.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\FacultyAndStaff.aspx.cs">
       <DependentUpon>FacultyAndStaff.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -267,6 +277,13 @@
     </Compile>
     <Compile Include="Pages\FAQ.aspx.designer.cs">
       <DependentUpon>FAQ.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ForgotPassword.aspx.cs">
+      <DependentUpon>ForgotPassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\ForgotPassword.aspx.designer.cs">
+      <DependentUpon>ForgotPassword.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>
@@ -288,6 +305,13 @@
     </Compile>
     <Compile Include="Pages\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\AccountVerification.aspx.cs">
+      <DependentUpon>AccountVerification.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\AccountVerification.aspx.designer.cs">
+      <DependentUpon>AccountVerification.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Site.Master.cs">

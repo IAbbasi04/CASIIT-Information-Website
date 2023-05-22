@@ -1,58 +1,8 @@
-﻿<%@ Page Title="Login Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="CASIITInformationWebsite.Pages.Login" %>
+﻿<%@ Page Title="AccountVerification" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AccountVerification.aspx.cs" Inherits="CASIITInformationWebsite.Pages.AccountVerification" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    <div style="position:relative; left:100px;">
-        <asp:UpdatePanel runat="server" ID="upLogin">
-            <ContentTemplate>
-                <asp:Table runat="server">
-                    <%--Login Email--%>
-                    <asp:TableRow>
-                        <asp:TableCell>
-                            <asp:Label ID="lbLoginEmail" runat="server" ForeColor="White" Text="Email"></asp:Label>
-                        </asp:TableCell>
-                    </asp:TableRow>
-                    <asp:TableRow>
-                        <asp:TableCell>
-                            <%--Add spacing--%>
-                            <div style="padding-bottom:25px;"> 
-                                <asp:TextBox ID="tbLoginEmail" runat="server" />
-                            </div>
-                        </asp:TableCell>
-                    </asp:TableRow>
+    <div>
 
-                    <%--Login Password--%>
-                    <asp:TableRow>
-                        <asp:TableCell>
-                            <asp:Label ID="lbLoginPassword" runat="server" ForeColor="White" Text="Password"></asp:Label>
-                        </asp:TableCell>
-                    </asp:TableRow>
-                    <asp:TableRow>
-                        <asp:TableCell>
-                            <asp:TextBox ID="tbLoginPassword" runat="server" />
-                        </asp:TableCell>
-                    </asp:TableRow>
-                    <asp:TableRow>
-                        <asp:TableCell>
-                            <%--Add spacing--%>
-                            <div style="padding-bottom:25px;"> 
-                                <asp:HyperLink ID="hlForgotPassword" runat="server" ForeColor="White" NavigateUrl="~/Pages/ForgotPassword">Forgot Password?</asp:HyperLink>
-                            </div>
-                        </asp:TableCell>
-                    </asp:TableRow>
-
-                    <%--Login Button--%>
-                    <asp:TableRow>
-                        <asp:TableCell>
-                            <asp:Button ID="bLogin" runat="server" Text="Login" />
-                            <asp:Button ID="bCreateAccount" runat="server" Text="CreateAccount" />
-                        </asp:TableCell>
-                    </asp:TableRow>
-
-
-                </asp:Table>
-
-            </ContentTemplate>
-        </asp:UpdatePanel>
 
     </div>
 
