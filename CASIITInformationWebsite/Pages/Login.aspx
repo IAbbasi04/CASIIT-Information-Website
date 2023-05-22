@@ -1,33 +1,45 @@
 ﻿<%@ Page Title="Login Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="CASIITInformationWebsite.Pages.Login" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+    <style type="text/css">
+        .sign-up-button {
+            border-radius:50px;
+            border-width:1px;
+            background-color:lightgray;
+            width:200px;
+            height:200px;
+        }
+
+        .sign-up-button:hover {
+            background-color:aliceblue;
+        }
+    </style>
+
     <div class="jumbotron">
         <div>
             <asp:Table runat="server" Visible="true" ID="PersonTypeTable">
                 <asp:TableRow>
                     <asp:TableCell Width="200px">
-                        <asp:Button runat="server" Text="Student" BorderWidth="1" BackColor="LightGray" OnClick="PersonType_Click" ID="Student" Width="200px" Height="200px" />
+                        <asp:Button runat="server" Text="Sign up as a Student" OnClick="PersonType_Click" ID="Student" class="sign-up-button"/>
                     </asp:TableCell>
                     <asp:TableCell Width="200px">
                     </asp:TableCell>
                     <asp:TableCell Width="200px">
-                        <asp:Button runat="server" Text="Counselor" BorderWidth="1" BackColor="LightGray" OnClick="PersonType_Click" ID="Counselor" Width="200px" Height="200px"/>
+                        <asp:Button runat="server" Text="Sign up as a Counselor" OnClick="PersonType_Click" ID="Counselor" class="sign-up-button"/>
                     </asp:TableCell>
                     <asp:TableCell Width="200px">
                     </asp:TableCell>
                     <asp:TableCell Width="200px">
-                        <asp:Button runat="server" Text="Admin" BorderWidth="1" BackColor="LightGray" OnClick="PersonType_Click" ID="Admin" Width=" 200px" Height="200px"/>
+                        <asp:Button runat="server" Text="Sign up as an Admin" OnClick="PersonType_Click" ID="Admin" class="sign-up-button"/>
                     </asp:TableCell>
                 </asp:TableRow>
                 <asp:TableRow>
-                    <asp:TableCell>
-                        <asp:LinkButton runat="server" ForeColor="LightBlue" Font-Size="Smaller" OnClick="SignIn_Click">Already have an account? Sign in</asp:LinkButton>
+                    <asp:TableCell ColumnSpan="2">
+                        <asp:LinkButton runat="server" ForeColor="Purple" Font-Size="Large" OnClick="SignIn_Click" Width="400px">Already have an account? Sign in</asp:LinkButton>
+                        <asp:LinkButton runat="server" ForeColor="Purple" Font-Size="Large" OnClick="Guest_Click" Width="400px">Continue as guest</asp:LinkButton>
                     </asp:TableCell>
                 </asp:TableRow>
                 <asp:TableFooterRow>
-                    <asp:TableCell>
-                        <asp:LinkButton runat="server" ForeColor="LightBlue" Font-Size="Smaller" OnClick="Guest_Click">Continue as guest</asp:LinkButton>
-                    </asp:TableCell>
                 </asp:TableFooterRow>
             </asp:Table>
 
