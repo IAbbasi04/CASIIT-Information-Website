@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="InputTab.aspx.cs" Inherits="CASIITInformationWebsite.Pages.InputTab" %>
+<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeBehind="nav.aspx.cs" Inherits="CASIITInformationWebsite.Pages.nav" %>
 
 <!DOCTYPE html>
 
