@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
+using System.EnterpriseServices;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
@@ -8,15 +11,93 @@ using System.Security.Cryptography;
 using System.Web;
 using System.Web.DynamicData;
 using System.Web.Management;
+using System.Web.UI;
+using K4os.Compression.LZ4.Streams.Abstractions;
 using Microsoft.Ajax.Utilities;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Asn1.X509.Qualified;
+using Org.BouncyCastle.Utilities.Collections;
 
 namespace CASIITInformationWebsite.Common_Elements.Csharp
 {
     public class SQLQuerier
     {
         public const string CONNECTION_STRING = "server=p3nlmysql165plsk.secureserver.net;uid=CSIsAwesome;pwd=Casiit2117Class;database=battlefield_casiit";
+
+        private const int ID_COL = 0;
+        private const int FIRST_NAME_COL = 1;
+        private const int LAST_NAME_COL = 2;
+        private const int EMAIL_COL = 3;
+        private const int PASSWORD_COL = 4;
+        private const int VERIFIED_COL = 5;
+        private const int ROLE_ID_COL = 6;
+
+        public static string[] GetRow(int row)
+        {
+            string query = "SELECT * FROM users LIMIT " + row + ",1";
+            List<string> output = new List<string>();
+
+            using (MySqlConnection conn = new MySqlConnection(CONNECTION_STRING))
+            {
+                conn.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, conn).ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        for(int i = 0; i < reader.FieldCount; i++)
+                        {
+                            if (i != 5)
+                            {
+                                output.Add(reader.GetString(i));
+                            }
+                        }
+                    }
+                }
+            }
+
+            return output.ToArray();
+        }
+
+        public static string[] GetColNames(string table)
+        {
+            string query = "SELECT * FROM users";
+            MySqlConnection conn = new MySqlConnection(CONNECTION_STRING);
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            conn.Open();
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            DataTable schema = rdr.GetSchemaTable();
+            conn.Close();
+
+            List<string> cols = new List<string>();
+
+            foreach (DataRow rdrColumn in schema.Rows)
+            {
+                String columnName = rdrColumn[schema.Columns["ColumnName"]].ToString();
+                String dataType = rdrColumn[schema.Columns["DataType"]].ToString();
+                cols.Add(columnName);
+            }
+
+            return cols.ToArray();
+        }
+
+        public static string[] GetAllStudents()
+        {
+            string query = "SELECT first_name FROM users";
+            List<string> names = new List<string>();
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        for (int i = 0; i < reader.FieldCount; i++) names.Add(reader.GetString(i));
+                    }
+                }
+            }
+
+            return names.ToArray();
+        }
 
         public static string[] Parse(string item)
         {
@@ -43,6 +124,51 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             string[] elements = new string[indeces];
             string[] outputs = rc.Split(',');
             
+            for (int j = 0; j < outputs.Length; j++)
+            {
+                string[] splitOutputs = outputs[j].Split('|');
+                for (int i = 0; i < indeces; i++)
+                {
+                    elements[i] += splitOutputs[i] + ", ";
+                }
+            }
+
+            for (int i = 0; i < elements.Length; i++)
+            {
+                elements[i] = elements[i].Substring(0, elements[i].Length - 2);
+            }
+            return elements;
+        }
+
+        public static string[] Parse(string item, string table)
+        {
+            string rc = "";
+            string query = "SELECT " + item + " FROM " + table;
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        for (int i = 0; i < reader.FieldCount; i++) rc += reader.GetString(i) + "|";
+                        rc = rc.Substring(0, rc.Length - 1);
+                        rc += ",";
+                    }
+
+
+                    rc = rc.Substring(0, rc.Length - 1);
+                }
+            }
+
+            int indeces = item.Split(',').Length;
+            if (item == "*")
+            {
+                indeces = 6;
+            }
+            string[] elements = new string[indeces];
+            string[] outputs = rc.Split(',');
+
             for (int j = 0; j < outputs.Length; j++)
             {
                 string[] splitOutputs = outputs[j].Split('|');
