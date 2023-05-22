@@ -11,7 +11,7 @@ namespace CASIITInformationWebsite
 {
 
 
-    public partial class Contact
+    public partial class CourseCatalogue
     {
 
         /// <summary>

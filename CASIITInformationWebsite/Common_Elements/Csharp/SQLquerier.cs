@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.EnterpriseServices;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Runtime.Remoting.Services;
 using System.Security.Cryptography;
 using System.Web;
+using System.Web.DynamicData;
 using System.Web.Management;
+using Microsoft.Ajax.Utilities;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Asn1.X509.Qualified;
 using Org.BouncyCastle.Utilities.Collections;
@@ -280,7 +283,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     course.dual_enrolled + ", " +
                     course.hs_credit + ", " +
                     course.college_credit + ", " +
-                    course.prerequisite.ToString() + ")";
+                    Prerequisite.writeJSON(course.prerequisite) + ")";
 
                 using (MySqlCommand command = new MySqlCommand(insert, connection))
                 {
@@ -298,23 +301,24 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         {
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {
-                string query = "SELECT * FROM block7_table WHERE id = " + class_id;
+                string query = "SELECT * FROM courses WHERE id = " + class_id;
                 connection.Open();
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
-                    return new Class(
-                        reader.GetInt32(0),                                 //id
-                        reader.GetString(1),                                //name
-                        reader.GetDouble(2),                                //weight
-                        reader.GetString(3),                                //description
-                        reader.GetInt16(4),                                 //dual_enrolled
-                        reader.GetDouble(5),                                //hs_credit
-                        reader.GetDouble(6),                                //college credit
-                        Prerequisite.readFromJSON(reader.GetString(7)));    //prerequisite
+                    if(reader.Read()) return new Class(
+                        reader.GetInt32("id"),
+                        reader.IsDBNull(reader.GetOrdinal("course_name")) ? string.Empty : reader.GetString("course_name"),
+                        reader.IsDBNull(reader.GetOrdinal("course_weight")) ? 0.0 : reader.GetDouble("course_weight"),
+                        reader.IsDBNull(reader.GetOrdinal("description")) ? string.Empty : reader.GetString("description"),
+                        reader.IsDBNull(reader.GetOrdinal("concentration")) ? string.Empty : reader.GetString("concentration"),
+                        reader.IsDBNull(reader.GetOrdinal("dual_enrolled")) ? (short)0 : reader.GetInt16("dual_enrolled"),
+                        reader.IsDBNull(reader.GetOrdinal("hs_credit")) ? 0.0 : reader.GetDouble("hs_credit"),
+                        reader.IsDBNull(reader.GetOrdinal("college_credit")) ? 0.0 : reader.GetDouble("college_credit"),
+                        Prerequisite.readFromJSON(reader.IsDBNull(reader.GetOrdinal("prerequisites")) ? string.Empty : reader.GetString("prerequisites")));
                 }
             }
+            return new Class();
         }
-
 
         /// <summary> Finds all classes a user has taken, and returns them as an array of classes. </summary> 
         /// <param name="user">user to correlate classes with</param>
@@ -325,16 +329,16 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             {
                 string query = "SELECT COUNT(id) " +
                     "FROM courses " +
-                    "WHERE class_id IN(" +
-                        "SELECT class_id" +
-                        "FROM track_courses" +
+                    "WHERE id IN(" +
+                        "SELECT course_id " +
+                        "FROM track_courses " +
                         "WHERE user_id = " + user.UserId + 
                         " AND track_id = " + user.currentSelectedTrack + 
                         " )";
                 connection.Open();
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
-                    numRows = reader.GetInt32(0);
+                    if(reader.Read()) numRows = reader.GetInt32(0);
                 }
             }
 
@@ -344,9 +348,9 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 string query =
                     "SELECT * " +
                     "FROM courses " +
-                    "WHERE class_id IN(" +
-                        "SELECT class_id" +
-                        "FROM track_courses" +
+                    "WHERE id IN(" +
+                        "SELECT course_id " +
+                        "FROM track_courses " +
                         "WHERE user_id = " + user.UserId +
                         " AND track_id = " + user.currentSelectedTrack +
                         " )";
@@ -357,14 +361,15 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     while (reader.Read())
                     {
                         classes[index] = new Class(
-                           reader.GetInt32("id"),                                              //id
-                           reader.GetString("course_name"),                                    //name
-                           reader.GetDouble("course_weight"),                                  //weight
-                           reader.GetString("description"),                                    //description
-                           reader.GetInt16("dual_enrolled"),                                   //dual_enrolled
-                           reader.GetDouble("hs_credit"),                                      //hs_credit
-                           reader.GetDouble("college_credit"),                                 //college credit
-                           Prerequisite.readFromJSON(reader.GetString("prerequisites")));      //prerequisite
+                            reader.GetInt32("id"),
+                            reader.IsDBNull(reader.GetOrdinal("course_name")) ? string.Empty : reader.GetString("course_name"),
+                            reader.IsDBNull(reader.GetOrdinal("course_weight")) ? 0.0 : reader.GetDouble("course_weight"),
+                            reader.IsDBNull(reader.GetOrdinal("description")) ? string.Empty : reader.GetString("description"),
+                            reader.IsDBNull(reader.GetOrdinal("concentration")) ? string.Empty : reader.GetString("concentration"),
+                            reader.IsDBNull(reader.GetOrdinal("dual_enrolled")) ? (short)0 : reader.GetInt16("dual_enrolled"),
+                            reader.IsDBNull(reader.GetOrdinal("hs_credit")) ? 0.0 : reader.GetDouble("hs_credit"),
+                            reader.IsDBNull(reader.GetOrdinal("college_credit")) ? 0.0 : reader.GetDouble("college_credit"),
+                            Prerequisite.readFromJSON(reader.IsDBNull(reader.GetOrdinal("prerequisites")) ? string.Empty : reader.GetString("prerequisites")));     //prerequisite
                         index++;
                     }
                 }
@@ -379,16 +384,16 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             {
                 string query = "SELECT COUNT(id) " +
                     "FROM courses " +
-                    "WHERE class_id IN(" +
-                        "SELECT class_id" +
-                        "FROM track_courses" +
+                    "WHERE id IN(" +
+                        "SELECT course_id " +
+                        "FROM track_courses " +
                         "WHERE user_id = " + user.UserId +
                         " AND track_id = " + user.currentSelectedTrack +
                         " )";
                 connection.Open();
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
-                    numRows = reader.GetInt32(0);
+                    if(reader.Read()) numRows = reader.GetInt32(0);
                 }
             }
 
@@ -398,9 +403,9 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 string query =
                     "SELECT id " +
                     "FROM courses " +
-                    "WHERE class_id IN(" +
-                        "SELECT class_id" +
-                        "FROM track_courses" +
+                    "WHERE id IN(" +
+                        "SELECT course_id " +
+                        "FROM track_courses " +
                         "WHERE user_id = " + user.UserId +
                         " AND track_id = " + user.currentSelectedTrack +
                         " )";
@@ -476,24 +481,271 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         }
 
         /// <summary>
+        /// Inserts an instance of a Student into the database
+        /// </summary>
+        /// <param name="user"></param>
+        public static void InsertStudent(Student user)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String insertUser = "" +
+                    "INSERT INTO users " +
+                    "(id, first_name, last_name, email, password) VALUES " +
+                    user.UserId + ", " +
+                    user.FirstName + ", " +
+                    user.LastName + ", " +
+                    user.email + ", " +
+                    user.password;
+                String insertStudent = "" +
+                    "INSERT INTO students " +
+                    "(user_id, year, gpa, counselor_id) VALUES " +
+                    user.UserId + ", " +
+                    user.Year + ", " +
+                    user.GPA + ", " +
+                    user.CounselorId;
+
+                using (MySqlCommand command = new MySqlCommand(insertUser, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+                using (MySqlCommand command = new MySqlCommand(insertStudent, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
         /// Creates a student Object using a student ID using row data from students table
         /// </summary>
         /// <param name="studentID"></param>
         /// <returns></returns>
         public static Student SelectStudent(int studentID)
         {
-            string[] result = Parse("id, name");
-            int studentIndex = result[0].IndexOf("" + studentID);
+            Student output;
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query = "" +
+                    "SELECT * " +
+                    "FROM users " +
+                    "JOIN students ON users.id = students.user_id " +
+                    "WHERE id = " + studentID;
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        output = new Student(
+                            reader.IsDBNull(reader.GetOrdinal("first_name")) ? string.Empty : reader.GetString("first_name"),                 //first name
+                            reader.IsDBNull(reader.GetOrdinal("last_name")) ? string.Empty : reader.GetString("last_name"),                  //last name
+                            reader.GetInt32("id"),                                                                                  //userId
+                            reader.IsDBNull(reader.GetOrdinal("year")) ? 0 : DateTime.Now.Year - reader.GetInt32("year"),    //year
+                            reader.IsDBNull(reader.GetOrdinal("gpa")) ? 0.0 : reader.GetDouble("gpa"),                        //gpa
+                            reader.IsDBNull(reader.GetOrdinal("counselor_id")) ? 0 : reader.GetInt32("counselor_id"),
+                            reader.IsDBNull(reader.GetOrdinal("email")) ? string.Empty : reader.GetString("email"),                 //first name
+                            reader.IsDBNull(reader.GetOrdinal("password")) ? string.Empty : reader.GetString("password"));               //counselorID
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+            return output;
+        }
 
-            Student student = new Student(
-                result[0],                  // name
-                int.Parse(result[1]),       // username
-                int.Parse(result[2]),       // grade level 
-                double.Parse(result[3]),    // gpa
-                int.Parse(result[4])        // counselor ID
-            );
+        /// <summary>
+        /// Deletes a student's record from the database
+        /// </summary>
+        /// <param name="uid"></param>
+        public static void DeleteStudent( int uid) 
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string delete = "" +
+                    "DELETE " +
+                    "FROM users " +
+                    "JOIN students ON users.id = students.user_id " +
+                    "WHERE id = " + uid;
+                connection.Open();
+                using (MySqlCommand command = new MySqlCommand(delete, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
 
-            return student;
+        /// <summary>
+        /// Inserts and instance of a Counselor into the database
+        /// </summary>
+        /// <param name="user"></param>
+        public static void InsertCounselor(Counselor user)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String insertUser = "" +
+                    "INSERT INTO users " +
+                    "(id, first_name, last_name, email, password) VALUES " +
+                    user.UserId + ", " +
+                    user.FirstName + ", " +
+                    user.LastName + ", " +
+                    user.email + ", " +
+                    user.password;
+                String insertCounselor = "" +
+                    "INSERT INTO counselors " +
+                    "(user_id, name_range_start, name_range_end) VALUES " +
+                    user.UserId + ", " +
+                    user.NameRangeStart + ", " +
+                    user.NameRangeEnd;
+
+                using (MySqlCommand command = new MySqlCommand(insertUser, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+                using (MySqlCommand command = new MySqlCommand(insertCounselor, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        ///Creates a Counselor Object from and instance in the database
+        /// </summary>
+        /// <param name="counselorID"></param>
+        /// <returns></returns>
+        public static Counselor SelectCounselor(int counselorID)
+        {
+            Counselor output;
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query = "" +
+                    "SELECT * " +
+                    "FROM users " +
+                    "JOIN counselors ON users.id = counselors.user_id " +
+                    "WHERE id = " + counselorID;
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    if (reader.Read()) output = new Counselor(
+                        reader.IsDBNull(reader.GetOrdinal("first_name")) ? string.Empty : reader.GetString("first_name"),                 //first name
+                        reader.IsDBNull(reader.GetOrdinal("last_name")) ? string.Empty : reader.GetString("last_name"),
+                        reader.GetInt32("id"),                          //userId
+                        reader.IsDBNull(reader.GetOrdinal("name_range_start")) ? "A" : reader.GetString("name_range_start"),           //name range start
+                        reader.IsDBNull(reader.GetOrdinal("name_range_end")) ? "A" : reader.GetString("name_range_emd"),
+                        reader.IsDBNull(reader.GetOrdinal("email")) ? string.Empty : reader.GetString("email"),                 //first name
+                        reader.IsDBNull(reader.GetOrdinal("password")) ? string.Empty : reader.GetString("password"));         
+                    else return null;
+                }
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Deletes a counselor's record from the database
+        /// </summary>
+        /// <param name="uid"></param>
+        public static void DeleteCounselor(int uid)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string delete = "" +
+                    "DELETE " +
+                    "FROM users " +
+                    "JOIN counselors ON users.id = counselors.user_id " +
+                    "WHERE id = " + uid;
+                connection.Open();
+                using (MySqlCommand command = new MySqlCommand(delete, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Inserts an instance of an Admin into the database
+        /// </summary>
+        /// <param name="user"></param>
+        public static void InsertAdmin(Admin user)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String insertUser = "" +
+                    "INSERT INTO users " +
+                    "(id, first_name, last_name, email, password) VALUES " +
+                    user.UserId + ", " +
+                    user.FirstName + ", " +
+                    user.LastName + ", " +
+                    user.email + ", " +
+                    user.password;
+                String insertAdmin = "" +
+                    "INSERT INTO admins " +
+                    "(user_id) VALUES " +
+                    user.UserId;
+
+                using (MySqlCommand command = new MySqlCommand(insertUser, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+                using (MySqlCommand command = new MySqlCommand(insertAdmin, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        ///Creates an Admin Object from and instance in the database
+        /// </summary>
+        /// <param name="adminID"></param>
+        /// <returns></returns>
+        public static Admin SelectAdmin( int adminID)
+        {
+            Admin output;
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query = "" +
+                    "SELECT * " +
+                    "FROM users " +
+                    "JOIN admins ON users.id = admins.user_id " +
+                    "WHERE id = " + adminID;
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    if (reader.Read()) output = new Admin(
+                        reader.IsDBNull(reader.GetOrdinal("first_name")) ? string.Empty : reader.GetString("first_name"),                 //first name
+                        reader.IsDBNull(reader.GetOrdinal("last_name")) ? string.Empty : reader.GetString("last_name"),
+                        reader.GetInt32("id"),
+                        reader.IsDBNull(reader.GetOrdinal("email")) ? string.Empty : reader.GetString("email"),                 //first name
+                        reader.IsDBNull(reader.GetOrdinal("password")) ? string.Empty : reader.GetString("password"));               //counselorID
+                  else return null;
+                }
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Deletes an Admin's record from the database
+        /// </summary>
+        /// <param name="uid"></param>
+        public static void DeleteAdmin(int uid)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string delete = "" +
+                    "DELETE " +
+                    "FROM users " +
+                    "JOIN admins ON users.id = admins.user_id " +
+                    "WHERE id = " + uid;
+                connection.Open();
+                using (MySqlCommand command = new MySqlCommand(delete, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         /// <summary>
@@ -502,19 +754,20 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <param name="email"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public static int getUID(string email, string password)
+        public static int GetUID(string email, string password)
         {
             int uid = -1;
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {
                 string query = "" +
-                    "SELECT id" +
-                    "FROM users" +
+                    "SELECT id " +
+                    "FROM users " +
                     "WHERE email = " + email +
-                    "AND password = " + password;
+                    " AND password = " + password;
                 connection.Open();
                 using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                 {
+                    reader.Read();
                     try
                     {
                         uid = reader.GetInt32("id");
@@ -539,7 +792,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             {
                 connection.Open();
                 String insert = "" +
-                    "INSERT INTO tracks" +
+                    "INSERT INTO tracks " +
                     "(user_id, track_name) VALUES " +
                     "" + uid + ", " + 
                     trackname;
@@ -563,11 +816,29 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             {
                 connection.Open();
                 String insert = "" +
-                    "INSERT INTO track_courses" +
+                    "INSERT INTO track_courses " +
                     "(user_id, track_id, course_id) VALUES " +
                     uid + ", " +
                     track_id + ", " +
                     course_id;
+
+                using (MySqlCommand command = new MySqlCommand(insert, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static void DeleteClassFromTrack( int uid, int track_id, int course_id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String insert = "" +
+                    "DELETE FROM track_courses " +
+                    "WHERE user_id = " + uid + " AND " +
+                    "track_id = " + track_id + " AND " +
+                    "course_id = " + course_id;
 
                 using (MySqlCommand command = new MySqlCommand(insert, connection))
                 {
@@ -601,23 +872,49 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// Selects all the available classes a student will be able to take
         /// </summary>
         /// <returns></returns>
-        public static List<Class> AllAvailableClasses(UserInfo user)
+        public static List<Class> AllAvailableClasses(Student user)
         {
-            List<Class> allClasses = AllClassIDs();
+            int[] previouslyTakenCourses = PreviousClassIDs(user);
+            List<Class> allClasses = AllClasses();
             List<Class> availableClasses = new List<Class>();
             // goes through every class, if the user meets the requirements of a class then it is added to the list of available classes
-            foreach( Class course in availableClasses)
+            foreach( Class course in allClasses)
             {
-                if (course.MeetsRequisites(user)) availableClasses.Add(course);
+                if (course.MeetsRequisites(user) && !previouslyTakenCourses.Contains(course.id)) availableClasses.Add(course);
             }
             return availableClasses;
+        }
+        
+        /// <summary>
+        /// Returns a List of all the classes a student can take with their current status, filtered by a certain grade level
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="year">the year to filter by</param>
+        /// <returns></returns>
+        public static List<Class> AllAvailableYearClasses(Student user, int year)
+        {
+            List<Class> courses = AllAvailableClasses(user);
+            courses = FilterMinYear(courses, year);
+            return courses = FilterMaxYear(courses, year);
+        }
+
+        /// <summary>
+        /// Returns a List of all the classes a student can take in the coming year
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static List<Class> AllAvailableNextYearClasses(Student user)
+        {
+            List<Class> courses = AllAvailableClasses(user);
+            courses = FilterMinYear(courses, user.Year + 1);
+            return courses = FilterMaxYear(courses, user.Year + 1);
         }
 
         /// <summary>
         /// Returns all classes in course table as Class objects
         /// </summary>
         /// <returns></returns>
-        public static List<Class> AllClassIDs()
+        public static List<Class> AllClasses()
         {
             List<Class> courses = new List<Class>();
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
@@ -631,20 +928,47 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     while (reader.Read())
                     {
                         courses.Add(new Class(
-                           reader.GetInt32("id"),                                              //id
-                           reader.GetString("course_name"),                                    //name
-                           reader.GetDouble("course_weight"),                                  //weight
-                           reader.GetString("description"),                                    //description
-                           reader.GetInt16("dual_enrolled"),                                   //dual_enrolled
-                           reader.GetDouble("hs_credit"),                                      //hs_credit
-                           reader.GetDouble("college_credit"),                                 //college credit
-                           Prerequisite.readFromJSON(reader.GetString("prerequisites")))      //prerequisite
-                        );
+                            reader.GetInt32("id"),
+                            reader.IsDBNull(reader.GetOrdinal("course_name")) ? string.Empty : reader.GetString("course_name"),
+                            reader.IsDBNull(reader.GetOrdinal("course_weight")) ? 0.0 : reader.GetDouble("course_weight"),
+                            reader.IsDBNull(reader.GetOrdinal("description")) ? string.Empty : reader.GetString("description"),
+                            reader.IsDBNull(reader.GetOrdinal("concentration")) ? string.Empty : reader.GetString("concentration"),
+                            reader.IsDBNull(reader.GetOrdinal("dual_enrolled")) ? (short)0 : reader.GetInt16("dual_enrolled"),
+                            reader.IsDBNull(reader.GetOrdinal("hs_credit")) ? 0.0 : reader.GetDouble("hs_credit"),
+                            reader.IsDBNull(reader.GetOrdinal("college_credit")) ? 0.0 : reader.GetDouble("college_credit"),
+                            Prerequisite.readFromJSON(reader.IsDBNull(reader.GetOrdinal("prerequisites")) ? string.Empty : reader.GetString("prerequisites"))
+                        )) ;
                     }
                 }
             }
             return courses;
         }
+
+        /// <summary>
+        /// Returns all classes in course table as Class objects
+        /// </summary>
+        /// <returns></returns>
+        public static List<int> AllClassIDs()
+        {
+            List<int> courses = new List<int>();
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                string query =
+                    "SELECT * " +
+                    "FROM courses ";
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        courses.Add(
+                           reader.GetInt32("id"));
+                    }
+                }
+            }
+            return courses;
+        }
+
 
         /// <summary>
         /// Drops a table from the database
@@ -663,6 +987,129 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 }
             }
         }
+
+        private static List<Class> FilterMinYear( List<Class> courses , int min_year = 0)
+        {
+            List<Class> filteredResult = new List<Class>();
+            foreach( Class course in courses)
+            {
+                if(course.prerequisite.min_year >= min_year) filteredResult.Add(course);
+            }
+            return filteredResult;
+        }
+
+        private static List<Class> FilterMinGPA(List<Class> courses, double min_GPA = 0)
+        {
+            List<Class> filteredResult = new List<Class>();
+            foreach (Class course in courses)
+            {
+                if (course.prerequisite.min_GPA >= min_GPA) filteredResult.Add(course);
+            }
+            return filteredResult;
+        }
+
+        private static List<Class> FilterMaxGPA(List<Class> courses, double max_GPA = 5)
+        {
+            List<Class> filteredResult = new List<Class>();
+            foreach (Class course in courses)
+            {
+                if (course.prerequisite.min_GPA <= max_GPA) filteredResult.Add(course);
+            }
+            return filteredResult;
+        }
+
+        private static List<Class> FilterMaxYear(List<Class> courses, int maxYear = 4)
+        {
+            List<Class> filteredResult = new List<Class>();
+            foreach (Class course in courses)
+            {
+                if (course.prerequisite.min_year <= maxYear) filteredResult.Add(course);
+            }
+            return filteredResult;
+        }
+
+        /// <summary>
+        /// Returns a list of classes from the database that conform to the set of parameters. Parameters are optional, and can be entered as null if necessary.
+        /// Enter parameters in this format: SQLQuerier.FilterSelect(courseWeightMin: *Value* , gpaMin *Value* , etc. );
+        /// </summary>
+        /// <param name="courseWeightMin"></param>
+        /// <param name="courseWeightMax"></param>
+        /// <param name="isDualEnrolled"></param>
+        /// <param name="hsCrediMin"></param>
+        /// <param name="hsCreditMax"></param>
+        /// <param name="collegeCreditMin"></param>
+        /// <param name="collegeCreditMax"></param>
+        /// <param name="gpaMin"></param>
+        /// <param name="gpaMax"></param>
+        /// <param name="yearMin"></param>
+        /// <param name="yearMax"></param>
+        /// <returns></returns>
+        public static List<Class> FilterSelect(
+                double courseWeightMin = 0,
+                double courseWeightMax = 5.0,
+                bool isDualEnrolled = false,
+                double hsCrediMin = 0,
+                double hsCreditMax = 10,
+                double collegeCreditMin = 0,
+                double collegeCreditMax = 10,
+                double gpaMin = 0.0,
+                double gpaMax = 5,
+                int yearMin = 0,
+                int yearMax = 4,
+                string concentration = "")
+        {
+            List<Class> courses = new List<Class>();
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                //Query without dual enrolled filter
+                string query =
+                    "SELECT * " +
+                    "FROM courses " +
+                    "WHERE IFNULL(course_weight, 0) >= " + courseWeightMin + " AND " +
+                    "IFNULL(course_weight, 0) <= " + courseWeightMax + " AND " +
+                    "IFNULL(hs_credit, 0) >= " + hsCrediMin + " AND " +
+                    "IFNULL(hs_credit, 0) <= " + hsCreditMax + " AND " +
+                    "IFNULL(college_credit, 0) >= " + collegeCreditMin + " AND " +
+                    "IFNULL(college_credit, 0) <= " + collegeCreditMax;
+                //With dual enrolled filter
+                if (isDualEnrolled)
+                {
+                    query += " AND dual_enrolled = 1";
+                }
+                if( concentration.Length != 0)
+                {
+                    query += " AND concentration LIKE '" + concentration + "'"; 
+                }
+
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        courses.Add(new Class(reader.GetInt32("id"),
+                        reader.IsDBNull(reader.GetOrdinal("course_name")) ? string.Empty : reader.GetString("course_name"),
+                        reader.IsDBNull(reader.GetOrdinal("course_weight")) ? 0.0 : reader.GetDouble("course_weight"),
+                        reader.IsDBNull(reader.GetOrdinal("description")) ? string.Empty : reader.GetString("description"),
+                        reader.IsDBNull(reader.GetOrdinal("concentration")) ? string.Empty : reader.GetString("concentration"),
+                        reader.IsDBNull(reader.GetOrdinal("dual_enrolled")) ? (short)0 : reader.GetInt16("dual_enrolled"),
+                        reader.IsDBNull(reader.GetOrdinal("hs_credit")) ? 0.0 : reader.GetDouble("hs_credit"),
+                        reader.IsDBNull(reader.GetOrdinal("college_credit")) ? 0.0 : reader.GetDouble("college_credit"),
+                        Prerequisite.readFromJSON(reader.IsDBNull(reader.GetOrdinal("prerequisites")) ? string.Empty : reader.GetString("prerequisites"))
+                        ));
+                    }
+                }
+            }
+
+            courses = FilterMinGPA(courses, gpaMin);
+            courses = FilterMaxGPA(courses, gpaMax);
+            courses = FilterMinYear(courses, yearMin);
+            courses = FilterMaxYear(courses, yearMax);
+
+            return courses;
+        }
+
     }
+
+
 
 }

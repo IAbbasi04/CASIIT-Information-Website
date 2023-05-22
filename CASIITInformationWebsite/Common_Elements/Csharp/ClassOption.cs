@@ -8,13 +8,18 @@ using System.Xml.Schema;
 
 namespace CASIITInformationWebsite.Common_Elements.Csharp
 {
-    public abstract class ClassOption
+    public class ClassOption
     {
 
         public ClassOption ClassOption1;
         public ClassOption ClassOption2;
-        int classID;
-        int type;
+        public int classID;
+        public int type = 3;
+
+        public ClassOption()
+        {
+            type = 3;
+        }
 
         /// <summary>
         /// A choice for a class
@@ -27,9 +32,9 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 this.classID = classID;
             }
 
-            override public string ToString()
+            public static string ToString( ClassOption option)
             {
-                return classID + "";
+                return "ID: " + option.classID;
             }
 
         }
@@ -67,9 +72,9 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 ClassOption2 = new Option(classOption2);
             }
 
-            override public string ToString()
+            public static string ToString(ClassOption and)
             {
-                return "(" + ClassOption1 + " AND " + ClassOption2 + ")";
+                return "(" + and.ClassOption1 + " AND " + and.ClassOption2 + ")";
             }
         }
         
@@ -107,13 +112,24 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
 
 
-            override public string ToString()
+            public static string ToString( ClassOption or)
             {
-                return "(" + ClassOption1 + " OR " + ClassOption2 + ")";
+                return "(" + or.ClassOption1 + " OR " + or.ClassOption2 + ")";
             }
         }
 
-        public override abstract string ToString();
+        public override string ToString()
+        {
+            switch (type) {
+                case 0:
+                    return Option.ToString(this);
+                case 1:
+                    return And.ToString(this);
+                case 2:
+                    return Or.ToString(this);
+            }
+            return "No required classes";
+        }
 
         /// <summary>
         /// Returns all the possible sets of class ids that could be taken to meet the course requirement of a Prerequisite object
@@ -124,7 +140,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             int[] currentPath = new int[0];
             ClassOption currentOption = this;
 
-            if (currentOption.GetType() == typeof(Option))
+            if (currentOption.type == 0)
             {
                 List<List<int>> main = new List<List<int>>();
                 List<int> sub = new List<int>();
@@ -133,10 +149,13 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 return main;
             }
 
-            List<List<int>> courses = getClassSets((currentOption).ClassOption1);
-            List<List<int>> courses2 = getClassSets((currentOption).ClassOption2);
+            List<List<int>> courses = new List<List<int>>();
+            if (currentOption.ClassOption1 != null) getClassSets((currentOption).ClassOption1);
 
-            if (currentOption.GetType() == typeof(And))
+            List<List<int>> courses2 = new List<List<int>>();
+            if (currentOption.ClassOption2 != null) getClassSets((currentOption).ClassOption2);
+
+            if (currentOption.type == 1)
             {
                 //adds the contents of every list in courses2 into courses 1
                 foreach (List<int> c1 in courses)
@@ -151,7 +170,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 }
             }
 
-            if (currentOption.GetType() == typeof(Or))
+            if (currentOption.type == 2)
             {
                 foreach (List<int> c in courses2)
                 {
@@ -165,7 +184,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         private List<List<int>> getClassSets( ClassOption option)
         {
             List<List<int>> main = new List<List<int>>();
-            if (option.GetType() == typeof(Option))
+            if (option.type == 0)
             {
                 List<int> sub = new List<int>();
                 sub.Add(option.classID);
@@ -173,9 +192,14 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 return main;
             }
 
-            List<List<int>> courses = getClassSets((option).ClassOption1);
-            List<List<int>> courses2 = getClassSets((option).ClassOption2);
-            if (option.GetType() == typeof(And))
+            List<List<int>> courses = new List<List<int>>();
+            if (option.ClassOption1 != null) getClassSets((option).ClassOption1);
+
+            List<List<int>> courses2 = new List<List<int>>();
+            if (option.ClassOption2 != null) getClassSets((option).ClassOption2);
+
+
+            if ( option.type == 1)
             {
                 //adds the contents of every list in courses2 into courses 1
                 foreach (List<int> c1 in courses)
@@ -191,7 +215,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 return courses;
             }
 
-            if (option.GetType() == typeof(Or))
+            if (option.type == 2)
             {
                 foreach (List<int> c in courses)
                 {
