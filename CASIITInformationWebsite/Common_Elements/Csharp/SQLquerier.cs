@@ -115,30 +115,38 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <param name="course">class to be inserted</param>
         public static void InsertClass(Class course)
         {
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                connection.Open();
-                String insert = "" +
-                    "INSERT INTO courses (id, " +
-                    "course_name, " +
-                    "course_weight, " +
-                    "description, " +
-                    "dual_enrolled, " +
-                    "hs_credit, " +
-                    "college_credit, " +
-                    "prerequisites) VALUES" +
-                    "(" + course.id + ", " +
-                    course.course_weight + ", " +
-                    course.description + ", " +
-                    course.dual_enrolled + ", " +
-                    course.hs_credit + ", " +
-                    course.college_credit + ", " +
-                    Prerequisite.writeJSON(course.prerequisite) + ")";
-
-                using (MySqlCommand command = new MySqlCommand(insert, connection))
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    command.ExecuteNonQuery();
+                    connection.Open();
+                    String insert = "" +
+                        "INSERT INTO courses (id, " +
+                        "course_name, " +
+                        "course_weight, " +
+                        "description, " +
+                        "dual_enrolled, " +
+                        "hs_credit, " +
+                        "college_credit, " +
+                        "prerequisites) VALUES" +
+                        "(" + course.id + ", " +
+                        course.course_weight + ", " +
+                        course.description + ", " +
+                        course.dual_enrolled + ", " +
+                        course.hs_credit + ", " +
+                        course.college_credit + ", " +
+                        Prerequisite.writeJSON(course.prerequisite) + ")";
+
+                    using (MySqlCommand command = new MySqlCommand(insert, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
+            }
+
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
         }
 
@@ -149,23 +157,30 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <returns></returns>
         public static Class SelectClass(int class_id)
         {
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                string query = "SELECT * FROM courses WHERE id = " + class_id;
-                connection.Open();
-                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    if(reader.Read()) return new Class(
-                        reader.GetInt32("id"),
-                        reader.IsDBNull(reader.GetOrdinal("course_name")) ? string.Empty : reader.GetString("course_name"),
-                        reader.IsDBNull(reader.GetOrdinal("course_weight")) ? 0.0 : reader.GetDouble("course_weight"),
-                        reader.IsDBNull(reader.GetOrdinal("description")) ? string.Empty : reader.GetString("description"),
-                        reader.IsDBNull(reader.GetOrdinal("concentration")) ? string.Empty : reader.GetString("concentration"),
-                        reader.IsDBNull(reader.GetOrdinal("dual_enrolled")) ? (short)0 : reader.GetInt16("dual_enrolled"),
-                        reader.IsDBNull(reader.GetOrdinal("hs_credit")) ? 0.0 : reader.GetDouble("hs_credit"),
-                        reader.IsDBNull(reader.GetOrdinal("college_credit")) ? 0.0 : reader.GetDouble("college_credit"),
-                        Prerequisite.readFromJSON(reader.IsDBNull(reader.GetOrdinal("prerequisites")) ? string.Empty : reader.GetString("prerequisites")));
+                    string query = "SELECT * FROM courses WHERE id = " + class_id;
+                    connection.Open();
+                    using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                    {
+                        if (reader.Read()) return new Class(
+                            reader.GetInt32("id"),
+                            reader.IsDBNull(reader.GetOrdinal("course_name")) ? string.Empty : reader.GetString("course_name"),
+                            reader.IsDBNull(reader.GetOrdinal("course_weight")) ? 0.0 : reader.GetDouble("course_weight"),
+                            reader.IsDBNull(reader.GetOrdinal("description")) ? string.Empty : reader.GetString("description"),
+                            reader.IsDBNull(reader.GetOrdinal("concentration")) ? string.Empty : reader.GetString("concentration"),
+                            reader.IsDBNull(reader.GetOrdinal("dual_enrolled")) ? (short)0 : reader.GetInt16("dual_enrolled"),
+                            reader.IsDBNull(reader.GetOrdinal("hs_credit")) ? 0.0 : reader.GetDouble("hs_credit"),
+                            reader.IsDBNull(reader.GetOrdinal("college_credit")) ? 0.0 : reader.GetDouble("college_credit"),
+                            Prerequisite.readFromJSON(reader.IsDBNull(reader.GetOrdinal("prerequisites")) ? string.Empty : reader.GetString("prerequisites")));
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
             return new Class();
         }
@@ -175,54 +190,69 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         public static  Class[] PreviousClasses(UserInfo user)
         {
             int numRows = 0;
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                string query = "SELECT COUNT(id) " +
-                    "FROM courses " +
-                    "WHERE id IN(" +
-                        "SELECT course_id " +
-                        "FROM track_courses " +
-                        "WHERE user_id = " + user.UserId + 
-                        " AND track_id = " + user.currentSelectedTrack + 
-                        " )";
-                connection.Open();
-                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    if(reader.Read()) numRows = reader.GetInt32(0);
+                    string query = "SELECT COUNT(id) " +
+                        "FROM courses " +
+                        "WHERE id IN(" +
+                            "SELECT course_id " +
+                            "FROM track_courses " +
+                            "WHERE user_id = " + user.UserId +
+                            " AND track_id = " + user.currentSelectedTrack +
+                            " )";
+                    connection.Open();
+                    using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                    {
+                        if (reader.Read()) numRows = reader.GetInt32(0);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
+                return new Class[0];
             }
 
             Class[] classes = new Class[numRows];
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                string query =
-                    "SELECT * " +
-                    "FROM courses " +
-                    "WHERE id IN(" +
-                        "SELECT course_id " +
-                        "FROM track_courses " +
-                        "WHERE user_id = " + user.UserId +
-                        " AND track_id = " + user.currentSelectedTrack +
-                        " )";
-                connection.Open();
-                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    int index = 0;
-                    while (reader.Read())
+                    string query =
+                        "SELECT * " +
+                        "FROM courses " +
+                        "WHERE id IN(" +
+                            "SELECT course_id " +
+                            "FROM track_courses " +
+                            "WHERE user_id = " + user.UserId +
+                            " AND track_id = " + user.currentSelectedTrack +
+                            " )";
+                    connection.Open();
+                    using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                     {
-                        classes[index] = new Class(
-                            reader.GetInt32("id"),
-                            reader.IsDBNull(reader.GetOrdinal("course_name")) ? string.Empty : reader.GetString("course_name"),
-                            reader.IsDBNull(reader.GetOrdinal("course_weight")) ? 0.0 : reader.GetDouble("course_weight"),
-                            reader.IsDBNull(reader.GetOrdinal("description")) ? string.Empty : reader.GetString("description"),
-                            reader.IsDBNull(reader.GetOrdinal("concentration")) ? string.Empty : reader.GetString("concentration"),
-                            reader.IsDBNull(reader.GetOrdinal("dual_enrolled")) ? (short)0 : reader.GetInt16("dual_enrolled"),
-                            reader.IsDBNull(reader.GetOrdinal("hs_credit")) ? 0.0 : reader.GetDouble("hs_credit"),
-                            reader.IsDBNull(reader.GetOrdinal("college_credit")) ? 0.0 : reader.GetDouble("college_credit"),
-                            Prerequisite.readFromJSON(reader.IsDBNull(reader.GetOrdinal("prerequisites")) ? string.Empty : reader.GetString("prerequisites")));     //prerequisite
-                        index++;
+                        int index = 0;
+                        while (reader.Read())
+                        {
+                            classes[index] = new Class(
+                                reader.GetInt32("id"),
+                                reader.IsDBNull(reader.GetOrdinal("course_name")) ? string.Empty : reader.GetString("course_name"),
+                                reader.IsDBNull(reader.GetOrdinal("course_weight")) ? 0.0 : reader.GetDouble("course_weight"),
+                                reader.IsDBNull(reader.GetOrdinal("description")) ? string.Empty : reader.GetString("description"),
+                                reader.IsDBNull(reader.GetOrdinal("concentration")) ? string.Empty : reader.GetString("concentration"),
+                                reader.IsDBNull(reader.GetOrdinal("dual_enrolled")) ? (short)0 : reader.GetInt16("dual_enrolled"),
+                                reader.IsDBNull(reader.GetOrdinal("hs_credit")) ? 0.0 : reader.GetDouble("hs_credit"),
+                                reader.IsDBNull(reader.GetOrdinal("college_credit")) ? 0.0 : reader.GetDouble("college_credit"),
+                                Prerequisite.readFromJSON(reader.IsDBNull(reader.GetOrdinal("prerequisites")) ? string.Empty : reader.GetString("prerequisites")));     //prerequisite
+                            index++;
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
             return classes;
         }
@@ -230,45 +260,60 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         public static int[] PreviousClassIDs(UserInfo user)
         {
             int numRows = 0;
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                string query = "SELECT COUNT(id) " +
-                    "FROM courses " +
-                    "WHERE id IN(" +
-                        "SELECT course_id " +
-                        "FROM track_courses " +
-                        "WHERE user_id = " + user.UserId +
-                        " AND track_id = " + user.currentSelectedTrack +
-                        " )";
-                connection.Open();
-                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    if(reader.Read()) numRows = reader.GetInt32(0);
+                    string query = "SELECT COUNT(id) " +
+                        "FROM courses " +
+                        "WHERE id IN(" +
+                            "SELECT course_id " +
+                            "FROM track_courses " +
+                            "WHERE user_id = " + user.UserId +
+                            " AND track_id = " + user.currentSelectedTrack +
+                            " )";
+                    connection.Open();
+                    using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                    {
+                        if (reader.Read()) numRows = reader.GetInt32(0);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
+                return new int[0];
             }
 
             int[] classes = new int[numRows];
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                string query =
-                    "SELECT id " +
-                    "FROM courses " +
-                    "WHERE id IN(" +
-                        "SELECT course_id " +
-                        "FROM track_courses " +
-                        "WHERE user_id = " + user.UserId +
-                        " AND track_id = " + user.currentSelectedTrack +
-                        " )";
-                connection.Open();
-                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    int index = 0;
-                    while (reader.Read())
+                    string query =
+                        "SELECT id " +
+                        "FROM courses " +
+                        "WHERE id IN(" +
+                            "SELECT course_id " +
+                            "FROM track_courses " +
+                            "WHERE user_id = " + user.UserId +
+                            " AND track_id = " + user.currentSelectedTrack +
+                            " )";
+                    connection.Open();
+                    using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                     {
-                        classes[index] = reader.GetInt32("id");                             
-                        index++;
+                        int index = 0;
+                        while (reader.Read())
+                        {
+                            classes[index] = reader.GetInt32("id");
+                            index++;
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
             return classes;
         }
@@ -281,27 +326,36 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         public static void AddPrereqsToCourse(int course_id, Prerequisite prereq)
         {
             int rowsAffected = 0;
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                connection.Open();
-                String insert = "" +
-                    "UPDATE courses " +
-                    "SET prerequisites = '" + Prerequisite.writeJSON(prereq) + "' "+ 
-                    "WHERE id = " + course_id;
-
-                using (MySqlCommand command = new MySqlCommand(insert, connection))
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    
-                    try{
-                        rowsAffected = command.ExecuteNonQuery();
-                        Console.WriteLine("Prerequisite for course #" + course_id + " Added Succesfully");
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Update Failed on course #" + course_id);
-                    }
+                    connection.Open();
+                    String insert = "" +
+                        "UPDATE courses " +
+                        "SET prerequisites = '" + Prerequisite.writeJSON(prereq) + "' " +
+                        "WHERE id = " + course_id;
 
+                    using (MySqlCommand command = new MySqlCommand(insert, connection))
+                    {
+
+                        try
+                        {
+                            rowsAffected = command.ExecuteNonQuery();
+                            Console.WriteLine("Prerequisite for course #" + course_id + " Added Succesfully");
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Update Failed on course #" + course_id);
+                        }
+
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
+                return;
             }
 
             Console.WriteLine("Rows Affected: " + rowsAffected);
@@ -315,18 +369,25 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <param name="prereq"></param>
         public static void AddPrereqsToCourse(Class course, Prerequisite prereq)
         {
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                connection.Open();
-                String insert = "" +
-                    "UPDATE courses " +
-                    "SET prerequisites = '" + Prerequisite.writeJSON(prereq) + "' " +
-                    "WHERE id = " + course.id;
-
-                using (MySqlCommand command = new MySqlCommand(insert, connection))
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    command.ExecuteNonQuery();
+                    connection.Open();
+                    String insert = "" +
+                        "UPDATE courses " +
+                        "SET prerequisites = '" + Prerequisite.writeJSON(prereq) + "' " +
+                        "WHERE id = " + course.id;
+
+                    using (MySqlCommand command = new MySqlCommand(insert, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
         }
 
@@ -336,33 +397,40 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <param name="user"></param>
         public static void InsertStudent(Student user)
         {
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                connection.Open();
-                String insertUser = "" +
-                    "INSERT INTO users " +
-                    "(id, first_name, last_name, email, password) VALUES " +
-                    user.UserId + ", " +
-                    user.FirstName + ", " +
-                    user.LastName + ", " +
-                    user.email + ", " +
-                    user.password;
-                String insertStudent = "" +
-                    "INSERT INTO students " +
-                    "(user_id, year, gpa, counselor_id) VALUES " +
-                    user.UserId + ", " +
-                    user.Year + ", " +
-                    user.GPA + ", " +
-                    user.CounselorId;
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+                {
+                    connection.Open();
+                    String insertUser = "" +
+                        "INSERT INTO users " +
+                        "(id, first_name, last_name, email, password) VALUES " +
+                        user.UserId + ", " +
+                        user.FirstName + ", " +
+                        user.LastName + ", " +
+                        user.email + ", " +
+                        user.password;
+                    String insertStudent = "" +
+                        "INSERT INTO students " +
+                        "(user_id, year, gpa, counselor_id) VALUES " +
+                        user.UserId + ", " +
+                        user.Year + ", " +
+                        user.GPA + ", " +
+                        user.CounselorId;
 
-                using (MySqlCommand command = new MySqlCommand(insertUser, connection))
-                {
-                    command.ExecuteNonQuery();
+                    using (MySqlCommand command = new MySqlCommand(insertUser, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    using (MySqlCommand command = new MySqlCommand(insertStudent, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
-                using (MySqlCommand command = new MySqlCommand(insertStudent, connection))
-                {
-                    command.ExecuteNonQuery();
-                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
         }
 
@@ -373,34 +441,41 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <returns></returns>
         public static Student SelectStudent(int studentID)
         {
-            Student output;
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            Student output = null;
+            try
             {
-                string query = "" +
-                    "SELECT * " +
-                    "FROM users " +
-                    "JOIN students ON users.id = students.user_id " +
-                    "WHERE id = " + studentID;
-                connection.Open();
-                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    if (reader.Read())
+                    string query = "" +
+                        "SELECT * " +
+                        "FROM users " +
+                        "JOIN students ON users.id = students.user_id " +
+                        "WHERE id = " + studentID;
+                    connection.Open();
+                    using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                     {
-                        output = new Student(
-                            reader.IsDBNull(reader.GetOrdinal("first_name")) ? string.Empty : reader.GetString("first_name"),                 //first name
-                            reader.IsDBNull(reader.GetOrdinal("last_name")) ? string.Empty : reader.GetString("last_name"),                  //last name
-                            reader.GetInt32("id"),                                                                                  //userId
-                            reader.IsDBNull(reader.GetOrdinal("year")) ? 0 : DateTime.Now.Year - reader.GetInt32("year"),    //year
-                            reader.IsDBNull(reader.GetOrdinal("gpa")) ? 0.0 : reader.GetDouble("gpa"),                        //gpa
-                            reader.IsDBNull(reader.GetOrdinal("counselor_id")) ? 0 : reader.GetInt32("counselor_id"),
-                            reader.IsDBNull(reader.GetOrdinal("email")) ? string.Empty : reader.GetString("email"),                 //first name
-                            reader.IsDBNull(reader.GetOrdinal("password")) ? string.Empty : reader.GetString("password"));               //counselorID
-                    }
-                    else
-                    {
-                        return null;
+                        if (reader.Read())
+                        {
+                            output = new Student(
+                                reader.IsDBNull(reader.GetOrdinal("first_name")) ? string.Empty : reader.GetString("first_name"),                 //first name
+                                reader.IsDBNull(reader.GetOrdinal("last_name")) ? string.Empty : reader.GetString("last_name"),                  //last name
+                                reader.GetInt32("id"),                                                                                  //userId
+                                reader.IsDBNull(reader.GetOrdinal("year")) ? 0 : DateTime.Now.Year - reader.GetInt32("year"),    //year
+                                reader.IsDBNull(reader.GetOrdinal("gpa")) ? 0.0 : reader.GetDouble("gpa"),                        //gpa
+                                reader.IsDBNull(reader.GetOrdinal("counselor_id")) ? 0 : reader.GetInt32("counselor_id"),
+                                reader.IsDBNull(reader.GetOrdinal("email")) ? string.Empty : reader.GetString("email"),                 //first name
+                                reader.IsDBNull(reader.GetOrdinal("password")) ? string.Empty : reader.GetString("password"));               //counselorID
+                        }
+                        else
+                        {
+                            return null;
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
             return output;
         }
@@ -411,18 +486,25 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <param name="uid"></param>
         public static void DeleteStudent( int uid) 
         {
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                string delete = "" +
-                    "DELETE " +
-                    "FROM users " +
-                    "JOIN students ON users.id = students.user_id " +
-                    "WHERE id = " + uid;
-                connection.Open();
-                using (MySqlCommand command = new MySqlCommand(delete, connection))
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    command.ExecuteNonQuery();
+                    string delete = "" +
+                        "DELETE " +
+                        "FROM users " +
+                        "JOIN students ON users.id = students.user_id " +
+                        "WHERE id = " + uid;
+                    connection.Open();
+                    using (MySqlCommand command = new MySqlCommand(delete, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
         }
 
@@ -432,32 +514,39 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <param name="user"></param>
         public static void InsertCounselor(Counselor user)
         {
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                connection.Open();
-                String insertUser = "" +
-                    "INSERT INTO users " +
-                    "(id, first_name, last_name, email, password) VALUES " +
-                    user.UserId + ", " +
-                    user.FirstName + ", " +
-                    user.LastName + ", " +
-                    user.email + ", " +
-                    user.password;
-                String insertCounselor = "" +
-                    "INSERT INTO counselors " +
-                    "(user_id, name_range_start, name_range_end) VALUES " +
-                    user.UserId + ", " +
-                    user.NameRangeStart + ", " +
-                    user.NameRangeEnd;
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+                {
+                    connection.Open();
+                    String insertUser = "" +
+                        "INSERT INTO users " +
+                        "(id, first_name, last_name, email, password) VALUES " +
+                        user.UserId + ", " +
+                        user.FirstName + ", " +
+                        user.LastName + ", " +
+                        user.email + ", " +
+                        user.password;
+                    String insertCounselor = "" +
+                        "INSERT INTO counselors " +
+                        "(user_id, name_range_start, name_range_end) VALUES " +
+                        user.UserId + ", " +
+                        user.NameRangeStart + ", " +
+                        user.NameRangeEnd;
 
-                using (MySqlCommand command = new MySqlCommand(insertUser, connection))
-                {
-                    command.ExecuteNonQuery();
+                    using (MySqlCommand command = new MySqlCommand(insertUser, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    using (MySqlCommand command = new MySqlCommand(insertCounselor, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
-                using (MySqlCommand command = new MySqlCommand(insertCounselor, connection))
-                {
-                    command.ExecuteNonQuery();
-                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
         }
 
@@ -468,27 +557,34 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <returns></returns>
         public static Counselor SelectCounselor(int counselorID)
         {
-            Counselor output;
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            Counselor output = null;
+            try
             {
-                string query = "" +
-                    "SELECT * " +
-                    "FROM users " +
-                    "JOIN counselors ON users.id = counselors.user_id " +
-                    "WHERE id = " + counselorID;
-                connection.Open();
-                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    if (reader.Read()) output = new Counselor(
-                        reader.IsDBNull(reader.GetOrdinal("first_name")) ? string.Empty : reader.GetString("first_name"),                 //first name
-                        reader.IsDBNull(reader.GetOrdinal("last_name")) ? string.Empty : reader.GetString("last_name"),
-                        reader.GetInt32("id"),                          //userId
-                        reader.IsDBNull(reader.GetOrdinal("name_range_start")) ? "A" : reader.GetString("name_range_start"),           //name range start
-                        reader.IsDBNull(reader.GetOrdinal("name_range_end")) ? "A" : reader.GetString("name_range_emd"),
-                        reader.IsDBNull(reader.GetOrdinal("email")) ? string.Empty : reader.GetString("email"),                 //first name
-                        reader.IsDBNull(reader.GetOrdinal("password")) ? string.Empty : reader.GetString("password"));         
-                    else return null;
+                    string query = "" +
+                        "SELECT * " +
+                        "FROM users " +
+                        "JOIN counselors ON users.id = counselors.user_id " +
+                        "WHERE id = " + counselorID;
+                    connection.Open();
+                    using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                    {
+                        if (reader.Read()) output = new Counselor(
+                            reader.IsDBNull(reader.GetOrdinal("first_name")) ? string.Empty : reader.GetString("first_name"),                 //first name
+                            reader.IsDBNull(reader.GetOrdinal("last_name")) ? string.Empty : reader.GetString("last_name"),
+                            reader.GetInt32("id"),                          //userId
+                            reader.IsDBNull(reader.GetOrdinal("name_range_start")) ? "A" : reader.GetString("name_range_start"),           //name range start
+                            reader.IsDBNull(reader.GetOrdinal("name_range_end")) ? "A" : reader.GetString("name_range_emd"),
+                            reader.IsDBNull(reader.GetOrdinal("email")) ? string.Empty : reader.GetString("email"),                 //first name
+                            reader.IsDBNull(reader.GetOrdinal("password")) ? string.Empty : reader.GetString("password"));
+                        else return null;
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
             return output;
         }
@@ -499,18 +595,25 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <param name="uid"></param>
         public static void DeleteCounselor(int uid)
         {
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                string delete = "" +
-                    "DELETE " +
-                    "FROM users " +
-                    "JOIN counselors ON users.id = counselors.user_id " +
-                    "WHERE id = " + uid;
-                connection.Open();
-                using (MySqlCommand command = new MySqlCommand(delete, connection))
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    command.ExecuteNonQuery();
+                    string delete = "" +
+                        "DELETE " +
+                        "FROM users " +
+                        "JOIN counselors ON users.id = counselors.user_id " +
+                        "WHERE id = " + uid;
+                    connection.Open();
+                    using (MySqlCommand command = new MySqlCommand(delete, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
         }
 
@@ -520,30 +623,37 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <param name="user"></param>
         public static void InsertAdmin(Admin user)
         {
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                connection.Open();
-                String insertUser = "" +
-                    "INSERT INTO users " +
-                    "(id, first_name, last_name, email, password) VALUES " +
-                    user.UserId + ", " +
-                    user.FirstName + ", " +
-                    user.LastName + ", " +
-                    user.email + ", " +
-                    user.password;
-                String insertAdmin = "" +
-                    "INSERT INTO admins " +
-                    "(user_id) VALUES " +
-                    user.UserId;
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+                {
+                    connection.Open();
+                    String insertUser = "" +
+                        "INSERT INTO users " +
+                        "(id, first_name, last_name, email, password) VALUES " +
+                        user.UserId + ", " +
+                        user.FirstName + ", " +
+                        user.LastName + ", " +
+                        user.email + ", " +
+                        user.password;
+                    String insertAdmin = "" +
+                        "INSERT INTO admins " +
+                        "(user_id) VALUES " +
+                        user.UserId;
 
-                using (MySqlCommand command = new MySqlCommand(insertUser, connection))
-                {
-                    command.ExecuteNonQuery();
+                    using (MySqlCommand command = new MySqlCommand(insertUser, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    using (MySqlCommand command = new MySqlCommand(insertAdmin, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
-                using (MySqlCommand command = new MySqlCommand(insertAdmin, connection))
-                {
-                    command.ExecuteNonQuery();
-                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
         }
 
@@ -554,25 +664,32 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <returns></returns>
         public static Admin SelectAdmin( int adminID)
         {
-            Admin output;
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            Admin output = null;
+            try
             {
-                string query = "" +
-                    "SELECT * " +
-                    "FROM users " +
-                    "JOIN admins ON users.id = admins.user_id " +
-                    "WHERE id = " + adminID;
-                connection.Open();
-                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    if (reader.Read()) output = new Admin(
-                        reader.IsDBNull(reader.GetOrdinal("first_name")) ? string.Empty : reader.GetString("first_name"),                 //first name
-                        reader.IsDBNull(reader.GetOrdinal("last_name")) ? string.Empty : reader.GetString("last_name"),
-                        reader.GetInt32("id"),
-                        reader.IsDBNull(reader.GetOrdinal("email")) ? string.Empty : reader.GetString("email"),                 //first name
-                        reader.IsDBNull(reader.GetOrdinal("password")) ? string.Empty : reader.GetString("password"));               //counselorID
-                  else return null;
+                    string query = "" +
+                        "SELECT * " +
+                        "FROM users " +
+                        "JOIN admins ON users.id = admins.user_id " +
+                        "WHERE id = " + adminID;
+                    connection.Open();
+                    using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                    {
+                        if (reader.Read()) output = new Admin(
+                            reader.IsDBNull(reader.GetOrdinal("first_name")) ? string.Empty : reader.GetString("first_name"),                 //first name
+                            reader.IsDBNull(reader.GetOrdinal("last_name")) ? string.Empty : reader.GetString("last_name"),
+                            reader.GetInt32("id"),
+                            reader.IsDBNull(reader.GetOrdinal("email")) ? string.Empty : reader.GetString("email"),                 //first name
+                            reader.IsDBNull(reader.GetOrdinal("password")) ? string.Empty : reader.GetString("password"));               //counselorID
+                        else return null;
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
             return output;
         }
@@ -583,18 +700,25 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <param name="uid"></param>
         public static void DeleteAdmin(int uid)
         {
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                string delete = "" +
-                    "DELETE " +
-                    "FROM users " +
-                    "JOIN admins ON users.id = admins.user_id " +
-                    "WHERE id = " + uid;
-                connection.Open();
-                using (MySqlCommand command = new MySqlCommand(delete, connection))
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    command.ExecuteNonQuery();
+                    string delete = "" +
+                        "DELETE " +
+                        "FROM users " +
+                        "JOIN admins ON users.id = admins.user_id " +
+                        "WHERE id = " + uid;
+                    connection.Open();
+                    using (MySqlCommand command = new MySqlCommand(delete, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
         }
 
@@ -607,26 +731,33 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         public static int GetUID(string email, string password)
         {
             int uid = -1;
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                string query = "" +
-                    "SELECT id " +
-                    "FROM users " +
-                    "WHERE email = " + email +
-                    " AND password = " + password;
-                connection.Open();
-                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    reader.Read();
-                    try
+                    string query = "" +
+                        "SELECT id " +
+                        "FROM users " +
+                        "WHERE email = " + email +
+                        " AND password = " + password;
+                    connection.Open();
+                    using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                     {
-                        uid = reader.GetInt32("id");
-                    }
-                    catch
-                    {
-                        return -1;
+                        reader.Read();
+                        try
+                        {
+                            uid = reader.GetInt32("id");
+                        }
+                        catch
+                        {
+                            return -1;
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
             return uid;
         }
@@ -638,19 +769,26 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <param name="trackname"></param>
         public static void CreateTrack( int uid, string trackname)
         {
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                connection.Open();
-                String insert = "" +
-                    "INSERT INTO tracks " +
-                    "(user_id, track_name) VALUES " +
-                    "" + uid + ", " + 
-                    trackname;
-
-                using (MySqlCommand command = new MySqlCommand(insert, connection))
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    command.ExecuteNonQuery();
+                    connection.Open();
+                    String insert = "" +
+                        "INSERT INTO tracks " +
+                        "(user_id, track_name) VALUES " +
+                        "" + uid + ", " +
+                        trackname;
+
+                    using (MySqlCommand command = new MySqlCommand(insert, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
         }
 
@@ -662,38 +800,52 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <param name="course_id"></param>
         public static void InsertClassIntoTrack( int uid, int track_id, int course_id )
         {
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                connection.Open();
-                String insert = "" +
-                    "INSERT INTO track_courses " +
-                    "(user_id, track_id, course_id) VALUES " +
-                    uid + ", " +
-                    track_id + ", " +
-                    course_id;
-
-                using (MySqlCommand command = new MySqlCommand(insert, connection))
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    command.ExecuteNonQuery();
+                    connection.Open();
+                    String insert = "" +
+                        "INSERT INTO track_courses " +
+                        "(user_id, track_id, course_id) VALUES " +
+                        uid + ", " +
+                        track_id + ", " +
+                        course_id;
+
+                    using (MySqlCommand command = new MySqlCommand(insert, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
         }
 
         public static void DeleteClassFromTrack( int uid, int track_id, int course_id)
         {
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                connection.Open();
-                String insert = "" +
-                    "DELETE FROM track_courses " +
-                    "WHERE user_id = " + uid + " AND " +
-                    "track_id = " + track_id + " AND " +
-                    "course_id = " + course_id;
-
-                using (MySqlCommand command = new MySqlCommand(insert, connection))
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    command.ExecuteNonQuery();
+                    connection.Open();
+                    String insert = "" +
+                        "DELETE FROM track_courses " +
+                        "WHERE user_id = " + uid + " AND " +
+                        "track_id = " + track_id + " AND " +
+                        "course_id = " + course_id;
+
+                    using (MySqlCommand command = new MySqlCommand(insert, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
         }
 
@@ -703,18 +855,25 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <param name="table_name"></param>
         public static void CreateTempCourseTable( string table_name )
         {
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                connection.Open();
-                String sql = ""+
-                    "CREATE TABLE " + table_name + "( " +
-                    "course_id int(5) primary key" +
-                    " )";
-
-                using (MySqlCommand command = new MySqlCommand(sql, connection))
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    command.ExecuteNonQuery();
+                    connection.Open();
+                    String sql = "" +
+                        "CREATE TABLE " + table_name + "( " +
+                        "course_id int(5) primary key" +
+                        " )";
+
+                    using (MySqlCommand command = new MySqlCommand(sql, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
         }
 
@@ -767,29 +926,36 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         public static List<Class> AllClasses()
         {
             List<Class> courses = new List<Class>();
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                string query =
-                    "SELECT * " +
-                    "FROM courses ";
-                connection.Open();
-                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    while (reader.Read())
+                    string query =
+                        "SELECT * " +
+                        "FROM courses ";
+                    connection.Open();
+                    using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                     {
-                        courses.Add(new Class(
-                            reader.GetInt32("id"),
-                            reader.IsDBNull(reader.GetOrdinal("course_name")) ? string.Empty : reader.GetString("course_name"),
-                            reader.IsDBNull(reader.GetOrdinal("course_weight")) ? 0.0 : reader.GetDouble("course_weight"),
-                            reader.IsDBNull(reader.GetOrdinal("description")) ? string.Empty : reader.GetString("description"),
-                            reader.IsDBNull(reader.GetOrdinal("concentration")) ? string.Empty : reader.GetString("concentration"),
-                            reader.IsDBNull(reader.GetOrdinal("dual_enrolled")) ? (short)0 : reader.GetInt16("dual_enrolled"),
-                            reader.IsDBNull(reader.GetOrdinal("hs_credit")) ? 0.0 : reader.GetDouble("hs_credit"),
-                            reader.IsDBNull(reader.GetOrdinal("college_credit")) ? 0.0 : reader.GetDouble("college_credit"),
-                            Prerequisite.readFromJSON(reader.IsDBNull(reader.GetOrdinal("prerequisites")) ? string.Empty : reader.GetString("prerequisites"))
-                        )) ;
+                        while (reader.Read())
+                        {
+                            courses.Add(new Class(
+                                reader.GetInt32("id"),
+                                reader.IsDBNull(reader.GetOrdinal("course_name")) ? string.Empty : reader.GetString("course_name"),
+                                reader.IsDBNull(reader.GetOrdinal("course_weight")) ? 0.0 : reader.GetDouble("course_weight"),
+                                reader.IsDBNull(reader.GetOrdinal("description")) ? string.Empty : reader.GetString("description"),
+                                reader.IsDBNull(reader.GetOrdinal("concentration")) ? string.Empty : reader.GetString("concentration"),
+                                reader.IsDBNull(reader.GetOrdinal("dual_enrolled")) ? (short)0 : reader.GetInt16("dual_enrolled"),
+                                reader.IsDBNull(reader.GetOrdinal("hs_credit")) ? 0.0 : reader.GetDouble("hs_credit"),
+                                reader.IsDBNull(reader.GetOrdinal("college_credit")) ? 0.0 : reader.GetDouble("college_credit"),
+                                Prerequisite.readFromJSON(reader.IsDBNull(reader.GetOrdinal("prerequisites")) ? string.Empty : reader.GetString("prerequisites"))
+                            ));
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
             return courses;
         }
@@ -801,20 +967,27 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         public static List<int> AllClassIDs()
         {
             List<int> courses = new List<int>();
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                string query =
-                    "SELECT * " +
-                    "FROM courses ";
-                connection.Open();
-                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    while (reader.Read())
+                    string query =
+                        "SELECT * " +
+                        "FROM courses ";
+                    connection.Open();
+                    using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                     {
-                        courses.Add(
-                           reader.GetInt32("id"));
+                        while (reader.Read())
+                        {
+                            courses.Add(
+                               reader.GetInt32("id"));
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
             return courses;
         }
@@ -826,15 +999,22 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         /// <param name="table_name"></param>
         public static void DropTable(string table_name)
         {
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                connection.Open();
-                String sql = "DROP TABLE " + table_name;
-
-                using (MySqlCommand command = new MySqlCommand(sql, connection))
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    command.ExecuteNonQuery();
+                    connection.Open();
+                    String sql = "DROP TABLE " + table_name;
+
+                    using (MySqlCommand command = new MySqlCommand(sql, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
         }
 
@@ -909,45 +1089,52 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                 string concentration = "")
         {
             List<Class> courses = new List<Class>();
-            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            try
             {
-                //Query without dual enrolled filter
-                string query =
-                    "SELECT * " +
-                    "FROM courses " +
-                    "WHERE IFNULL(course_weight, 0) >= " + courseWeightMin + " AND " +
-                    "IFNULL(course_weight, 0) <= " + courseWeightMax + " AND " +
-                    "IFNULL(hs_credit, 0) >= " + hsCrediMin + " AND " +
-                    "IFNULL(hs_credit, 0) <= " + hsCreditMax + " AND " +
-                    "IFNULL(college_credit, 0) >= " + collegeCreditMin + " AND " +
-                    "IFNULL(college_credit, 0) <= " + collegeCreditMax;
-                //With dual enrolled filter
-                if (isDualEnrolled)
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
                 {
-                    query += " AND dual_enrolled = 1";
-                }
-                if( concentration.Length != 0)
-                {
-                    query += " AND concentration LIKE '" + concentration + "'"; 
-                }
-
-                connection.Open();
-                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
-                {
-                    while (reader.Read())
+                    //Query without dual enrolled filter
+                    string query =
+                        "SELECT * " +
+                        "FROM courses " +
+                        "WHERE IFNULL(course_weight, 0) >= " + courseWeightMin + " AND " +
+                        "IFNULL(course_weight, 0) <= " + courseWeightMax + " AND " +
+                        "IFNULL(hs_credit, 0) >= " + hsCrediMin + " AND " +
+                        "IFNULL(hs_credit, 0) <= " + hsCreditMax + " AND " +
+                        "IFNULL(college_credit, 0) >= " + collegeCreditMin + " AND " +
+                        "IFNULL(college_credit, 0) <= " + collegeCreditMax;
+                    //With dual enrolled filter
+                    if (isDualEnrolled)
                     {
-                        courses.Add(new Class(reader.GetInt32("id"),
-                        reader.IsDBNull(reader.GetOrdinal("course_name")) ? string.Empty : reader.GetString("course_name"),
-                        reader.IsDBNull(reader.GetOrdinal("course_weight")) ? 0.0 : reader.GetDouble("course_weight"),
-                        reader.IsDBNull(reader.GetOrdinal("description")) ? string.Empty : reader.GetString("description"),
-                        reader.IsDBNull(reader.GetOrdinal("concentration")) ? string.Empty : reader.GetString("concentration"),
-                        reader.IsDBNull(reader.GetOrdinal("dual_enrolled")) ? (short)0 : reader.GetInt16("dual_enrolled"),
-                        reader.IsDBNull(reader.GetOrdinal("hs_credit")) ? 0.0 : reader.GetDouble("hs_credit"),
-                        reader.IsDBNull(reader.GetOrdinal("college_credit")) ? 0.0 : reader.GetDouble("college_credit"),
-                        Prerequisite.readFromJSON(reader.IsDBNull(reader.GetOrdinal("prerequisites")) ? string.Empty : reader.GetString("prerequisites"))
-                        ));
+                        query += " AND dual_enrolled = 1";
+                    }
+                    if (concentration.Length != 0)
+                    {
+                        query += " AND concentration LIKE '" + concentration + "'";
+                    }
+
+                    connection.Open();
+                    using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            courses.Add(new Class(reader.GetInt32("id"),
+                            reader.IsDBNull(reader.GetOrdinal("course_name")) ? string.Empty : reader.GetString("course_name"),
+                            reader.IsDBNull(reader.GetOrdinal("course_weight")) ? 0.0 : reader.GetDouble("course_weight"),
+                            reader.IsDBNull(reader.GetOrdinal("description")) ? string.Empty : reader.GetString("description"),
+                            reader.IsDBNull(reader.GetOrdinal("concentration")) ? string.Empty : reader.GetString("concentration"),
+                            reader.IsDBNull(reader.GetOrdinal("dual_enrolled")) ? (short)0 : reader.GetInt16("dual_enrolled"),
+                            reader.IsDBNull(reader.GetOrdinal("hs_credit")) ? 0.0 : reader.GetDouble("hs_credit"),
+                            reader.IsDBNull(reader.GetOrdinal("college_credit")) ? 0.0 : reader.GetDouble("college_credit"),
+                            Prerequisite.readFromJSON(reader.IsDBNull(reader.GetOrdinal("prerequisites")) ? string.Empty : reader.GetString("prerequisites"))
+                            ));
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("SQL error: " + e.Message);
             }
 
             courses = FilterMinGPA(courses, gpaMin);
