@@ -1,11 +1,11 @@
 <%@ Page Title="Contact" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CourseCatalogue.aspx.cs" Inherits="CASIITInformationWebsite.Contact" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    <h1 style="font-size:100px; font-family:'Baskerville Old Face'; font-weight:bold; vertical-align:bottom; color:black" align="center">
+    <h1 style="font-size:100px; font-weight:bold; vertical-align:bottom; color:black" align="center">
         Course Catalogue
     </h1>
 
-    <p style="font-size:30px; font-family:'Baskerville Old Face'; font-weight:bold; color:black; text-underline-position:from-font;" align="left">
+    <p style="font-size:30px; font-weight:bold; color:black; text-underline-position:from-font;" align="left">
         Select Filters
     </p>
 
@@ -59,32 +59,32 @@
     <asp:Table ID="Table6" runat="server" HorizontalAlign="Center">
             <asp:TableRow>
                 <asp:TableCell Height="50px" Width="250px" BorderWidth="2" BackColor="LightGray" HorizontalAlign="Center" VerticalAlign="Middle">
-                    <p style="color:blueviolet; font-weight:bold; font-family:'Baskerville Old Face'">
+                    <p style="color:blueviolet; font-weight:bold;  ">
                         Course Name
                     </p>
                 </asp:TableCell>
                 <asp:TableCell Height="50px" Width="350px" BorderWidth="2" BackColor="LightGray" HorizontalAlign="Center" VerticalAlign="Middle">
-                    <p style="color:blueviolet; font-weight:bold; font-family:'Baskerville Old Face'">
+                    <p style="color:blueviolet; font-weight:bold;  ">
                         Course Description
                     </p>
                 </asp:TableCell>
                 <asp:TableCell Height="50px" Width="100px" BorderWidth="2" BackColor="LightGray" HorizontalAlign="Center" VerticalAlign="Middle">
-                    <p style="color:blueviolet; font-weight:bold; font-family:'Baskerville Old Face'">
+                    <p style="color:blueviolet; font-weight:bold;  ">
                         Minimum Year
                     </p>
                 </asp:TableCell>
                 <asp:TableCell Height="50px" Width="100px" BorderWidth="2" BackColor="LightGray" HorizontalAlign="Center" VerticalAlign="Middle">
-                    <p style="color:blueviolet; font-weight:bold; font-family:'Baskerville Old Face'">
+                    <p style="color:blueviolet; font-weight:bold;  ">
                         Minimum GPA
                     </p>
                 </asp:TableCell>
                 <asp:TableCell Height="50px" Width="100px" BorderWidth="2" BackColor="LightGray" HorizontalAlign="Center" VerticalAlign="Middle">
-                    <p style="color:blueviolet; font-weight:bold; font-family:'Baskerville Old Face'">
+                    <p style="color:blueviolet; font-weight:bold;  ">
                         Concentration
                     </p>
                 </asp:TableCell>
                 <asp:TableCell Height="50px" Width="250px" BorderWidth="2" BackColor="LightGray" HorizontalAlign="Center" VerticalAlign="Middle">
-                    <p style="color:blueviolet; font-weight:bold; font-family:'Baskerville Old Face'">
+                    <p style="color:blueviolet; font-weight:bold;  ">
                         Prerequisites
                     </p>
                 </asp:TableCell>
@@ -92,32 +92,32 @@
 
         <asp:TableRow ID="Class1" Visible="true">
                 <asp:TableCell Height="100px" Width="250px" BorderWidth="2" BackColor="White" HorizontalAlign="Center" VerticalAlign="Middle">
-                    <p style="color:black; font-weight:bold; font-family:'Baskerville Old Face'">
+                    <p style="color:black; font-weight:bold;  ">
                         Class A
                     </p>
                 </asp:TableCell>
                 <asp:TableCell Height="100px" Width="350px" BorderWidth="2" BackColor="White" HorizontalAlign="Center" VerticalAlign="Middle">
-                    <p style="color:black; font-weight:bold; font-family:'Baskerville Old Face'">
+                    <p style="color:black; font-weight:bold;  ">
                         Class Description A
                     </p>
                 </asp:TableCell>
                 <asp:TableCell Height="100px" Width="100px" BorderWidth="2" BackColor="White" HorizontalAlign="Center" VerticalAlign="Middle" Text="10" ID="Class1MinYear">
-                    <p style="color:black; font-weight:bold; font-family:'Baskerville Old Face'">
+                    <p style="color:black; font-weight:bold;  ">
                         10
                     </p>
                 </asp:TableCell>
                 <asp:TableCell Height="100px" Width="100px" BorderWidth="2" BackColor="White" HorizontalAlign="Center" VerticalAlign="Middle" Text="3.5" ID="Class1MinGPA">
-                    <p style="color:black; font-weight:bold; font-family:'Baskerville Old Face'">
+                    <p style="color:black; font-weight:bold;  ">
                         3.5
                     </p>
                 </asp:TableCell>
                 <asp:TableCell Height="100px" Width="100px" BorderWidth="2" BackColor="White" HorizontalAlign="Center" VerticalAlign="Middle" Text="Information Technology" ID="Class1Concentration">
-                    <p style="color:black; font-weight:bold; font-family:'Baskerville Old Face'">
+                    <p style="color:black; font-weight:bold;  ">
                         Information Technology
                     </p>
                 </asp:TableCell>
                 <asp:TableCell Height="100px" Width="250px" BorderWidth="2" BackColor="White" HorizontalAlign="Center" VerticalAlign="Middle">
-                    <p style="color:black; font-weight:bold; font-family:'Baskerville Old Face'">
+                    <p style="color:black; font-weight:bold;  ">
                         Prerequisite A
                     </p>
                 </asp:TableCell>
