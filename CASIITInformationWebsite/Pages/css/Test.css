@@ -5,8 +5,8 @@
     --toggler-size: 30px;
     --toggler-line-number: 3;
     --toggler-line-size: calc(var(--toggler-size) / (var(--toggler-line-number) + var(--toggler-line-number) - 1));
-    --toggler-offset-left: 10px;
-    --toggler-offset-top: 10px;
+    --toggler-offset-left: 200px;
+    --toggler-offset-top: 200px;
     --toggler-color: Purple;
     --toggler-color-hover: Purple;
 }
@@ -48,7 +48,7 @@ html {
 .sidebar {
     width: var(--sidebar-width);
     transform: translateX(calc(var(--sidebar-width) * -1));
-    background: linear-gradient(to bottom right, Tomato, Wheat);
+    background: linear-gradient(to bottom right, MediumOrchid, Plum);
     display: flex;
     justify-content: center;
     align-items: center;
