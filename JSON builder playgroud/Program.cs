@@ -38,7 +38,7 @@ using System.Diagnostics;
     double min_GPA = 3.25;
     int min_year = 0;
     ClassOption courses = null;
-    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
 
@@ -47,7 +47,7 @@ using System.Diagnostics;
     double min_GPA = 2.5;
     int min_year = 0;
     ClassOption courses = null;
-    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
 
@@ -55,7 +55,7 @@ using System.Diagnostics;
     int id = 6;
     double min_GPA = 2.5;
     int min_year = 1;
-    ClassOption courses = new ClassOption.Or(1, 2);
+    ClassOption courses = new ClassOption.OR(1, 2);
     Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
@@ -64,7 +64,7 @@ using System.Diagnostics;
     int id = 7;
     double min_GPA = 2.5;
     int min_year = 1;
-    ClassOption courses = new ClassOption.Or(1, 2);
+    ClassOption courses = new ClassOption.OR(1, 2);
     Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
@@ -73,7 +73,7 @@ using System.Diagnostics;
     int id = 8;
     double min_GPA = 2.5;
     int min_year = 1;
-    ClassOption courses = new ClassOption.Or(4, 13);
+    ClassOption courses = new ClassOption.OR(4, 13);
     Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
@@ -82,7 +82,7 @@ using System.Diagnostics;
     int id = 9;
     double min_GPA = 2.5;
     int min_year = 1;
-    ClassOption courses = new ClassOption.Option(3);
+    ClassOption courses = new ClassOption.OPTION(3);
     Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
@@ -91,7 +91,7 @@ using System.Diagnostics;
     int id = 10;
     double min_GPA = 2.5;
     int min_year = 1;
-    ClassOption courses = new ClassOption.Option(29);
+    ClassOption courses = new ClassOption.OPTION(29);
     Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
@@ -100,7 +100,7 @@ using System.Diagnostics;
     int id = 11;
     double min_GPA = 2.5;
     int min_year = 1;
-    ClassOption courses = new ClassOption.Or(4, 13);
+    ClassOption courses = new ClassOption.OR(4, 13);
     Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
@@ -133,10 +133,28 @@ using System.Diagnostics;
 }
 
 {
+    int id = 13;
+    double min_GPA = 3.25;
+    int min_year = 0;
+    ClassOption courses = null;
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
+    int id = 14;
+    double min_GPA = 2.5;
+    int min_year = 2;
+    ClassOption courses = new ClassOption.OPTION(6);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
+    SQLQuerier.AddPrereqsToCourse(id, preq);
+}
+
+{
     int id = 15;
     double min_GPA = 2.5;
     int min_year = 2;
-    ClassOption courses = new ClassOption.Option(6);
+    ClassOption courses = new ClassOption.OPTION(6);
     Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
@@ -145,7 +163,7 @@ using System.Diagnostics;
     int id = 16;
     double min_GPA = 2.5;
     int min_year = 2;
-    ClassOption courses = new ClassOption.Option(6);
+    ClassOption courses = new ClassOption.OPTION(6);
     Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
@@ -155,7 +173,7 @@ using System.Diagnostics;
     double min_GPA = 2.5;
     int min_year = 2;
     ClassOption courses = null;
-    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
 
@@ -163,7 +181,7 @@ using System.Diagnostics;
     int id = 18;
     double min_GPA = 2.5;
     int min_year = 2;
-    ClassOption courses = new ClassOption.Option(6);
+    ClassOption courses = new ClassOption.OPTION(6);
     Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
@@ -172,7 +190,7 @@ using System.Diagnostics;
     int id = 19;
     double min_GPA = 2.5;
     int min_year = 2;
-    ClassOption courses = new ClassOption.Option(9);
+    ClassOption courses = new ClassOption.OPTION(9);
     Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
@@ -181,7 +199,7 @@ using System.Diagnostics;
     int id = 20;
     double min_GPA = 2.5;
     int min_year = 3;
-    ClassOption courses = new ClassOption.Option(19);
+    ClassOption courses = new ClassOption.OPTION(19);
     Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
@@ -190,7 +208,7 @@ using System.Diagnostics;
     int id = 21;
     double min_GPA = 2.5;
     int min_year = 2;
-    ClassOption courses = new ClassOption.Option(8);
+    ClassOption courses = new ClassOption.OPTION(8);
     Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
@@ -199,7 +217,7 @@ using System.Diagnostics;
     int id = 22;
     double min_GPA = 2.5;
     int min_year = 2;
-    ClassOption courses = new ClassOption.Option(10);
+    ClassOption courses = new ClassOption.OPTION(10);
     Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
@@ -209,7 +227,7 @@ using System.Diagnostics;
     double min_GPA = 2.5;
     int min_year = 2;
     ClassOption courses = null;
-    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
 
@@ -217,7 +235,7 @@ using System.Diagnostics;
     int id = 24;
     double min_GPA = 2.5;
     int min_year = 2;
-    ClassOption courses = new ClassOption.Option(12);
+    ClassOption courses = new ClassOption.OPTION(12);
     Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
@@ -226,7 +244,7 @@ using System.Diagnostics;
     int id = 25;
     double min_GPA = 2.5;
     int min_year = 2;
-    ClassOption courses = new ClassOption.Option(11);
+    ClassOption courses = new ClassOption.OPTION(11);
     Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
@@ -236,7 +254,7 @@ using System.Diagnostics;
     double min_GPA = 2.5;
     int min_year = 2;
     ClassOption courses = null;
-    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
 
@@ -244,7 +262,7 @@ using System.Diagnostics;
     int id = 27;
     double min_GPA = 2.5;
     int min_year = 3;
-    ClassOption courses = new ClassOption.Option(26);
+    ClassOption courses = new ClassOption.OPTION(26);
     Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
@@ -254,7 +272,7 @@ using System.Diagnostics;
     double min_GPA = 0;
     int min_year = 0;
     ClassOption courses = null;
-    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
 
@@ -263,6 +281,6 @@ using System.Diagnostics;
     double min_GPA = 0;
     int min_year = 0;
     ClassOption courses = null;
-    Prerequisite preq = new Prerequisite(min_GPA, min_year);
+    Prerequisite preq = new Prerequisite(min_GPA, min_year, courses);
     SQLQuerier.AddPrereqsToCourse(id, preq);
 }
