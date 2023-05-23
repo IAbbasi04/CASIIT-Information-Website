@@ -11,6 +11,17 @@ namespace CASIITInformationWebsite.Pages
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // On page load send the verification email
+            Common_Elements.Csharp.EmailSender.Send_Verification_Email("kyle@houchin.us");
+        }
+
+        protected void bConfirmAccount_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void bResendCode_Click(object sender, EventArgs e)
+        {
 
         }
     }
