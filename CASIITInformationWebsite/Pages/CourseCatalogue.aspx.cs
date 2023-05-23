@@ -26,7 +26,6 @@ namespace CASIITInformationWebsite
             {
                 PopulateDropDownList();
             }
-            PropogateList();
         }
 
             //for(int i = 0; i < NUMCLASSES; i++)
@@ -144,7 +143,6 @@ namespace CASIITInformationWebsite
         protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
         {
             concentrationFilter = DropDownList1.SelectedItem.Text;
-            PropogateList();
         }
 
         protected void TextBox1_TextChanged(object sender, EventArgs e)
@@ -158,13 +156,11 @@ namespace CASIITInformationWebsite
             {
                 Label3.Visible = true;
             }
-            PropogateList();
         }
 
         protected void DropDownList2_SelectedIndexChanged(object sender, EventArgs e)
         {
             yearFilter = int.Parse(DropDownList2.SelectedValue);
-            PropogateList();
         }
 
         protected void GoButton_Click(object sender, EventArgs e)
