@@ -383,6 +383,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return classes;
         }
 
+        /// <summary>
+        /// All of the previous class IDs (int) that a user has inserted into the track_courses table
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public static int[] PreviousClassIDs(UserInfo user)
         {
             int numRows = 0;
@@ -518,6 +523,55 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         }
 
         /// <summary>
+        /// Commits a change to the database. If this is not done after inserts/deletes, the changes may or may not be temporary. This should be called at the end of any transaction (ie. insert or update)
+        /// Also note that this does not have error protection, so if the command fails (likely poor connection) the changes will not be commited
+        /// </summary>
+        public static void CommitChange()
+        {
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                String insert = "COMMIT;";
+                Console.WriteLine(insert);
+                using (MySqlCommand command = new MySqlCommand(insert, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates an instance of a user in the database. This will overwrite email, password, and names, but will not change roles or IDs
+        /// </summary>
+        /// <param name="user"></param>
+        public static void UpdateUser(UserInfo user)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+                {
+                    connection.Open();
+                    String insert = "" +
+                        "UPDATE users " +
+                        "SET first_name = '" + user.FirstName + "' , " +
+                        "last_name = '" + user.LastName + "' , " +
+                        "email = '" + user.email + "' , " +
+                        "password = '" + user.password + "' " +
+                        "WHERE id = " + user.UserId;
+                    Console.WriteLine(insert);
+                    using (MySqlCommand command = new MySqlCommand(insert, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
         /// Inserts an instance of a Student into the database
         /// </summary>
         /// <param name="user"></param>
@@ -573,6 +627,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                         command.ExecuteNonQuery();
                     }
                 }
+                CommitChange();
             }
             catch (Exception e)
             {
@@ -595,8 +650,8 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     string query = "" +
                         "SELECT * " +
                         "FROM users " +
-                        "JOIN students ON users.id = students.user_id " +
-                        "WHERE id = " + studentID;
+                        "JOIN students ON users.id = students.id " +
+                        "WHERE users.id = " + studentID;
                     connection.Open();
                     using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                     {
@@ -608,7 +663,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                                 reader.GetInt32("id"),                                                                                  //userId
                                 reader.IsDBNull(reader.GetOrdinal("year")) ? 0 : DateTime.Now.Year - reader.GetInt32("year"),    //year
                                 reader.IsDBNull(reader.GetOrdinal("gpa")) ? 0.0 : reader.GetDouble("gpa"),                        //gpa
-                                reader.IsDBNull(reader.GetOrdinal("counselor_id")) ? 0 : reader.GetInt32("counselor_id"),
+                                reader.IsDBNull(reader.GetOrdinal("counselor_id")) ? -1 : reader.GetInt32("counselor_id"),
                                 reader.IsDBNull(reader.GetOrdinal("email")) ? string.Empty : reader.GetString("email"),                 //first name
                                 reader.IsDBNull(reader.GetOrdinal("password")) ? string.Empty : reader.GetString("password"));               //counselorID
                         }
@@ -627,6 +682,37 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         }
 
         /// <summary>
+        /// Updates an instance of a student in the database. In addition to updating the user this updates: year, gpa, and counselor_id.
+        /// </summary>
+        /// <param name="user"></param>
+        public static void UpdateStudent( Student user)
+        {
+            UpdateUser(user);
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+                {
+                    connection.Open();
+                    string insert = "" +
+                        "UPDATE students " +
+                        "SET year = " + (DateTime.Now.Year - user.Year) + " , " +
+                        "gpa = " + user.GPA + " " +
+                        "WHERE id = " + user.UserId;
+                    Console.WriteLine(insert);
+                    using (MySqlCommand command = new MySqlCommand(insert, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                }
+                CommitChange();
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
         /// Deletes a student's record from the database
         /// </summary>
         /// <param name="uid"></param>
@@ -639,7 +725,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     string delete = "" +
                         "DELETE " +
                         "FROM users " +
-                        "JOIN students ON users.id = students.user_id " +
+                        "JOIN students ON users.id = students.id " +
                         "WHERE id = " + uid;
                     connection.Open();
                     using (MySqlCommand command = new MySqlCommand(delete, connection))
@@ -710,6 +796,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                         command.ExecuteNonQuery();
                     }
                 }
+                CommitChange();
             }
             catch (Exception e)
             {
@@ -732,8 +819,8 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     string query = "" +
                         "SELECT * " +
                         "FROM users " +
-                        "JOIN counselors ON users.id = counselors.user_id " +
-                        "WHERE id = " + counselorID;
+                        "JOIN counselors ON users.id = counselors.id " +
+                        "WHERE users.id = " + counselorID;
                     connection.Open();
                     using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
                     {
@@ -757,6 +844,37 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
         }
 
         /// <summary>
+        /// Updates an instance of a counselor in the database. This changes the info as a user as well as the name_range_start and name_range_end
+        /// </summary>
+        /// <param name="user"></param>
+        public static void UpdateCounselor(Counselor user)
+        {
+            UpdateUser(user);
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+                {
+                    connection.Open();
+                    string insert = "" +
+                        "UPDATE counselors " +
+                        "SET name_range_start = '" + user.NameRangeStart + "' , " +
+                        "name_range_end = '" + user.NameRangeEnd + "' " +
+                        "WHERE id = " + user.UserId;
+                    Console.WriteLine(insert);
+                    using (MySqlCommand command = new MySqlCommand(insert, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                }
+                CommitChange();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
         /// Deletes a counselor's record from the database
         /// </summary>
         /// <param name="uid"></param>
@@ -769,7 +887,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     string delete = "" +
                         "DELETE " +
                         "FROM users " +
-                        "JOIN counselors ON users.id = counselors.user_id " +
+                        "JOIN counselors ON users.id = counselors.id " +
                         "WHERE id = " + uid;
                     connection.Open();
                     using (MySqlCommand command = new MySqlCommand(delete, connection))
@@ -838,6 +956,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                         command.ExecuteNonQuery();
                     }
                 }
+                CommitChange();
             }
             catch (Exception e)
             {
@@ -860,7 +979,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     string query = "" +
                         "SELECT * " +
                         "FROM users " +
-                        "JOIN admins ON users.id = admins.user_id " +
+                        "JOIN admins ON users.id = admins.id " +
                         "WHERE id = " + adminID;
                     connection.Open();
                     using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
@@ -895,7 +1014,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     string delete = "" +
                         "DELETE " +
                         "FROM users " +
-                        "JOIN admins ON users.id = admins.user_id " +
+                        "JOIN admins ON users.id = admins.id " +
                         "WHERE id = " + uid;
                     connection.Open();
                     using (MySqlCommand command = new MySqlCommand(delete, connection))
@@ -972,6 +1091,8 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                     {
                         command.ExecuteNonQuery();
                     }
+                    CommitChange();
+
                 }
             }
             catch (Exception e)
@@ -1005,6 +1126,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                         command.ExecuteNonQuery();
                     }
                 }
+                CommitChange();
             }
             catch (Exception e)
             {
@@ -1012,6 +1134,12 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             }
         }
 
+        /// <summary>
+        /// Removes a class from a track 
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="track_id"></param>
+        /// <param name="course_id"></param>
         public static void DeleteClassFromTrack( int uid, int track_id, int course_id)
         {
             try
@@ -1058,6 +1186,7 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
                         command.ExecuteNonQuery();
                     }
                 }
+                CommitChange();
             }
             catch (Exception e)
             {
@@ -1082,6 +1211,11 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return availableClasses;
         }
 
+        /// <summary>
+        /// All classes a User can take, but ignores gpa and year fields. This is meant for counselors and admins since they are not currently enrolled in school.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public static List<Class> AllAvailableClasses(UserInfo user)
         {
             int[] previouslyTakenCourses = PreviousClassIDs(user);

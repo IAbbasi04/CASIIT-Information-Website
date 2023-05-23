@@ -26,7 +26,6 @@ namespace CASIITInformationWebsite
             {
                 PopulateDropDownList();
             }
-            
         }
 
             //for(int i = 0; i < NUMCLASSES; i++)
@@ -189,12 +188,7 @@ namespace CASIITInformationWebsite
             else concentrationFilter = DropDownList1.SelectedItem.Text;
 
             //if (CheckBox1.Checked && Pages.Login.currentUser != null) courses = SQLQuerier.AllAvailableClasses(Pages.Login.currentUser);
-             courses = SQLQuerier.FilterSelect(gpaMin: gpaFilter, yearMin: DropDownList2.SelectedIndex, concentration: concentrationFilter );
-            //Class1.Visible = ((Class1Concentration.Text.Equals(concentrationFilter) ||
-            //concentrationFilter == "None") &&
-            //Double.Parse(Class1MinGPA.Text) < gpaFilter &&
-            //int.Parse(Class1MinYear.Text) <= yearFilter) ||
-            //concentrationFilter == "None";
+             courses = SQLQuerier.FilterSelect(gpaMax: gpaFilter, yearMin: DropDownList2.SelectedIndex, concentration: concentrationFilter );
 
             foreach (Class course in courses)
             {

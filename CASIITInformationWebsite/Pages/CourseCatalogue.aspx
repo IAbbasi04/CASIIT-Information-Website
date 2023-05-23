@@ -89,39 +89,6 @@
                     </p>
                 </asp:TableCell>
             </asp:TableRow>
-
-        <asp:TableRow ID="Class1" Visible="true">
-                <asp:TableCell Height="100px" Width="250px" BorderWidth="2" BackColor="White" HorizontalAlign="Center" VerticalAlign="Middle">
-                    <p style="color:black; font-weight:bold;  ">
-                        Class A
-                    </p>
-                </asp:TableCell>
-                <asp:TableCell Height="100px" Width="350px" BorderWidth="2" BackColor="White" HorizontalAlign="Center" VerticalAlign="Middle">
-                    <p style="color:black; font-weight:bold;  ">
-                        Class Description A
-                    </p>
-                </asp:TableCell>
-                <asp:TableCell Height="100px" Width="100px" BorderWidth="2" BackColor="White" HorizontalAlign="Center" VerticalAlign="Middle" Text="10" ID="Class1MinYear">
-                    <p style="color:black; font-weight:bold;  ">
-                        10
-                    </p>
-                </asp:TableCell>
-                <asp:TableCell Height="100px" Width="100px" BorderWidth="2" BackColor="White" HorizontalAlign="Center" VerticalAlign="Middle" Text="3.5" ID="Class1MinGPA">
-                    <p style="color:black; font-weight:bold;  ">
-                        3.5
-                    </p>
-                </asp:TableCell>
-                <asp:TableCell Height="100px" Width="100px" BorderWidth="2" BackColor="White" HorizontalAlign="Center" VerticalAlign="Middle" Text="Information Technology" ID="Class1Concentration">
-                    <p style="color:black; font-weight:bold;  ">
-                        Information Technology
-                    </p>
-                </asp:TableCell>
-                <asp:TableCell Height="100px" Width="250px" BorderWidth="2" BackColor="White" HorizontalAlign="Center" VerticalAlign="Middle">
-                    <p style="color:black; font-weight:bold;  ">
-                        Prerequisite A
-                    </p>
-                </asp:TableCell>
-            </asp:TableRow>
      </asp:Table>
 
 </asp:Content>
