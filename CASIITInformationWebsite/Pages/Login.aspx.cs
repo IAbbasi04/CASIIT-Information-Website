@@ -1,4 +1,5 @@
 ﻿using CASIITInformationWebsite.Common_Elements.Csharp;
+using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,7 @@ namespace CASIITInformationWebsite.Pages
         protected void Login_Click(object sender, EventArgs e)
         {
             bool canMoveOn = true;
+            string desiredPassword;
 
             if (!IsValidEmail(LoginEmailBox.Text))
             {
@@ -62,7 +64,10 @@ namespace CASIITInformationWebsite.Pages
             else
             {
                 LoginEmailLabel.Visible = false;
+                desiredPassword = SQLQuerier.SelectStudent();
             }
+
+
 
             if (LoginPasswordBox.Text == "")
             {
@@ -82,21 +87,6 @@ namespace CASIITInformationWebsite.Pages
             }
         }
 
-
-        private bool IsValidEmail(string email)
-        {
-            string trimmedEmail = email.Trim();
-
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == trimmedEmail;
-            }
-            catch
-            {
-                return false;
-            }
-        }
 
         protected void PersonType_Click(object sender, EventArgs e)
         {
@@ -196,6 +186,30 @@ namespace CASIITInformationWebsite.Pages
                 Server.TransferRequest("~/Pages/Home");
             }
 
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            string trimmedEmail = email.Trim();
+
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == trimmedEmail;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private int GetUIDFromEmail(string email)
+        {
+            int uid = 0;
+
+
+
+            return uid;
         }
     }
 }
