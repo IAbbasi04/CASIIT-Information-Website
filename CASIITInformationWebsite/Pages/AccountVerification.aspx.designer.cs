@@ -24,13 +24,13 @@ namespace CASIITInformationWebsite.Pages
         protected global::System.Web.UI.UpdatePanel upCreateAccount;
 
         /// <summary>
-        /// tableCreateAccount control.
+        /// tableVerifyAccount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Table tableCreateAccount;
+        protected global::System.Web.UI.WebControls.Table tableVerifyAccount;
 
         /// <summary>
         /// lbAccountVerificationHeader control.

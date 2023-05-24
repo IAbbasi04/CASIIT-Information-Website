@@ -5,7 +5,7 @@
         <div style="position:relative; left:100px;">
         <asp:UpdatePanel runat="server" ID="upCreateAccount">
             <ContentTemplate>
-                <asp:Table runat="server" ID="tableCreateAccount">
+                <asp:Table runat="server" ID="tableVerifyAccount">
                     <%--Context to Page--%>
                     <asp:TableRow>
                         <asp:TableCell>
