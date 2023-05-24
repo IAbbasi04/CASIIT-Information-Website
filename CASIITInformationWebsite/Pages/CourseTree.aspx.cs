@@ -14,6 +14,7 @@ namespace CASIITInformationWebsite
         const int minHeightOffset = 130;//the ideal minimum vertical distance to keep elements apart, measured from top point to top point
         const int minWidthOffset = 100;//the ideal minimum hoorizontal distance to keep elements apart, measured form aproximate end to aproximate end
         const int avgPanelWidth = 200;//the width to assume the panels are
+        const int LBT = 30;//the number of characters needed to trigger a line break
         protected void Page_Init(object sender, EventArgs e)
         {
             //on first page load, get js to pickup clientHeight and clientWidth for each panel, then push that to the server and reload, hopefully before clientside is ever displayed so it doesn't look wierd
@@ -74,7 +75,7 @@ namespace CASIITInformationWebsite
 
 
 
-            //create panels TODO: do this properly
+            //create panels TODO: do this properly using the database or whatever
             List<Panel> panels = new List<Panel>();
             panels.Add(CreateBox("Adv Computer Math", "math bro", 9, null, new string[] { "Algebra 1" }));
             panels.Add(CreateBox("AP Computer Science", "science bro", 10, null, new string[] { "Geometry", "Adv Computer Math" }));
@@ -85,7 +86,7 @@ namespace CASIITInformationWebsite
             panels.Add(CreateBox("IT Adv Programming DE", "hey i think i took this class", 10, null, new string[] { "IT Programming DE" }));
             panels.Add(CreateBox("Cybersecurity Systems Tech DE", "security bro", 10, null, new string[] { "IT Fundamentals" }));
             panels.Add(CreateBox("Comp Networking I, II DE", "networks bro", 10, 2.5f, new string[] { "IT Fundamentals" }));
-            panels.Add(CreateBox("Comp Networking III, IV DE", "no idea if this is right, mostly just want to see what it does to the tree", 10, 2.5f, new string[] { "IT Fundamentals", "Comp Networking I, II DE" }));
+            panels.Add(CreateBox("Comp Networking III, IV DE", "no idea if this is right, mostly just want to see what it does to the tree", 10, 2.5f, new string[] { "Comp Networking I, II DE" }));
             panels.Add(CreateBox("IT Graphics Design", "art bro", 9, null, new string[] { }));
             panels.Add(CreateBox("IT Computer Graphics I", "graphics bro", 10, null, new string[] { "IT Graphics Design:OR:", "Art 1:OR:" }));
             panels.Add(CreateBox("Photography I", "pictures bro", 10, null, new string[] { "IT Graphics Design:OR:", "Art 1:OR:" }));
@@ -95,28 +96,7 @@ namespace CASIITInformationWebsite
             panels.Add(CreateBox("Sustainability and Renewable Technology", "long name club", 11, null, new string[] {}));
 
 
-            //string myConnectionString = "server=p3nlmysql165plsk.secureserver.net;uid=CSIsAwesome;pwd=Casiit2117Class;database=battlefield_casiit";
-
-            //using (MySqlConnection conn = new MySqlConnection(myConnectionString))
-            //{
-            //    conn.ConnectionString = myConnectionString;
-            //    conn.Open();
-
-            //    String sql = "SELECT id,course_name,course_weight,description,dual_enrolled,hs_credit,college_credit,prerequisites FROM courses";
-
-            //    using (MySqlCommand command = new MySqlCommand(sql, conn))
-            //    {
-            //        using (MySqlDataReader reader = command.ExecuteReader())
-            //        {
-            //            while (reader.Read())
-            //            {
-            //                //JsonConvert.
-            //                // reader.GetValue(7)
-            //                panels.Add(CreateBox(reader.GetString(1), reader.GetString(3), null, null, null));
-            //            }
-            //        }
-            //    }
-            //}
+            
 
 
 
@@ -135,6 +115,7 @@ namespace CASIITInformationWebsite
 
 
             //find postrequisites
+            //double comma is to prevent classses with commas in their name (looking at you, Comp Networking) from being seperated when converting form string to array
             foreach (Panel panel in panels)
             {
                 foreach (string prereq in ((HiddenField)panel.FindControl($"{panel.ID}_preq")).Value.Split(new string[] { ",," }, StringSplitOptions.RemoveEmptyEntries))
@@ -170,10 +151,6 @@ namespace CASIITInformationWebsite
                 panel.Style.Add("top", $"{minHeightOffset * (deepest - depth)}px");
             }
             //x
-            //foreach (Panel panel in roots)
-            //{
-            //    GetChildrenOffsetToParent(panel);
-            //}
             PositionRoots(roots);
             foreach (Panel panel in roots)
             {
@@ -181,6 +158,7 @@ namespace CASIITInformationWebsite
             }
             //line up panels 
             FixLinePanelRelations(panels);
+            //that data that we got from the reload comes up here
             string[] data = Request.Form["__EVENTARGUMENT"].Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 3; i < UpdatePanel1.ContentTemplateContainer.Controls.Count; i++)
             {
@@ -191,7 +169,7 @@ namespace CASIITInformationWebsite
             }
 
 
-            //get line classes
+            //get classes to connect with lines
             string lineClasses = "";
             foreach (Panel panel in panels)
             {
@@ -204,12 +182,14 @@ namespace CASIITInformationWebsite
                     Panel item = (Panel)panel.Parent.FindControl(prereq.Replace(":OR:", ""));
                     if (item != null)
                     {
+                        //build a comma seperated list to use for an array
                         lineClasses += "\"" + prereq + "\", ";
                         lineClasses += "\"" + panel.ID + "\", ";
                     }
                 }
             }
-            lineClasses = lineClasses.Substring(0, lineClasses.Length - 1);
+            //cut off the last comma
+            lineClasses = lineClasses.Substring(0, lineClasses.Length - 2);
 
             //draw lines
             Page.ClientScript.RegisterStartupScript(GetType(), "DrawLines",
@@ -218,15 +198,15 @@ namespace CASIITInformationWebsite
             "    for(let i = 0; i < arr.length-1; i+=2){\n" +
             "        let or = false;\n" +
             "        if(arr[i].endsWith(\":OR:\")){\n" +
-            "            arr[i] = arr[i].replace(\":OR:\",\"\");" +
+            "            arr[i] = arr[i].replace(\":OR:\",\"\");\n" +
             "            or = true;\n" +
             "        }\n" +
             "        if(arr[i+1].endsWith(\":OR:\")){\n" +
-            "            arr[i+1] = arr[i+1].replace(\":OR:\",\"\");" +
+            "            arr[i+1] = arr[i+1].replace(\":OR:\",\"\");\n" +
             "            or = true;\n" +
             "        }\n" +
-            "        let panel = document.getElementById(\"MainContent_\"+arr[i]);" +
-            "        let item = document.getElementById(\"MainContent_\"+arr[i+1]);" +
+            "        let panel = document.getElementById(\"MainContent_\"+arr[i]);\n" +
+            "        let item = document.getElementById(\"MainContent_\"+arr[i+1]);\n" +
             "        var newLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');\n" +
             "        newLine.setAttribute('id', 'line'+(i/2));\n" +
             "        newLine.setAttribute('x1', (+item.style.left.replace(\"px\", \"\")) + (item.clientWidth / 2) + \"\");\n" +
@@ -246,6 +226,7 @@ namespace CASIITInformationWebsite
         }
         protected void Page_LoadComplete(object sender, EventArgs e)
         {
+            //this is supposed to set the default position and zoom, but only sets the zoom for some reason. also just scrapes the defaults from the reset button
             Page.ClientScript.RegisterStartupScript(GetType(), "PanZoomPosition",
            $"{ResetViewButton.OnClientClick}\n"
             , true);
@@ -379,9 +360,11 @@ namespace CASIITInformationWebsite
         /// <returns>The depth of the element.</returns>
         private int FindDepth(Panel panel)
         {
+            bool root = false;
             //check if the depth has already been determined
-            if (int.TryParse(((HiddenField)panel.FindControl($"{panel.ID}_dpth")).Value, out int depth))
+            if (int.TryParse(((HiddenField)panel.FindControl($"{panel.ID}_dpth")).Value.Replace("R",""), out int depth))
             {
+                root = ((HiddenField)panel.FindControl($"{panel.ID}_dpth")).Value.Contains("R");
                 return depth;
             }
             //get the list of prerequisites
@@ -402,8 +385,11 @@ namespace CASIITInformationWebsite
                     }
                 }
             }
+            root = depth == 0;
+            //add any aditional offset here
+
             //save the depth to the panel data
-            ((HiddenField)panel.FindControl($"{panel.ID}_dpth")).Value = depth + "";
+            ((HiddenField)panel.FindControl($"{panel.ID}_dpth")).Value = depth + (root?"R":"");
             return depth;
         }
 
@@ -419,6 +405,7 @@ namespace CASIITInformationWebsite
         private Panel CreateBox(string className, string description, byte? minGrade, float? minGPA, string[] prerequisites)
         {
             //data defaults
+            //double comma is to prevent classses with commas in their name (looking at you, Comp Networking) from being seperated when converting form string to array
             minGrade = minGrade == null ? 9 : minGrade;
             minGPA = minGPA == null ? 0 : minGPA;
             string prereqs = "";
@@ -433,7 +420,7 @@ namespace CASIITInformationWebsite
                         prereqsDisplay += prerequisites[i].Replace(":OR:", "") + " or ";
                     }
                     else if (i + 1 < prerequisites.Length)
-                    {
+                    {//note that i did not use a double comma here, that is because this is the display string and is not a data transfer string, thus format does not matter here, just readability
                         prereqsDisplay += prerequisites[i].Replace(":OR:", "") + ", ";
                     }
                     else
@@ -449,21 +436,7 @@ namespace CASIITInformationWebsite
 
             Button button = new Button();
             string bText = $"Class: {className}\nMinimum Grade: {minGrade}th" + (minGPA == 0 ? "" : $"\nMinimum GPA: {minGPA}");
-            for (int i = 0; i < bText.Split('\n').Length; i++)
-            {
-                if (bText.Split('\n')[i].Length > 30)
-                {
-                    if (bText.Split('\n')[i].Substring(4, 26).Contains(' '))
-                    {
-                        bText = bText.Replace(bText.Split('\n')[i], bText.Split('\n')[i].Insert(bText.Split('\n')[i].LastIndexOf(' ', 30), "\n "));
-                    }
-                    else
-                    { 
-                        bText = bText.Replace(bText.Split('\n')[i], bText.Split('\n')[i].Insert(30, "\n ")); 
-                    }
-                }
-            }
-            button.Text = bText;
+            button.Text = WrapText(bText, LBT);
             button.Style.Add("text-align", "left");
             button.Style.Add("width", "100%");
             button.Style.Add("height", "100%");
@@ -471,21 +444,7 @@ namespace CASIITInformationWebsite
 
             Button button2 = new Button();
             string b2Text = $"Class: {className}\nDescription: {description}\nMinimum Grade: {minGrade}th" + (minGPA == 0 ? "" : $"\nMinimum GPA: {minGPA}") + (prereqs == "" ? "" : $"\nPrerequisites: {prereqsDisplay}");
-            for (int i = 0; i < b2Text.Split('\n').Length; i++)
-            {
-                if (b2Text.Split('\n')[i].Length > 30)
-                {
-                    if (b2Text.Split('\n')[i].Substring(4, 26).Contains(' '))
-                    {
-                        b2Text = b2Text.Replace(b2Text.Split('\n')[i], b2Text.Split('\n')[i].Insert(b2Text.Split('\n')[i].LastIndexOf(' ', 30), "\n "));
-                    }
-                    else
-                    {
-                        b2Text = b2Text.Replace(b2Text.Split('\n')[i], b2Text.Split('\n')[i].Insert(30, "\n "));
-                    }
-                }
-            }
-            button2.Text = b2Text;
+            button2.Text = WrapText(b2Text, LBT);
             button2.Style.Add("text-align", "left");
             button2.Style.Add("width", "100%");
             button2.Style.Add("height", "100%");
@@ -548,6 +507,33 @@ namespace CASIITInformationWebsite
             UpdatePanel1.ContentTemplateContainer.Controls.Add(panel);
             return panel;
         }
+        /// <summary>
+        /// Makes sure that every line of the given string is less than the given number of characters long, adding line breaks as needed
+        /// </summary>
+        /// <param name="text">The text to wrap</param>
+        /// <param name="threshold">The maximum characters per line</param>
+        /// <returns>The edited text</returns>
+        /// <remarks>Likely will not work with thresholds less than 4 or 5</remarks>
+        private static string WrapText(string text, int threshold)
+        {
+            for (int i = 0; i < text.Split('\n').Length; i++)
+            {//text wrapping woo. basically just checks character count between line breaks (\n), and if above threshold attempt to split on the nearest space character
+                if (text.Split('\n')[i].Length > threshold)
+                {
+                    if (text.Split('\n')[i].Substring(4, threshold - 4).Contains(' '))
+                    {//if there is a space character, split there and add an extra space for indent because it looks nice
+                        text = text.Replace(text.Split('\n')[i], text.Split('\n')[i].Insert(text.Split('\n')[i].LastIndexOf(' ', threshold), "\n "));
+                    }
+                    else
+                    {//if there is no space character, break the line on the 29th character and add a hyphen and the indent space
+                        text = text.Replace(text.Split('\n')[i], text.Split('\n')[i].Insert(threshold - 1, "-\n  "));
+                    }
+                }
+            }
+
+            return text;
+        }
+
         /// <summary>
         /// Switches which element is folded out.
         /// </summary>

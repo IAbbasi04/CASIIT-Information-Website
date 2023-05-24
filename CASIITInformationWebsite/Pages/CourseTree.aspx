@@ -21,7 +21,7 @@
     <!-- update panel for buttons to keep reloads down -->
     <asp:UpdatePanel runat="server">
         <ContentTemplate>
-            <!-- button to reset tree view -->
+            <!-- button to reset tree view. whatever values are put in here are the defaults. values can be found by inspecting panel2 -->
             <asp:Button ID="ResetViewButton" runat="server" Text="Reset View" style="position:absolute;left:50px;background-color:var(--button-background)" OnClientClick="pz.zoom(0.3,{animate:true});pz.pan(-1314,104,{animate:true});"/>
         </ContentTemplate>
     </asp:UpdatePanel>
@@ -29,7 +29,7 @@
     <asp:Panel ID="Panel1" runat="server" style="position:absolute;left:0px;top:90px;background-color:var(--panel-background)">
         <!-- tree panel, is the panzoom element -->
         <asp:Panel ID="Panel2" runat="server">
-            <!-- svg panel to draw lines -->
+            <!-- svg panel to draw lines. do not put this in an update panel, the lines dissapear -->
             <svg id="LinePanel" style="position:absolute;width:100%;height:100%"></svg>
             <!-- update panel to hold the tree elemeents and reduce reloads -->
             <asp:UpdatePanel ID="UpdatePanel1" runat="server" style="position:absolute" UpdateMode="Conditional">
