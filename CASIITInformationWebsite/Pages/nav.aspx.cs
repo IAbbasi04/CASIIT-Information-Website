@@ -36,7 +36,15 @@ namespace CASIITInformationWebsite.Pages
             setGrade();
             setMath();
             setClasses();
-            SQLQuerier.CreateTrack(SiteMaster.currentUserID, ""+ SiteMaster.currentUserID);
+
+            // when all the database stuff is correct, make sure to add the recordInDatabase method here.
+            // I'm not adding it for now because I don't want to cause a database error if there is a primary key violation with 
+            // repeated userIds, etc.
+        }
+
+        protected void recordInDatabase()
+        {
+            SQLQuerier.CreateTrack(SiteMaster.currentUserID, "" + SiteMaster.currentUserID);
 
             foreach (string course in classes)
             {
@@ -78,6 +86,7 @@ namespace CASIITInformationWebsite.Pages
 
         protected int getClassID(string className)
         {
+            // use sql to get the classID for a class based on its name
             return 238778;
         }
     }
