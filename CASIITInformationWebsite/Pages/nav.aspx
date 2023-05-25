@@ -84,8 +84,8 @@ html {
     color: white;
     font-weight: 100;
     text-decoration: none;
-    font-size: 10vmin;
-    line-height: 15vmin;
+    font-size: 5vmin;
+    line-height: 10vmin;
     transition: all 0.25s ease-out;
 }
 
@@ -211,9 +211,30 @@ html {
     <ul id="menubar" class="menu" role="menubar" aria-orientation="vertical">
         <li class="menu__item"><a class="menu__link" href="#" role="menuitem" tabindex="-1">Select Courses</a></li>
 
-            <asp:CheckBoxList ID="courseList" runat="server">
+            <asp:Table ID ="CourseTable" runat="server" CellPadding="100">
+            <asp:TableRow runat="server">
+                <asp:TableCell runat="server">
+                    <asp:CheckBoxList ID="courseList1" runat="server"> </asp:CheckBoxList>
+                </asp:TableCell>
+                 <asp:TableCell runat="server">
+                    <asp:CheckBoxList ID="courseList2" runat="server"> </asp:CheckBoxList>
+                </asp:TableCell>
+                <asp:TableCell runat="server">
+                    <asp:CheckBoxList ID="courseList3" runat="server"> </asp:CheckBoxList>
+                </asp:TableCell>
+                <asp:TableCell runat="server">
+                    <asp:CheckBoxList ID="courseList4" runat="server"> </asp:CheckBoxList>
+                </asp:TableCell>
+                <asp:TableCell runat="server">
+                    <asp:CheckBoxList ID="courseList5" runat="server"> </asp:CheckBoxList>
+                </asp:TableCell>
+                <asp:TableCell runat="server">
+                    <asp:CheckBoxList ID="courseList6" runat="server"> </asp:CheckBoxList>
+                </asp:TableCell>
+            </asp:TableRow>
+        </asp:Table>
 
-            </asp:CheckBoxList>
+
       <li class="menu__item"><a class="menu__link" href="#" role="menuitem" tabindex="-1">Select Upcoming Grade</a></li>
         <asp:RadioButtonList ID="gradeInput" runat="server">
             <asp:ListItem>9th</asp:ListItem>
@@ -228,6 +249,8 @@ html {
         </asp:CheckBoxList>
       <li class="menu__item"><a class="menu__link" href="#" role="menuitem" tabindex="-1">Current GPA</a></li>
         <asp:TextBox ID="gpaInput" type="number" runat="server"></asp:TextBox>
+
+              <li class="menu__item"><a class="menu__link" href="#" role="menuitem" tabindex="-1">Enter:</a></li>
 
         <asp:Button ID="submitButton" OnClick="SubmitInputs" runat="server" />
     </ul>

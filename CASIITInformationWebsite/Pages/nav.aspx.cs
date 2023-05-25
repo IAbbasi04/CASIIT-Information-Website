@@ -18,17 +18,40 @@ namespace CASIITInformationWebsite.Pages
         private List<string> classes = new List<string>();
         private string grade;
         private List<string> mathClasses = new List<string>();
+
+        private List<Class> courses = SQLQuerier.AllClasses();
         protected void Page_Load(object sender, EventArgs e)
         {
-            List<Class> courses = SQLQuerier.AllClasses();
 
-
-
-            foreach (Class course in courses)
+            for (int i = 0; i < courses.Count; i++)
             {
-                courseList.Items.Add(course.course_name);
+                if (i < 5)
+                {
+                    courseList1.Items.Add(courses[i].course_name);
+                }
+                else if (i < 10)
+                {
+                    courseList2.Items.Add(courses[i].course_name);
+                }
+                else if (i < 15)
+                {
+                    courseList3.Items.Add(courses[i].course_name);
+                }
+                else if (i < 20)
+                {
+                    courseList4.Items.Add(courses[i].course_name);
+                }
+                else if (i < 25)
+                {
+                    courseList5.Items.Add(courses[i].course_name);
+                }
+                else
+                {
+                    courseList6.Items.Add(courses[i].course_name);
+
+                }
             }
-        }
+            }
 
         protected void SubmitInputs(object sender, EventArgs e)
         {
@@ -72,9 +95,14 @@ namespace CASIITInformationWebsite.Pages
 
         protected void setClasses()
         {
-            for (int i = 0; i < courseList.Items.Count; i++)
+            for (int i = 0; i < courses.Count; i++)
             {
-                classes.Add(courseList.Items[i].Text);
+                classes.Add(courseList1.Items[i].Text);
+                classes.Add(courseList2.Items[i].Text);
+                classes.Add(courseList3.Items[i].Text);
+                classes.Add(courseList4.Items[i].Text);
+                classes.Add(courseList5.Items[i].Text);
+                classes.Add(courseList6.Items[i].Text);
             }
         }
 
