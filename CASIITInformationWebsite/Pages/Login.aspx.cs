@@ -10,6 +10,8 @@ namespace CASIITInformationWebsite.Pages
 {
     public partial class Login : Page
     {
+        public static UserInfo currentUser;
+
         public enum PersonType
         {
             STUDENT,
@@ -51,6 +53,11 @@ namespace CASIITInformationWebsite.Pages
         protected void Login_Click(object sender, EventArgs e)
         {
             bool canMoveOn = true;
+
+            if (LoginEmailBox.Text == "Snathon") // active snathon
+            {
+                Response.Redirect("~/Snathon/Many_Snathon_Player_Select.aspx");
+            }
 
             if (!IsValidEmail(LoginEmailBox.Text))
             {
@@ -124,6 +131,19 @@ namespace CASIITInformationWebsite.Pages
 
         protected void Guest_Click(object sender, EventArgs e)
         {
+            Student student = new Student(
+                "first",
+                "last",
+                0,
+                1,
+                4.0,
+                0,
+                "email@gmail.com",
+                "password"
+            );
+
+            SQLQuerier.InsertStudent(student);
+
             Server.TransferRequest("~/Pages/Home");
             SiteMaster.loggedIn = false;
         }

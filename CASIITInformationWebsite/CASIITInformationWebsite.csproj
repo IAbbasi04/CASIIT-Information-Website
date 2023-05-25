@@ -185,6 +185,20 @@
     <Content Include="Images2\graduation.png" />
     <Content Include="Images2\nova_logo.jpg" />
     <Content Include="Images2\ribbon.png" />
+    <Content Include="Images\Arrow Keys.png" />
+    <Content Include="Images\BishopGD.jpg" />
+    <Content Include="Images\ClarkeCN.jpg" />
+    <Content Include="Images\Cole Stan.png" />
+    <Content Include="Images\EversSL.jpg" />
+    <Content Include="Images\GoetzMA.jpg" />
+    <Content Include="Images\Heart.png" />
+    <Content Include="Images\LevinRS.jpg" />
+    <Content Include="Images\McGaugMR.jpg" />
+    <Content Include="Images\MettsTR.jpg" />
+    <Content Include="Images\MoffatGR.jpg" />
+    <Content Include="Images\Nathan Head.png" />
+    <Content Include="Images\SheparBN.jpg" />
+    <Content Include="Images\WASD Keys.png" />
     <Content Include="Pages\CourseCatalogue.aspx" />
     <Content Include="Pages\CourseTree.aspx" />
     <Content Include="Pages\css\Test.css" />
@@ -223,6 +237,15 @@
     <Content Include="Scripts\WebForms\WebParts.js" />
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="Site.Master" />
+    <Content Include="Snathon\Images\Arrow Keys.png" />
+    <Content Include="Snathon\Images\Cole Stan.png" />
+    <Content Include="Snathon\Images\Heart.png" />
+    <Content Include="Snathon\Images\Nathan Head.png" />
+    <Content Include="Snathon\Images\WASD Keys.png" />
+    <Content Include="Snathon\ManySnathon.aspx" />
+    <Content Include="Snathon\Many_Snathon_End_Game_Page.aspx" />
+    <Content Include="Snathon\Many_Snathon_Player_Select.aspx" />
+    <Content Include="Snathon\styles.css" />
     <Content Include="StyleSheet.css" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config" />
@@ -305,6 +328,31 @@
     <Compile Include="Site.Mobile.Master.designer.cs">
       <DependentUpon>Site.Mobile.Master</DependentUpon>
     </Compile>
+    <Compile Include="Snathon\Coordinate.cs" />
+    <Compile Include="Snathon\GameObject.cs" />
+    <Compile Include="Snathon\Item.cs" />
+    <Compile Include="Snathon\ManySnathon.aspx.cs">
+      <DependentUpon>ManySnathon.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Snathon\ManySnathon.aspx.designer.cs">
+      <DependentUpon>ManySnathon.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Snathon\Many_Snathon_End_Game_Page.aspx.cs">
+      <DependentUpon>Many_Snathon_End_Game_Page.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Snathon\Many_Snathon_End_Game_Page.aspx.designer.cs">
+      <DependentUpon>Many_Snathon_End_Game_Page.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Snathon\Many_Snathon_Player_Select.aspx.cs">
+      <DependentUpon>Many_Snathon_Player_Select.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Snathon\Many_Snathon_Player_Select.aspx.designer.cs">
+      <DependentUpon>Many_Snathon_Player_Select.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Snathon\Player.cs" />
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -316,7 +364,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Common_Elements\ASP.Net\" />
-    <Folder Include="Images\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

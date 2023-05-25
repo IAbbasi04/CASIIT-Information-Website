@@ -20,7 +20,7 @@
                 <asp:Label ID="Label1" Font-Size="XX-Large" runat="server" Text="Name"></asp:Label>
             </asp:TableCell>
             <asp:TableCell HorizontalAlign="Right" cellspacing="10px" BorderWidth="20px" BorderColor="White" cellpadding="10px" RowSpan="4">
-                <asp:Image Height="370" Width="300" ID="Image2" runat="server" src="../images/BishopGD.jpg" /></asp:TableCell>
+                <asp:Image Height="370" Width="300" ID="Image2" runat="server" src="../images/ClarkeCN.jpg" /></asp:TableCell>
             <asp:TableCell>
                 <asp:Label ID="Label5" Font-Size="XX-Large" runat="server" Text="Name"></asp:Label>
             </asp:TableCell>
@@ -47,12 +47,12 @@
 
         <asp:TableRow>
             <asp:TableCell cellspacing="10px" BorderWidth="20px" BorderColor="White" cellpadding="10px" RowSpan="4">
-                <asp:Image Height="370" Width="300" ID="Image3" runat="server" src="../images/BishopGD.jpg" /></asp:TableCell>
+                <asp:Image Height="370" Width="300" ID="Image3" runat="server" src="../images/EversSL.jpg" /></asp:TableCell>
             <asp:TableCell>
                 <asp:Label ID="Label9" Font-Size="XX-Large" runat="server" Text="Name"></asp:Label>
             </asp:TableCell>
             <asp:TableCell HorizontalAlign="Right" cellspacing="10px" BorderWidth="20px" BorderColor="White" cellpadding="10px" RowSpan="4">
-                <asp:Image Height="370" Width="300" ID="Image4" runat="server" src="../images/BishopGD.jpg" /></asp:TableCell>
+                <asp:Image Height="370" Width="300" ID="Image4" runat="server" src="../images/GoetzMA.jpg" /></asp:TableCell>
             <asp:TableCell>
                 <asp:Label ID="Label10" Font-Size="XX-Large" runat="server" Text="Name"></asp:Label>
             </asp:TableCell>
@@ -79,12 +79,12 @@
 
         <asp:TableRow>
             <asp:TableCell cellspacing="10px" BorderWidth="20px" BorderColor="White" cellpadding="10px" RowSpan="4">
-                <asp:Image Height="370" Width="300" ID="Image5" runat="server" src="../images/BishopGD.jpg" /></asp:TableCell>
+                <asp:Image Height="370" Width="300" ID="Image5" runat="server" src="../images/LevinRS.jpg" /></asp:TableCell>
             <asp:TableCell>
                 <asp:Label ID="Label17" Font-Size="XX-Large" runat="server" Text="Name"></asp:Label>
             </asp:TableCell>
             <asp:TableCell HorizontalAlign="Right" cellspacing="10px" BorderWidth="20px" BorderColor="White" cellpadding="10px" RowSpan="4">
-                <asp:Image Height="370" Width="300" ID="Image6" runat="server" src="../images/BishopGD.jpg" /></asp:TableCell>
+                <asp:Image Height="370" Width="300" ID="Image6" runat="server" src="../images/McGaugMR.jpg" /></asp:TableCell>
             <asp:TableCell>
                 <asp:Label ID="Label18" Font-Size="XX-Large" runat="server" Text="Name"></asp:Label>
             </asp:TableCell>
@@ -111,12 +111,12 @@
 
         <asp:TableRow>
             <asp:TableCell cellspacing="10px" BorderWidth="20px" BorderColor="White" cellpadding="10px" RowSpan="4">
-                <asp:Image Height="370" Width="300" ID="Image7" runat="server" src="../images/BishopGD.jpg" /></asp:TableCell>
+                <asp:Image Height="370" Width="300" ID="Image7" runat="server" src="../images/MettsTR.jpg" /></asp:TableCell>
             <asp:TableCell>
                 <asp:Label ID="Label25" Font-Size="XX-Large" runat="server" Text="Name"></asp:Label>
             </asp:TableCell>
             <asp:TableCell HorizontalAlign="Right" cellspacing="10px" BorderWidth="20px" BorderColor="White" cellpadding="10px" RowSpan="4">
-                <asp:Image Height="370" Width="300" ID="Image8" runat="server" src="../images/BishopGD.jpg" /></asp:TableCell>
+                <asp:Image Height="370" Width="300" ID="Image8" runat="server" src="../images/MoffatGR.jpg" /></asp:TableCell>
             <asp:TableCell>
                 <asp:Label ID="Label26" Font-Size="XX-Large" runat="server" Text="Name"></asp:Label>
             </asp:TableCell>
@@ -141,6 +141,30 @@
                 <asp:Label ID="Label32" runat="server" Text="Phone number"></asp:Label></asp:TableCell>
         </asp:TableRow>
     </asp:Table>
+
+    <asp:TableRow>
+            <asp:TableCell cellspacing="10px" BorderWidth="20px" BorderColor="White" cellpadding="10px" RowSpan="4">
+                <asp:Image Height="370" Width="300" ID="Image9" runat="server" src="../images/MettsTR.jpg" /></asp:TableCell>
+            <asp:TableCell>
+                <asp:Label ID="Label33" Font-Size="XX-Large" runat="server" Text="Name"></asp:Label>
+            </asp:TableCell>
+        </asp:TableRow>
+      <asp:TableRow>
+            <asp:TableCell>
+                <asp:Label ID="Label35" runat="server" Text="Courses"></asp:Label></asp:TableCell>
+            
+        </asp:TableRow>
+
+        <asp:TableRow>
+            <asp:TableCell>
+                <asp:Label ID="Label36" runat="server" Text="Email"></asp:Label></asp:TableCell>
+            
+        </asp:TableRow>
+        <asp:TableRow>
+            <asp:TableCell>
+                <asp:Label ID="Label37" runat="server" Text="Phone number"></asp:Label></asp:TableCell>
+            
+        </asp:TableRow>
 
 
 

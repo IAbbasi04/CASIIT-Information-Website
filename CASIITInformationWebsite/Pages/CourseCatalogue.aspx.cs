@@ -1,7 +1,9 @@
 using CASIITInformationWebsite.Common_Elements;
+using CASIITInformationWebsite.Common_Elements.Csharp;
 using Google.Protobuf.WellKnownTypes;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -11,7 +13,7 @@ namespace CASIITInformationWebsite
 {
     public partial class CourseCatalogue : Page
     {
-        private String concentrationFilter;
+        private string concentrationFilter = string.Empty;
         private double gpaFilter;
         private int yearFilter;
 
@@ -24,7 +26,6 @@ namespace CASIITInformationWebsite
             {
                 PopulateDropDownList();
             }
-            
         }
 
             //for(int i = 0; i < NUMCLASSES; i++)
@@ -164,11 +165,92 @@ namespace CASIITInformationWebsite
 
         protected void GoButton_Click(object sender, EventArgs e)
         {
-            //foreach (TableRow tr in rows)
-            //{
-                
-            //}
-            Class1.Visible = ((Class1Concentration.Text.Equals(concentrationFilter) || concentrationFilter == "None") && Double.Parse(Class1MinGPA.Text) < gpaFilter && int.Parse(Class1MinYear.Text) <= yearFilter) || concentrationFilter == "None";
+            PropogateList();
+
+            //Class1.Visible = ((Class1Concentration.Text.Equals(concentrationFilter) || concentrationFilter == "None") && Double.Parse(Class1MinGPA.Text) < gpaFilter && int.Parse(Class1MinYear.Text) <= yearFilter) || concentrationFilter == "None";
+        }
+
+        private void PropogateList()
+        {
+            List<Class> courses = new List<Class>();
+            try
+            {
+                gpaFilter = Double.Parse(TextBox1.Text);
+            }
+            catch
+            {
+                gpaFilter = 4.0;
+            }
+            if (DropDownList1.SelectedItem.Text.Equals("None"))
+            {
+                concentrationFilter = "";
+            }
+            else concentrationFilter = DropDownList1.SelectedItem.Text;
+
+            //if (CheckBox1.Checked && Pages.Login.currentUser != null) courses = SQLQuerier.AllAvailableClasses(Pages.Login.currentUser);
+             courses = SQLQuerier.FilterSelect(gpaMax: gpaFilter, yearMax: DropDownList2.SelectedIndex, concentration: concentrationFilter );
+
+            foreach (Class course in courses)
+            {
+                TableRow courseRow = new TableRow();
+
+                //name
+                {
+                    TableCell cell = new TableCell();
+                    cell.BorderWidth = 2;
+                    cell.HorizontalAlign = HorizontalAlign.Center;
+                    cell.BackColor = Color.White;
+                    cell.Text = "" + course.course_name;
+                    courseRow.Cells.Add(cell);
+                }
+                // description
+                {
+                    TableCell cell = new TableCell();
+                    cell.BorderWidth = 2;
+                    cell.HorizontalAlign = HorizontalAlign.Center;
+                    cell.BackColor = Color.White;
+                    cell.Text = "" + course.description;
+                    courseRow.Cells.Add(cell);
+                }
+                // minimum year
+                {
+                    TableCell cell = new TableCell();
+                    cell.BorderWidth = 2;
+                    cell.HorizontalAlign = HorizontalAlign.Center;
+                    cell.BackColor = Color.White;
+                    cell.Text = "" + (9 + course.prerequisite.min_year);
+                    courseRow.Cells.Add(cell);
+                }
+                // minimum gpa
+                {
+                    TableCell cell = new TableCell();
+                    cell.BorderWidth = 2;
+                    cell.HorizontalAlign = HorizontalAlign.Center;
+                    cell.BackColor = Color.White;
+                    cell.Text = "" + course.prerequisite.min_GPA;
+                    courseRow.Cells.Add(cell);
+                }
+                // concentration
+                {
+                    TableCell cell = new TableCell();
+                    cell.BorderWidth = 2;
+                    cell.HorizontalAlign = HorizontalAlign.Center;
+                    cell.BackColor = Color.White;
+                    cell.Text = "" + course.concentration;
+                    courseRow.Cells.Add(cell);
+                }
+                // prerequisites
+                {
+                    TableCell cell = new TableCell();
+                    cell.BorderWidth = 2;
+                    cell.HorizontalAlign = HorizontalAlign.Center;
+                    cell.BackColor = Color.White;
+                    cell.Text = "" + course.prerequisite.required_classes;
+                    courseRow.Cells.Add(cell);
+                }
+
+                Table6.Rows.Add(courseRow);
+            }
         }
     }
     
