@@ -11,6 +11,7 @@ namespace CASIITInformationWebsite
     public partial class SiteMaster : MasterPage
     {
         public static bool loggedIn = false;
+        public static int currentUserID = 1;
 
         protected void Page_Load(object sender, EventArgs e)
         {

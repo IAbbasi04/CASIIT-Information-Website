@@ -215,21 +215,21 @@ html {
 
             </asp:CheckBoxList>
       <li class="menu__item"><a class="menu__link" href="#" role="menuitem" tabindex="-1">Select Upcoming Grade</a></li>
-        <asp:RadioButtonList runat="server">
+        <asp:RadioButtonList ID="gradeInput" runat="server">
             <asp:ListItem>9th</asp:ListItem>
             <asp:ListItem>10th</asp:ListItem>
             <asp:ListItem>11th</asp:ListItem>
             <asp:ListItem>12th</asp:ListItem>
         </asp:RadioButtonList>
       <li class="menu__item"><a class="menu__link" href="#" role="menuitem" tabindex="-1">Math Completed</a></li>
-        <asp:CheckBoxList runat="server">
+        <asp:CheckBoxList ID="mathInput" runat="server">
             <asp:ListItem>Geometry</asp:ListItem>
             <asp:ListItem>Algebra</asp:ListItem>
         </asp:CheckBoxList>
       <li class="menu__item"><a class="menu__link" href="#" role="menuitem" tabindex="-1">Current GPA</a></li>
-        <asp:TextBox runat="server"></asp:TextBox>
+        <asp:TextBox ID="gpaInput" type="number" runat="server"></asp:TextBox>
 
-        <asp:Button ID="submitButton" runat="server" />
+        <asp:Button ID="submitButton" OnClick="SubmitInputs" runat="server" />
     </ul>
   </nav>
 

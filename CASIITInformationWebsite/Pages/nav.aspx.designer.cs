@@ -33,6 +33,33 @@ namespace CASIITInformationWebsite.Pages
         protected global::System.Web.UI.WebControls.CheckBoxList courseList;
 
         /// <summary>
+        /// gradeInput control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList gradeInput;
+
+        /// <summary>
+        /// mathInput control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBoxList mathInput;
+
+        /// <summary>
+        /// gpaInput control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox gpaInput;
+
+        /// <summary>
         /// submitButton control.
         /// </summary>
         /// <remarks>
