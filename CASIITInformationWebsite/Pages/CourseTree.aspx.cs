@@ -12,7 +12,7 @@ namespace CASIITInformationWebsite
     public partial class CourseTree : Page
     {
         const int minHeightOffset = 130;//the ideal minimum vertical distance to keep elements apart, measured from top point to top point
-        const int minWidthOffset = 100;//the ideal minimum hoorizontal distance to keep elements apart, measured form aproximate end to aproximate end
+        const int minWidthOffset = 100;//the ideal minimum horizontal distance to keep elements apart, measured form aproximate end to aproximate end
         const int avgPanelWidth = 200;//the width to assume the panels are
         const int LBT = 30;//the number of characters needed to trigger a line break
         protected void Page_Init(object sender, EventArgs e)
@@ -23,40 +23,43 @@ namespace CASIITInformationWebsite
             {
                 firstLoad = true;
             }
-
             //get rid of the footer for now (its too in the way right now, makes testing hard)
             Page.ClientScript.RegisterStartupScript(GetType(), "NoFooter",
             "document.getElementsByClassName('footer')[0].style.visibility = 'Hidden'\n"
+            , true);
+            //get rid of the random line on the page
+            Page.ClientScript.RegisterStartupScript(GetType(), "LineBGone",
+            "document.querySelector('#ctl01 > div.container.body-content > hr').remove()\n"
             , true);
             //load script to init Panzoom
             //Panzoom docs https://github.com/timmywil/panzoom
             Page.ClientScript.RegisterStartupScript(GetType(), "InitPanZoom",
             "elem = document.getElementById(\"MainContent_Panel2\");\n" +
-            "pz = Panzoom(elem, {" +
+            "pz = Panzoom(elem, {" +//panzoom configs
                 "contain: true," +
                 "canvas: true," +
                 "maxScale: 2," +
                 "minScale: 0.25," +
                 "step: 0.1" +
             "});\n" +
-            "elem.parentElement.addEventListener('wheel', pz.zoomWithWheel);\n"
+            "elem.parentElement.addEventListener('wheel', pz.zoomWithWheel);\n"//allow panzoom to work with the mouse wheel
             , true);
             //load script that automatically resizes the view panel to fit the screen
             Page.ClientScript.RegisterStartupScript(GetType(), "AutoSize",
             "function setPanelSize() {\n" +
                 "var bw = navigator.appName;\n" +
-                "if (bw == \"Microsoft Internet Explorer\")\n" +
+                "if (bw == \"Microsoft Internet Explorer\")\n" +//don't ask me why this is needed
                 "{\n" +
                     "var ht = document.body.clientHeight;\n" +
                     "var wt = document.body.clientWidth;\n" +
                 "}\n" +
                 "else\n" +
                 "{\n" +
-                    "var ht = window.innerHeight;\n" +
+                    "var ht = window.innerHeight;\n" +//get window size
                     "var wt = window.innerWidth;\n" +
                 "}\n" +
                 "var ctl = document.getElementById(\"MainContent_Panel1\");\n" +
-                "ctl.style.height = (ht - 90)+\"px\";\n" +
+                "ctl.style.height = (ht - 90)+\"px\";\n" +//set panel size to window size - some room on top
                 "ctl.style.width = (wt)+\"px\";\n" +
             "}\n" +
             "window.onresize=setPanelSize;\n" +
@@ -75,7 +78,7 @@ namespace CASIITInformationWebsite
 
 
 
-            //create panels TODO: do this properly using the database or whatever
+            //create panels TODO: do this using the database or whatever
             List<Panel> panels = new List<Panel>();
             panels.Add(CreateBox("Adv Computer Math", "math bro", 9, null, new string[] { "Algebra 1" }));
             panels.Add(CreateBox("AP Computer Science", "science bro", 10, null, new string[] { "Geometry", "Adv Computer Math" }));
@@ -100,7 +103,7 @@ namespace CASIITInformationWebsite
 
 
 
-            //if it is the first load, don't worry about positioning anything, just get the data and go
+            //if it is the first load, don't worry about positioning anything, just get the data and reload
             if (firstLoad)
             {
                 Page.ClientScript.RegisterStartupScript(GetType(), "getWHData",
@@ -132,11 +135,11 @@ namespace CASIITInformationWebsite
             //position panels
             List<Panel> roots = new List<Panel>();
             //y
-            int deepest = 0;
+            double deepest = 0;
             foreach (Panel panel in panels)
             {
-                int depth = FindDepth(panel);
-                if (depth == 0)
+                double depth = FindDepth(panel, out bool root);
+                if (root)
                 {
                     roots.Add(panel);
                 }
@@ -147,7 +150,7 @@ namespace CASIITInformationWebsite
             }
             foreach (Panel panel in panels)
             {
-                int depth = FindDepth(panel);
+                double depth = FindDepth(panel, out _);
                 panel.Style.Add("top", $"{minHeightOffset * (deepest - depth)}px");
             }
             //x
@@ -194,10 +197,10 @@ namespace CASIITInformationWebsite
             //draw lines
             Page.ClientScript.RegisterStartupScript(GetType(), "DrawLines",
             "function makeLines(){\n" +
-           $"    const arr = [{lineClasses}];\n" +
+           $"    const arr = [{lineClasses}];\n" +//create an array using the string
             "    for(let i = 0; i < arr.length-1; i+=2){\n" +
             "        let or = false;\n" +
-            "        if(arr[i].endsWith(\":OR:\")){\n" +
+            "        if(arr[i].endsWith(\":OR:\")){\n" +//read and remove the :OR: tags
             "            arr[i] = arr[i].replace(\":OR:\",\"\");\n" +
             "            or = true;\n" +
             "        }\n" +
@@ -205,9 +208,9 @@ namespace CASIITInformationWebsite
             "            arr[i+1] = arr[i+1].replace(\":OR:\",\"\");\n" +
             "            or = true;\n" +
             "        }\n" +
-            "        let panel = document.getElementById(\"MainContent_\"+arr[i]);\n" +
+            "        let panel = document.getElementById(\"MainContent_\"+arr[i]);\n" +//find the two elements to connect
             "        let item = document.getElementById(\"MainContent_\"+arr[i+1]);\n" +
-            "        var newLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');\n" +
+            "        var newLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');\n" +//create the line
             "        newLine.setAttribute('id', 'line'+(i/2));\n" +
             "        newLine.setAttribute('x1', (+item.style.left.replace(\"px\", \"\")) + (item.clientWidth / 2) + \"\");\n" +
             "        newLine.setAttribute('y1', (+item.style.top.replace(\"px\", \"\")) + item.clientHeight + \"\");\n" +
@@ -215,10 +218,10 @@ namespace CASIITInformationWebsite
             "        newLine.setAttribute('y2', (+panel.style.top.replace(\"px\", \"\")) + \"\");\n" +
             "        newLine.setAttribute(\"stroke\", \"black\");\n" +
             "        newLine.setAttribute(\"stroke-width\", \"3\");\n" +
-            "        if(or){\n" +
+            "        if(or){\n" +//make the line dashed if there was an :OR: tag
             "            newLine.setAttribute(\"stroke-dasharray\", \"5,5\");\n" +
             "        }\n" +
-            "        $(document.getElementById(\"LinePanel\")).append(newLine);\n" +
+            "        $(document.getElementById(\"LinePanel\")).append(newLine);\n" +//add the line to the svg
             "    }\n" +
             "}\n" +
             "makeLines();\n"
@@ -228,7 +231,7 @@ namespace CASIITInformationWebsite
         {
             //this is supposed to set the default position and zoom, but only sets the zoom for some reason. also just scrapes the defaults from the reset button
             Page.ClientScript.RegisterStartupScript(GetType(), "PanZoomPosition",
-           $"{ResetViewButton.OnClientClick}\n"
+           $"{ResetViewButton.OnClientClick}\n"//take the code from the reset position button and run it
             , true);
         }
         /// <summary>
@@ -358,11 +361,12 @@ namespace CASIITInformationWebsite
         /// </summary>
         /// <param name="panel">The element to calculate the depth of.</param>
         /// <returns>The depth of the element.</returns>
-        private int FindDepth(Panel panel)
+        /// <remarks>Any aditional vertical offset that should be applied to any element should be added here. Output is in double format to allow finer offset to be added</remarks>
+        private double FindDepth(Panel panel, out bool root)
         {
-            bool root = false;
+            root = false;
             //check if the depth has already been determined
-            if (int.TryParse(((HiddenField)panel.FindControl($"{panel.ID}_dpth")).Value.Replace("R",""), out int depth))
+            if (double.TryParse(((HiddenField)panel.FindControl($"{panel.ID}_dpth")).Value.Replace("R",""), out double depth))
             {
                 root = ((HiddenField)panel.FindControl($"{panel.ID}_dpth")).Value.Contains("R");
                 return depth;
@@ -377,7 +381,7 @@ namespace CASIITInformationWebsite
                 if (item != null)
                 {
                     //get the depth of the prerequisite and add 1
-                    int d = FindDepth(item) + 1;
+                    double d = FindDepth(item, out _) + 1;
                     //make depth the largest found value (in case tree is not balanced)
                     if (d > depth)
                     {
@@ -402,6 +406,7 @@ namespace CASIITInformationWebsite
         /// <param name="minGPA">The minimum GPA required to take the class that this element represents. optional.</param>
         /// <param name="prerequisites">The names of the prerequisites required to take the class that this element represents. Note that the names must match in order for them to link correctly. optional.</param>
         /// <returns>The element that was created</returns>
+        /// <remarks>This is where the text that shows up on the tree elements is generated</remarks>
         private Panel CreateBox(string className, string description, byte? minGrade, float? minGPA, string[] prerequisites)
         {
             //data defaults
@@ -415,12 +420,13 @@ namespace CASIITInformationWebsite
                 for (int i = 0; i < prerequisites.Length; i++)
                 {
                     prereqs += prerequisites[i] + ",,";
+                    //prereqsDisplay is a display string, not a data transfer string, so no double commas or :OR: tags here
                     if (prerequisites[i].EndsWith(":OR:") && i + 1 < prerequisites.Length && prerequisites[i + 1].EndsWith(":OR:"))
                     {
                         prereqsDisplay += prerequisites[i].Replace(":OR:", "") + " or ";
                     }
                     else if (i + 1 < prerequisites.Length)
-                    {//note that i did not use a double comma here, that is because this is the display string and is not a data transfer string, thus format does not matter here, just readability
+                    {
                         prereqsDisplay += prerequisites[i].Replace(":OR:", "") + ", ";
                     }
                     else
@@ -435,6 +441,7 @@ namespace CASIITInformationWebsite
             panel.Style.Add("position", "absolute");
 
             Button button = new Button();
+            //format for closed elements is here
             string bText = $"Class: {className}\nMinimum Grade: {minGrade}th" + (minGPA == 0 ? "" : $"\nMinimum GPA: {minGPA}");
             button.Text = WrapText(bText, LBT);
             button.Style.Add("text-align", "left");
@@ -443,6 +450,7 @@ namespace CASIITInformationWebsite
             button.Style.Add("background-color", "var(--button-background)");
 
             Button button2 = new Button();
+            //format for open elements is here
             string b2Text = $"Class: {className}\nDescription: {description}\nMinimum Grade: {minGrade}th" + (minGPA == 0 ? "" : $"\nMinimum GPA: {minGPA}") + (prereqs == "" ? "" : $"\nPrerequisites: {prereqsDisplay}");
             button2.Text = WrapText(b2Text, LBT);
             button2.Style.Add("text-align", "left");
@@ -462,6 +470,7 @@ namespace CASIITInformationWebsite
             infobutton.Style.Add("bottom", "0px");
             infobutton.Style.Add("background-color", "var(--button-background)");
 
+            //note that button and button2 are very similar in both form and function, and any adjustments to format or selection logic, or any visual changes caused by selection or otherwise, should likely be applied to both for visual continuity
             button.Click += (o, e) => { /*TODO:select logic*/ };
             panel.Controls.Add(button);
             button2.Click += (o, e) => { /*TODO:select logic*/ };
@@ -469,6 +478,7 @@ namespace CASIITInformationWebsite
             infobutton.Click += (o, e) => { SwitchView(panel); };
             panel.Controls.Add(infobutton);
 
+            //bunch of hidden objects for data storage
             HiddenField nameField = new HiddenField();
             nameField.Value = className;
             nameField.ID = className + "_name";
@@ -538,10 +548,12 @@ namespace CASIITInformationWebsite
         /// Switches which element is folded out.
         /// </summary>
         /// <param name="panel">The new element to fold out. optional, null collapses all.</param>
+        /// <remarks>closing is not the most consistent for some reason, thus just saving the open one does not work</remarks>
         private void SwitchView(Panel panel)
         {
+            //find the currently selected panel
             Panel activeView = Session["TVActive"] == null ? null : (Panel)(UpdatePanel1.ContentTemplateContainer.FindControl((string)Session["TVActive"]));
-
+            //close all open panels (was just the selected one but some got stuck open)
             foreach (Control item in UpdatePanel1.ContentTemplateContainer.Controls)
             {
                 if (item as Panel != null)
@@ -551,18 +563,18 @@ namespace CASIITInformationWebsite
                     item.Controls[2].Visible = true;
                 }
                 activeView = null;
-            }
+            }//open new panel
             if (panel != null)
             {
                 panel.Controls[0].Visible = false;
                 panel.Controls[2].Visible = false;
                 panel.Controls[1].Visible = true;
                 activeView = panel;
-            }
+            }//save selected panel
             Session["TVActive"] = activeView?.ID;
         }
         /// <summary>
-        /// Event handler relay for clear selection button.
+        /// Event handler for clear selection button.
         /// </summary>
         protected void ClearSelectionButton_Click(object sender, EventArgs e)
         {
