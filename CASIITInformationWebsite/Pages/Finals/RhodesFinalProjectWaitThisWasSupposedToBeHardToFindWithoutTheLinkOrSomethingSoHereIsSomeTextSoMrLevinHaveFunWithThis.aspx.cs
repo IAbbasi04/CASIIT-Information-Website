@@ -11,6 +11,10 @@ namespace CASIITInformationWebsite.Pages.Finals
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["seed"] == null)
+            {
+                Session["seed"] = new Random().Next();
+            }
 
             //get rid of the stuff thats not supposed to be there
             Page.ClientScript.RegisterStartupScript(GetType(), "No",
@@ -43,7 +47,7 @@ namespace CASIITInformationWebsite.Pages.Finals
             int[] ns = new int[3];
             do
             {
-                Random r = new Random();
+                Random r = new Random((int)Session["seed"]);
                 ns[0] = r.Next(funFacts.Length);
                 ns[1] = r.Next(funFacts.Length);
                 ns[2] = r.Next(funFacts.Length);
