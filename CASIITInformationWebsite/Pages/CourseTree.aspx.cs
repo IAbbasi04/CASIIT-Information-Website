@@ -510,7 +510,7 @@ namespace CASIITInformationWebsite
 
             HiddenField dpthField = new HiddenField();
             if (prereqs == "")
-                dpthField.Value = 0 + "";
+                dpthField.Value = 0 + "R";
             dpthField.ID = className + "_dpth";
             panel.Controls.Add(dpthField);
 
