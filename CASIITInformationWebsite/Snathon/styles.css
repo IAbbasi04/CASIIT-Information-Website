@@ -1,0 +1,57 @@
+.GameControlsStyleFormat 
+{
+
+}
+
+.DeadPlayerStyle
+{
+    opacity: 0.5;
+}
+
+.PlayerSelectImageStyle {
+    height: 75px;
+    width: 75px;
+}
+
+.PlayerImageStyle
+{
+    z-index: 1;
+}
+/*.PlayerImageStyle::after {*/ /*apply on top of image*/
+    /*background-color: rgba(0, 38, 255, 0.5);*/
+    /*z-index: -1;
+    background-color: red;*/ /* Change the color as desired */
+    /*mix-blend-mode: multiply;
+    opacity: 0.5;*/ /* Change the opacity as desired */
+/*}*/
+
+.ItemImageStyle
+{
+    z-index: 0;
+}
+.GameElementImage { 
+	height: 37.5px; 
+	width: 37.5px; 
+}
+td > img {  /*for every image inside a table cell */
+    position: absolute;
+    vertical-align: top;
+    transform: translate(0, -18.75px);
+}
+td img /* applies to every img with a predecessor that is a td */ {
+
+}
+.GameTableStyle {
+    /*width: 750px;
+    height: 750px;*/
+    /*table-layout: fixed;
+    overflow: hidden;*/
+    /*overflow-x: 0px;
+    overflow-y: 0px;*/
+    /*position: relative;*/
+    /*table-layout: fixed;
+    width: 750px;
+    height: 750px;*/
+    /*max-width: 100%;
+    max-height: 100%;*/
+}

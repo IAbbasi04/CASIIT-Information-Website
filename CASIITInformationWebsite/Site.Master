@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="CASIITInformationWebsite.SiteMaster" %>
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="CASIITInformationWebsite.SiteMaster" %>
 <!--GUHUIpiweubwpeibweiu !-->
 <!DOCTYPE html>
 
@@ -15,6 +15,7 @@
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <link rel="stylesheet" href="~/StyleSheet.css" type="text/css"/>
+
 
 </head>
 <body>
@@ -47,31 +48,45 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" runat="server" href="~/Pages/Home">Application name</a>
                 </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a runat="server" href="~/Pages/Home">Home</a></li>
-                        <li><a runat="server" href="~/Pages/CourseCatalogue">Course Catalogue</a></li>
-                        <li><a runat="server" href="~/Pages/CourseTree">Course Tree</a></li>
-                        <li><a runat="server" href="~/Pages/FacultyAndStaff">Faculty and Staff</a></li>
-                        <li><a runat="server" href="~/Pages/FAQ">FAQ</a></li>
-
-                    </ul>
+                <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+                <div id="nav-placeholder">
                     
                 </div>
-                
 
+                <script>
+                    $(function () {
+                        $("#nav-placeholder").load("nav.aspx");
+                    });
+                </script>
+                <div class="navbar-collapse collapse">
+                    <asp:Table runat="server">
+                        <asp:TableRow>
+                            <asp:TableCell>
+                                <ul class="nav navbar-nav">
+                                    <li><a runat="server" href="~/Pages/Home">Home</a></li>
+                                    <li><a runat="server" href="~/Pages/CourseCatalogue">Course Catalog</a></li>
+                                    <li><a runat="server" href="~/Pages/CourseTree">Course Tree</a></li>
+                                    <li><a runat="server" href="~/Pages/FacultyAndStaff">Faculty and Staff</a></li>
+                                    <li><a runat="server" href="~/Pages/FAQ">FAQ</a></li>
+                                </ul>
+                            </asp:TableCell>
+                            <asp:TableCell/>
+                            <asp:TableCell HorizontalAlign="Right">
+                                <ul class="nav navbar-nav">
+                                    <li><asp:LinkButton runat="server" ID="LoginButton" ForeColor="LightSkyBlue" PostBackUrl="~/Pages/Login" CssClass="login-button">Sign up | Login</asp:LinkButton></li>
+                                </ul>
+                            </asp:TableCell>
+                        </asp:TableRow>
+                    </asp:Table>
+                </div>
             </div>
         </div>
         <div class="container body-content">
-            <div >
-                <asp:Button runat="server" Text="Login" title="loginButton"   onmouseup=""  BorderWidth="0" />
-            </div>
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
             <hr />
-            <div class="footer" style="border:3px solid grey; position:absolute; bottom:50px; width:70%;" runat="server"  >
+            <div class="footer" style="border:3px solid grey; bottom:50px; width:100%;" runat="server"  >
                     &copy; <%: DateTime.Now.ToString("MM/dd/yyyy") %> - Contact and Help: <br>
                     <asp:HyperLink runat="server" NavigateUrl="https://www.nvcc.edu/catalog/" > Course Catalog <br/> </asp:HyperLink>
                     <asp:HyperLink runat="server" NavigateUrl="https://battlefieldhs.pwcs.edu/student_and_parent_resources/student_programs/casiit/index" > Casiit Page on BFHS Website <br/> </asp:HyperLink>
@@ -83,5 +98,7 @@
         </div>
 
     </form>
+
+
 </body>
 </html>

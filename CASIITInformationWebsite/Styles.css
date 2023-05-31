@@ -1,0 +1,15 @@
+.TeacherProfileImage
+{
+    height: auto;
+    width: 250px;
+}
+
+@font-face {
+    font-family: 'Arvo';
+    src: url('~/Arvo-Regular.ttf');
+}
+
+body {
+    font-family: 'Arvo', arvo;
+}
+
