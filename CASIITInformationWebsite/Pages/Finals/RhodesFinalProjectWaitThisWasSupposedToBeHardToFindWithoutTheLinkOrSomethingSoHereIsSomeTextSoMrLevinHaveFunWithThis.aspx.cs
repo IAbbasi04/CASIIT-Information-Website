@@ -20,11 +20,7 @@ namespace CASIITInformationWebsite.Pages.Finals
             Page.ClientScript.RegisterStartupScript(GetType(), "No",
             "document.querySelector('#ctl01 > div.container.body-content > div.footer').remove();\n" +
             "document.querySelector('#ctl01 > div.navbar.navbar-inverse.navbar-fixed-top').remove();\n" +
-            "if(document.querySelector('#ctl01 > div.container.body-content > div')!=null){\n" +
-            "    document.querySelector('#ctl01 > div.container.body-content > div').remove();\n" +
-            "}\n" +
-            "document.querySelector('head > link:nth-child(6)').remove();\n" +
-            "document.querySelector('head > link:nth-child(7)').remove();\n" +
+            "document.querySelector('head > link:nth-child(8)').remove();\n" +
             "document.querySelector('#ctl01 > div.container.body-content > hr').remove();\n;"
             , true);
             //typing animation
