@@ -185,6 +185,7 @@
     <Content Include="Images2\graduation.png" />
     <Content Include="Images2\nova_logo.jpg" />
     <Content Include="Images2\ribbon.png" />
+    <Content Include="Images\trophy-for-levin.png" />
     <Content Include="Images\Arrow Keys.png" />
     <Content Include="Images\BishopGD.jpg" />
     <Content Include="Images\ClarkeCN.jpg" />
@@ -204,6 +205,7 @@
     <Content Include="Pages\css\Test.css" />
     <Content Include="Pages\FacultyAndStaff.aspx" />
     <Content Include="Pages\FAQ.aspx" />
+    <Content Include="Pages\Finals\RhodesFinalProjectWaitThisWasSupposedToBeHardToFindWithoutTheLinkOrSomethingSoHereIsSomeTextSoMrLevinHaveFunWithThis.aspx" />
     <Content Include="Pages\Home.aspx" />
     <Content Include="Pages\Login.aspx" />
     <Content Include="Pages\nav.aspx" />
@@ -291,6 +293,13 @@
     </Compile>
     <Compile Include="Pages\FAQ.aspx.designer.cs">
       <DependentUpon>FAQ.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Finals\RhodesFinalProjectWaitThisWasSupposedToBeHardToFindWithoutTheLinkOrSomethingSoHereIsSomeTextSoMrLevinHaveFunWithThis.aspx.cs">
+      <DependentUpon>RhodesFinalProjectWaitThisWasSupposedToBeHardToFindWithoutTheLinkOrSomethingSoHereIsSomeTextSoMrLevinHaveFunWithThis.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Finals\RhodesFinalProjectWaitThisWasSupposedToBeHardToFindWithoutTheLinkOrSomethingSoHereIsSomeTextSoMrLevinHaveFunWithThis.aspx.designer.cs">
+      <DependentUpon>RhodesFinalProjectWaitThisWasSupposedToBeHardToFindWithoutTheLinkOrSomethingSoHereIsSomeTextSoMrLevinHaveFunWithThis.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>
