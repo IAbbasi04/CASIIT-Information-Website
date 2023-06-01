@@ -205,7 +205,9 @@
     <Content Include="Pages\css\Test.css" />
     <Content Include="Pages\FacultyAndStaff.aspx" />
     <Content Include="Pages\FAQ.aspx" />
+    <Content Include="Pages\Finals\Images\IMG_1052.jpg" />
     <Content Include="Pages\Finals\RhodesFinalProjectWaitThisWasSupposedToBeHardToFindWithoutTheLinkOrSomethingSoHereIsSomeTextSoMrLevinHaveFunWithThis.aspx" />
+    <Content Include="Pages\Finals\WhatHappensIfYouDoNotTurnWorkIn.aspx" />
     <Content Include="Pages\Home.aspx" />
     <Content Include="Pages\Login.aspx" />
     <Content Include="Pages\nav.aspx" />
@@ -300,6 +302,13 @@
     </Compile>
     <Compile Include="Pages\Finals\RhodesFinalProjectWaitThisWasSupposedToBeHardToFindWithoutTheLinkOrSomethingSoHereIsSomeTextSoMrLevinHaveFunWithThis.aspx.designer.cs">
       <DependentUpon>RhodesFinalProjectWaitThisWasSupposedToBeHardToFindWithoutTheLinkOrSomethingSoHereIsSomeTextSoMrLevinHaveFunWithThis.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Finals\WhatHappensIfYouDoNotTurnWorkIn.aspx.cs">
+      <DependentUpon>WhatHappensIfYouDoNotTurnWorkIn.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Finals\WhatHappensIfYouDoNotTurnWorkIn.aspx.designer.cs">
+      <DependentUpon>WhatHappensIfYouDoNotTurnWorkIn.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>

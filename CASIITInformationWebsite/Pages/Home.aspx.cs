@@ -14,8 +14,7 @@ namespace CASIITInformationWebsite
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            bool test = SQLQuerier.EmailAlreadyRegistered("Ibrahimzabbasi04@gmail.com");
-            string[] names = SQLQuerier.GetAllStudents();
+
         }
     }
 }

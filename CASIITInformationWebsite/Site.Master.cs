@@ -13,6 +13,7 @@ namespace CASIITInformationWebsite
     {
         public static bool loggedIn = false;
         public static Student CURRENT_STUDENT;
+        public static int currentUserID = 1;
 
         protected void Page_Load(object sender, EventArgs e)
         {
