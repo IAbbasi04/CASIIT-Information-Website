@@ -1,4 +1,5 @@
 ﻿using CASIITInformationWebsite.Common_Elements.Csharp;
+using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace CASIITInformationWebsite.Pages
 {
     public partial class Login : Page
     {
-        public static UserInfo currentUser;
+        public static Student currentStudent;
 
         public enum PersonType
         {
@@ -53,6 +54,7 @@ namespace CASIITInformationWebsite.Pages
         protected void Login_Click(object sender, EventArgs e)
         {
             bool canMoveOn = true;
+            string desiredPassword = "";
 
             if (LoginEmailBox.Text == "Snathon") // active snathon
             {
@@ -62,20 +64,29 @@ namespace CASIITInformationWebsite.Pages
             if (!IsValidEmail(LoginEmailBox.Text))
             {
                 canMoveOn = false;
+                LoginEmailLabel.Text = "Enter a valid email";
+                LoginEmailLabel.Visible = true;
+            } else if (!SQLQuerier.EmailAlreadyRegistered(LoginEmailBox.Text))
+            {
+                canMoveOn = false;
+                LoginEmailLabel.Text = "Email doesn't exists";
                 LoginEmailLabel.Visible = true;
             }
             else
             {
                 LoginEmailLabel.Visible = false;
+                desiredPassword = SQLQuerier.GetPasswordFromEmail(LoginEmailBox.Text);
             }
 
-            if (LoginPasswordBox.Text == "")
+
+
+            if (LoginPasswordBox.Text == desiredPassword && desiredPassword != "")
+            {
+                PasswordLabel.Visible = false;
+            } else
             {
                 canMoveOn = false;
                 PasswordLabel.Visible = true;
-            } else
-            {
-                PasswordLabel.Visible = false;
             }
 
             if (canMoveOn)
@@ -83,25 +94,11 @@ namespace CASIITInformationWebsite.Pages
                 LinkButton lb = Master.FindControl("LoginButton") as LinkButton;
                 lb.Text = "Sign Out";
                 SiteMaster.loggedIn = true;
+                SiteMaster.CURRENT_STUDENT = SQLQuerier.SelectStudent(SQLQuerier.GetUID(LoginEmailBox.Text, LoginPasswordBox.Text));
                 Server.TransferRequest("~/Pages/Home");
             }
         }
 
-
-        private bool IsValidEmail(string email)
-        {
-            string trimmedEmail = email.Trim();
-
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == trimmedEmail;
-            }
-            catch
-            {
-                return false;
-            }
-        }
 
         protected void PersonType_Click(object sender, EventArgs e)
         {
@@ -193,6 +190,7 @@ namespace CASIITInformationWebsite.Pages
 
             if (canMoveOn)
             {
+                SQLQuerier.InsertStudent(new Student(FirstNameTextBox.Text, LastNameTextBox.Text, 0, 4.0, SignUpEmailTextBox.Text, SignUpPasswordTextBox.Text));
                 SignUpTable.Visible = false;
                 LinkButton lb = Master.FindControl("LoginButton") as LinkButton;
                 lb.Text = "Sign Out";
@@ -200,6 +198,30 @@ namespace CASIITInformationWebsite.Pages
                 Server.TransferRequest("~/Pages/Home");
             }
 
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            string trimmedEmail = email.Trim();
+
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == trimmedEmail;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private int GetUIDFromEmail(string email)
+        {
+            int uid = 0;
+
+
+
+            return uid;
         }
     }
 }
