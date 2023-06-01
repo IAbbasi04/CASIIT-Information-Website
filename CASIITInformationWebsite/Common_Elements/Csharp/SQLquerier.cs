@@ -99,6 +99,45 @@ namespace CASIITInformationWebsite.Common_Elements.Csharp
             return names.ToArray();
         }
 
+        public static bool EmailAlreadyRegistered(string email)
+        {
+            string query = "SELECT email FROM users WHERE email='" + email + "'";
+            List<string> emails = new List<string>();
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        for (int i = 0; i < reader.FieldCount; i++) emails.Add(reader.GetString(i));
+                    }
+                }
+            }
+
+            return emails.Count > 0;
+        }
+
+        public static string GetPasswordFromEmail(string email)
+        {
+            string pass = "";
+
+            string query = "SELECT password FROM users WHERE email='" + email + "'";
+            using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+                using (MySqlDataReader reader = new MySqlCommand(query, connection).ExecuteReader())
+                {
+                    while (reader.Read() && reader.FieldCount > 0)
+                    {
+                        return reader.GetString(0);
+                    }
+                }
+            }
+            
+            return pass;
+        }
+
         public static string[] Parse(string item)
         {
             string rc = "";

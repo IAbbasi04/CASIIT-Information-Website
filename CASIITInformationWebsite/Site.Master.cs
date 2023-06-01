@@ -1,4 +1,5 @@
-﻿using CASIITInformationWebsite.Pages;
+﻿using CASIITInformationWebsite.Common_Elements.Csharp;
+using CASIITInformationWebsite.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace CASIITInformationWebsite
     public partial class SiteMaster : MasterPage
     {
         public static bool loggedIn = false;
+        public static Student CURRENT_STUDENT;
 
         protected void Page_Load(object sender, EventArgs e)
         {
