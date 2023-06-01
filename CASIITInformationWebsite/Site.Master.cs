@@ -1,4 +1,4 @@
-﻿using CASIITInformationWebsite.Common_Elements.Csharp;
+using CASIITInformationWebsite.Common_Elements.Csharp;
 using CASIITInformationWebsite.Pages;
 using System;
 using System.Collections.Generic;

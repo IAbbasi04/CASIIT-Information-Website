@@ -5,10 +5,10 @@
     --toggler-size: 30px;
     --toggler-line-number: 3;
     --toggler-line-size: calc(var(--toggler-size) / (var(--toggler-line-number) + var(--toggler-line-number) - 1));
-    --toggler-offset-left: 10px;
-    --toggler-offset-top: 10px;
+    --toggler-offset-left: 20px;
+    --toggler-offset-top: 70px;
     --toggler-color: Purple;
-    --toggler-color-hover: Wheat;
+    --toggler-color-hover: Purple;
 }
 
 * {
@@ -18,7 +18,7 @@
 }
 
 html {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "sans-serif";
     font-size: 0.8rem;
 }
 
@@ -48,19 +48,20 @@ html {
 .sidebar {
     width: var(--sidebar-width);
     transform: translateX(calc(var(--sidebar-width) * -1));
-    background: linear-gradient(to bottom right, Tomato, Wheat);
+    background: linear-gradient(to bottom right, MediumOrchid, Plum);
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
     top: 0;
+    left: 0;
     height: 100vh;
     opacity: 0.5;
 }
 
 .content {
     width: 100%;
-    display: flex;
+    display: block;
     align-items: center;
     justify-content: center;
     flex-direction: column;
@@ -80,7 +81,7 @@ html {
 }
 
     .menu__link:hover, .menu__link:focus, .menu__link:active {
-        color: Gold;
+        color: mediumpurple;
     }
 
 .menu-toggler {
@@ -149,7 +150,7 @@ html {
     }
 
 .wrapper {
-    height: calc(100vh - 50px);
+    /*height: calc(100vh - 50px);*/
 }
 
 .sb-link {
@@ -166,5 +167,5 @@ html {
     .sb-link:hover,
     .sb-link:focus,
     .sb-link:active {
-        background: #f7f7f7;
+        background: #d01bf5;
     }

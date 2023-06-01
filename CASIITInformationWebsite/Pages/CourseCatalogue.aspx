@@ -1,8 +1,8 @@
-<%@ Page Title="CourseCatalogue" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CourseCatalogue.aspx.cs" Inherits="CASIITInformationWebsite.CourseCatalogue" %>
+<%@ Page Title="CourseCatalog" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CourseCatalogue.aspx.cs" Inherits="CASIITInformationWebsite.CourseCatalogue" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <h1 style="font-size:100px; font-weight:bold; vertical-align:bottom; color:black" align="center">
-        Course Catalogue
+        Course Catalog
     </h1>
 
     <p style="font-size:30px; font-weight:bold; color:black; text-underline-position:from-font;" align="left">

@@ -5,13 +5,13 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace CASIITInformationWebsite.Pages
+namespace CasiitCourses
 {
-    public partial class InputTab : System.Web.UI.Page
+    public partial class Many_Snathon_End_Game_Page : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+
         }
     }
 }

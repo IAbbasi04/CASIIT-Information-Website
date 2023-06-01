@@ -56,6 +56,11 @@ namespace CASIITInformationWebsite.Pages
             bool canMoveOn = true;
             string desiredPassword = "";
 
+            if (LoginEmailBox.Text == "Snathon") // active snathon
+            {
+                Response.Redirect("~/Snathon/Many_Snathon_Player_Select.aspx");
+            }
+
             if (!IsValidEmail(LoginEmailBox.Text))
             {
                 canMoveOn = false;
